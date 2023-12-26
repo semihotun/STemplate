@@ -30,7 +30,6 @@ builder.AddCustomMassTransit(assembly, (busRegistrationContext, busFactoryConfig
     busFactoryConfigurator.AddPublishers();
 });
 //Service Registered
-builder.Services.AddTransient<IMailService, MailManager>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 //Build
 var app = builder.Build();
