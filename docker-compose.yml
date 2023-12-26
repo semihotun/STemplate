@@ -1,0 +1,41 @@
+version: "3.4"
+services:
+  webapigateway:
+    image: ${DOCKER_REGISTRY}-webapigateway
+    build:
+      context: .
+      dockerfile: src/ApiGateway/Web.ApiGateway/Dockerfile
+    container_name: c_webapigateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${STAGE}
+      - ASPNETCORE_URLS=http://+:${WEBAPIGATEWAY}
+      - ServiceConfig__serviceName=webapigateway
+    ports:
+      - "${WEBAPIGATEWAY}:${WEBAPIGATEWAY}"
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env
+  dddtemplateservice:
+    image: ${DOCKER_REGISTRY}-dddtemplateservice
+    build:
+      context: .
+      dockerfile: src/Services/DDDTemplateServices/DDDTemplateService/Dockerfile
+    container_name: c_dddtemplateservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${STAGE}
+      - ASPNETCORE_URLS=http://+:4033
+      - ServiceConfig__serviceName=c_dddtemplateservice
+    ports:
+      - "4033:4033"
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env
+networks:
+  net_frontend:
+    driver: bridge
+    external: true
+  net_backendservices:
+    driver: bridge
+    external: true

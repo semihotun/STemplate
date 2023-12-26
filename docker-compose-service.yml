@@ -1,0 +1,180 @@
+version: "3.4"
+
+services:
+  s_rabbitmq:
+    container_name: c_rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - ${RABBITMQ_TCPPORT}:${RABBITMQ_TCPPORT}
+      - ${RABBITMQ_UIPORT}:${RABBITMQ_UIPORT}
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    networks:
+      - net_backendservices
+      - net_frontend
+    env_file:
+      - ./.env
+
+  s_redis:
+    container_name: c_redis
+    image: redis
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env
+    volumes:
+      - /path/to/local/dаta:/root/redis
+    command: redis-server --requirepass squba
+    environment:
+      - REDIS_PASSWORD=squba
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_REPLICATION_MODE=master
+
+  redisinsight:
+    container_name: c_redisinsight
+    image: redislabs/redisinsight:latest
+    networks:
+      - net_backendservices
+    ports:
+      - '8001:8001'
+
+  s_sqlserver:
+    container_name: c_sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    user: root
+    ports:
+      - ${SQL_HOST_PORT}:${SQL_TCP_PORT}
+    environment:
+      - ACCEPT_EULA=${SQL_USER}
+      - MSSQL_SA_PASSWORD=semihO123.
+    volumes:
+      - sqlserver_data:/var/opt/mssql/data
+      - sqlserver_log:/var/opt/mssql/log
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env
+
+  # s_nginx:
+  #   container_name: c_nginx
+  #   image: nginx
+  #   ports:
+  #     - ${NGINX_PORT}:80
+  #   env_file:
+  #     - ./.env
+
+  s_prometheus:
+    image: prom/prometheus
+    container_name: c_prometheus
+    restart: unless-stopped
+    ports:
+      - "${PROMETHEUS_PORT}:9090"
+    environment:
+      - TZ=UTC
+    volumes:
+      - ./Docker/Config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./Docker/PrometheusData:/prometheus/data
+    command:
+      - '--storage.tsdb.retention.time=0s'
+      - '--storage.tsdb.retention.size=2KB'
+      - '--config.file=/etc/prometheus/prometheus.yml'  
+    links:
+      - s_cadvisor:cadvisor
+      - s_node-exporter:node-exporter
+    env_file:
+      - ./.env       
+
+  s_grafana:
+    image: grafana/grafana
+    container_name: c_grafana
+    ports:
+      - "${GRAFANA_PORT}:3000"
+    volumes:
+      - ./Docker/MetricData/grafana-data/data:/var/lib/grafana
+    links:
+      - s_prometheus:prometheus
+    restart: unless-stopped
+    env_file:
+      - ./.env
+
+  s_node-exporter:
+    image: prom/node-exporter:latest
+    container_name: c_node-exporter
+    restart: unless-stopped
+    expose:
+      - 9100
+
+  s_cadvisor:
+    image: google/cadvisor:latest
+    container_name: c_cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    expose:
+      - 8080
+
+
+  s_elasticsearch:
+    container_name: c_elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=localhost
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.monitoring.enabled=false
+      - xpack.monitoring.collection.enabled=false
+      - ELASTIC_PASSWORD=squbadiving.!34
+      - ELASTICSEARCH_USERNAME=jakobu
+      # - discovery.type=single-node           
+      # Uzaktan bağlantıyı açmak için
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "${ELASTIC_TCP_PORT}:9200"
+      - "${ELASTIC_UDP_PORT}:9300"
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env
+
+  s_kibana:
+    container_name: c_kibana
+    image: docker.elastic.co/kibana/kibana:7.10.2
+    environment:
+      - ELASTICSEARCH_HOSTS=["http://s_elasticsearch:${ELASTIC_TCP_PORT}"]
+      - elasticsearch.sniffOnStart=true
+      - ES_JAVA_OPTS=-Xms3g -Xmx3g
+      - xpack.infra.sources.default.metricAlias=metricbeat-*
+      - XPACK_MONITORING_KIBANA_COLLECTION_ENABLED=false
+      - ELASTIC_PASSWORD=squbadiving.!34
+      - ELASTICSEARCH_USERNAME=jakobu
+    ports:
+      - "${KIBANA_PORT}:5601"
+    depends_on:
+      - s_elasticsearch
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env
+
+networks:
+  net_frontend:
+    driver: bridge
+    external: true
+  net_backendservices:
+    driver: bridge
+    external: true
+
+volumes:
+  rabbitmq:
+  sqlserver_data:
+  sqlserver_log:
