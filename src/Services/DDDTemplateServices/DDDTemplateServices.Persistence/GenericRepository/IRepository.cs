@@ -17,6 +17,5 @@ namespace DDDTemplateServices.Persistence.GenericRepository
         Task<int> GetCountAsync(Expression<Func<T, bool>>? expression = null);
         int GetCount(Expression<Func<T, bool>>? expression = null);
         T? GetById(int Id);
-        Task<TResult> BeginTransaction<TResult>(Func<Task<TResult>> action, Action? successAction = null, Action<Exception>? exceptionAction = null);
     }
 }

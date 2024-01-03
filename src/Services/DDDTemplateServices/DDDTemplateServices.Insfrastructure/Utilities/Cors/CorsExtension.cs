@@ -11,10 +11,10 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Cors
         {
             builder.Services.AddCors(options =>
             options.AddDefaultPolicy(policy => policy
-              .WithOrigins("https://localhost:5001",
-              "https://localhost:5000",
-              "http://localhost:5001",
-              "http://localhost:5000")
+              .WithOrigins("https://localhost:4000",
+              "https://localhost:4033",
+              "http://localhost:4000",
+              "http://localhost:4033")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials()));

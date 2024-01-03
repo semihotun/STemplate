@@ -9,12 +9,10 @@ namespace DDDTemplateServices.Persistence.GenericRepository
     public class Repository<TEntity> : IRepository<TEntity>
           where TEntity : class, IEntity
     {
-        protected readonly CoreDbContext Context;
-        private readonly IMediator mediator;
-        public Repository(CoreDbContext context, IMediator mediator)
+        protected readonly ICoreDbContext Context;
+        public Repository(ICoreDbContext context)
         {
             Context = context;
-            this.mediator = mediator;
         }
         public TEntity? GetById(int Id)
         {
@@ -22,28 +20,37 @@ namespace DDDTemplateServices.Persistence.GenericRepository
         }
         public TEntity Add(TEntity entity)
         {
-            return Context.Add(entity).Entity;
+            var data = Context.Set<TEntity>().Add(entity);
+            return data.Entity;
         }
         public void AddRange(List<TEntity> entity)
         {
-            Context.AddRange(entity);
+            Context.Set<TEntity>().AddRange(entity);
+        }
+        public async Task AddRangeAsync(IEnumerable<TEntity> entity)
+        {
+            await Context.Set<TEntity>().AddRangeAsync(entity);
         }
         public TEntity Update(TEntity entity)
         {
-            Context.Update(entity);
+            Context.Set<TEntity>().Update(entity);
             return entity;
         }
         public void Delete(TEntity entity)
         {
-            Context.Remove(entity);
+            Context.Set<TEntity>().Remove(entity);
         }
         public void DeleteRange(List<TEntity> entity)
         {
-            Context.RemoveRange(entity);
+            Context.Set<TEntity>().RemoveRange(entity);
         }
         public TEntity? Get(Expression<Func<TEntity, bool>> expression)
         {
             return Context.Set<TEntity>().FirstOrDefault(expression);
+        }
+        public bool Any(Expression<Func<TEntity, bool>> expression)
+        {
+            return Context.Set<TEntity>().Any(expression);
         }
         public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> expression)
         {
@@ -75,42 +82,6 @@ namespace DDDTemplateServices.Persistence.GenericRepository
                 return Context.Set<TEntity>().Count();
             else
                 return Context.Set<TEntity>().Count(expression);
-        }
-#nullable disable
-        public async Task<TResult> BeginTransaction<TResult>(Func<Task<TResult>> action, Action successAction = null, Action<Exception> exceptionAction = null)
-        {
-            var result = default(TResult);
-            var strategy = Context.Database.CreateExecutionStrategy();
-            try
-            {
-                await strategy.ExecuteAsync(async () =>
-                {
-                    using (var tx = Context.Database.BeginTransaction())
-                    {
-                        try
-                        {
-                            result = await action();
-                            await mediator.DispatchDomainEventsAsync(Context);
-                            await Context.SaveChangesAsync();
-                            tx.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            tx.Rollback();
-                            throw;
-                        }
-                    }
-                    successAction?.Invoke();
-                });
-            }
-            catch (Exception ex)
-            {
-                if (exceptionAction == null)
-                    throw;
-                else
-                    exceptionAction(ex);
-            }
-            return result;
         }
     }
 }
