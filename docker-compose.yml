@@ -32,6 +32,9 @@ services:
       - net_backendservices
     env_file:
       - ./.env
+    depends_on:
+      - webapigateway
+      - adminidentityservice
   adminidentityservice:
     image: ${DOCKER_REGISTRY}-adminidentityservice
     build:
@@ -48,6 +51,8 @@ services:
       - net_backendservices
     env_file:
       - ./.env
+    depends_on:
+      - webapigateway
 networks:
   net_frontend:
     driver: bridge
