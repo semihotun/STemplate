@@ -8,7 +8,7 @@ builder.Services.AddHttpContextAccessor();
 //Ocelot
 builder.AddOcelotSetting();
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
-    policy.WithOrigins("http://localhost:5000", "http://localhost:5001").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
+    policy.WithOrigins("http://localhost:4000").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
 ));
 builder.Services.AddHttpClient();
 var app = builder.Build();
