@@ -27,7 +27,7 @@ namespace DDDTemplateServices.Persistence.Extensions
             });
             var optionBuilder = new DbContextOptionsBuilder<CoreDbContext>()
                 .UseSqlServer(configuration["ConnectionString"]);
-            using (var ctx = new CoreDbContext(optionBuilder.Options,null))
+            using (var ctx = new CoreDbContext(optionBuilder.Options, null))
             {
                 if (!ctx.Database.EnsureCreated())
                 {

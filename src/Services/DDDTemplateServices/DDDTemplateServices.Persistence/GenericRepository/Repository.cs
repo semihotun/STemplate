@@ -1,7 +1,5 @@
 ﻿using DDDTemplateService.Domain.SeedWork;
 using DDDTemplateServices.Persistence.Context;
-using DDDTemplateServices.Persistence.Extensions;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 namespace DDDTemplateServices.Persistence.GenericRepository
@@ -36,11 +34,11 @@ namespace DDDTemplateServices.Persistence.GenericRepository
             Context.Set<TEntity>().Update(entity);
             return entity;
         }
-        public void Delete(TEntity entity)
+        public void Remove(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
         }
-        public void DeleteRange(List<TEntity> entity)
+        public void RemoveRange(List<TEntity> entity)
         {
             Context.Set<TEntity>().RemoveRange(entity);
         }
@@ -82,6 +80,15 @@ namespace DDDTemplateServices.Persistence.GenericRepository
                 return Context.Set<TEntity>().Count();
             else
                 return Context.Set<TEntity>().Count(expression);
+        }
+        public async Task<TEntity> AddAsync(TEntity entity)
+        {
+            var data = await Context.Set<TEntity>().AddAsync(entity);
+            return data.Entity;
+        }
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            return await Context.Set<TEntity>().AnyAsync(expression);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace DDDTemplateServices.Persistence.Context
     public class CoreDbContext : DbContext, ICoreDbContext
     {
         public const string DEFAULT_SCHEMA = "CoreDbContextSchema";
-        public CoreDbContext(DbContextOptions<CoreDbContext> options,IMediator? mediator) : base(options)
+        public CoreDbContext(DbContextOptions<CoreDbContext> options, IMediator? mediator) : base(options)
         {
             _mediator = mediator;
         }
