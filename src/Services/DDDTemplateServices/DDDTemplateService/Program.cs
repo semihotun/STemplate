@@ -4,7 +4,6 @@ using DDDTemplateService.Extensions;
 using DDDTemplateServices.Insfrastructure.Utilities.Caching.Redis;
 using DDDTemplateServices.Insfrastructure.Utilities.Cors;
 using DDDTemplateServices.Insfrastructure.Utilities.Exceptions.GlobalEror;
-using DDDTemplateServices.Insfrastructure.Utilities.Identity;
 using DDDTemplateServices.Insfrastructure.Utilities.Identity.Middleware;
 using DDDTemplateServices.Insfrastructure.Utilities.Ioc;
 using DDDTemplateServices.Insfrastructure.Utilities.Logging;
@@ -35,7 +34,6 @@ builder.AddCustomMassTransit(assembly, (busRegistrationContext, busFactoryConfig
     busFactoryConfigurator.AddConsumers(busRegistrationContext);
     busFactoryConfigurator.AddPublishers();
 });
-builder.AddIdentitySettings();
 //Service Registered
 builder.Services.AddScoped<ICoreDbContext, CoreDbContext>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -57,8 +55,6 @@ app.UseStaticFiles();
 app.UseAuthorization();
 app.MapControllers();
 //MiddleWare
-await app.GenerateDbRole(Assembly.GetExecutingAssembly());
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseMiddleware<ClaimMiddleware>();
 ServiceTool.ServiceProvider = app.Services;
 app.Run();
