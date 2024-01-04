@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 using System.Security.Claims;
 namespace AdminIdentityService.Insfrastructure.Utilities.Identity.Middleware
 {
@@ -19,7 +20,8 @@ namespace AdminIdentityService.Insfrastructure.Utilities.Identity.Middleware
         {
             var path = httpContext.Request.Path.Value;
             var isAllowAnonymous = httpContext.GetEndpoint()?.Metadata.GetMetadata<AllowAnonymousAttribute>();
-            if (!notIgnorePath.Any(x => x == path) && isAllowAnonymous is null)
+            var endPoint = httpContext.GetEndpoint();
+            if (!notIgnorePath.Any(x => x == path) && isAllowAnonymous is null && endPoint is not null)
             {
                 //Check Login in
                 if (httpContext.User.Identity?.IsAuthenticated != false)
