@@ -14,4 +14,9 @@
 	  <ProjectReference Include="..\AdminIdentityService.Insfrastructure\AdminIdentityService.Insfrastructure.csproj" />
 	  <ProjectReference Include="..\AdminIdentityService.Persistence\AdminIdentityService.Persistence.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+		<PackageReference Include="prometheus-net.AspNetCore" Version="8.1.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	</ItemGroup>
 </Project>

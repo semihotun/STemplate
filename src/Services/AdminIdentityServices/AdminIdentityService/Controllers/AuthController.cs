@@ -9,9 +9,8 @@ namespace AdminIdentityService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IMediator mediator, IHttpContextAccessor httpContextAccessor) : ControllerBase
+    public class AuthController(IMediator mediator): ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
         private readonly IMediator _mediator = mediator;
         /// <summary>
         /// Admin Login oeperation
@@ -38,6 +37,7 @@ namespace AdminIdentityService.Controllers
         /// </summary>
         /// <param name="createUser"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
