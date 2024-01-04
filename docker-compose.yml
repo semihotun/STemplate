@@ -32,6 +32,22 @@ services:
       - net_backendservices
     env_file:
       - ./.env
+  adminidentityservice:
+    image: ${DOCKER_REGISTRY}-adminidentityservice
+    build:
+      context: .
+      dockerfile: src/Services/AdminIdentityServices/AdminIdentityService/Dockerfile
+    container_name: c_adminidentityservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${STAGE}
+      - ASPNETCORE_URLS=http://+:${ADMINIDENTITY}
+      - ServiceConfig__serviceName=c_adminidentityservice
+    ports:
+      - "${ADMINIDENTITY}:${ADMINIDENTITY}"
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env
 networks:
   net_frontend:
     driver: bridge

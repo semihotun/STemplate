@@ -19,7 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{0FD813
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{87C1EAA3-AF62-4F2E-B0E8-275345A1FFAB}"
 	ProjectSection(SolutionItems) = preProject
-		Docker\Config\.env = Docker\Config\.env
 		Docker\Config\prometheus.yml = Docker\Config\prometheus.yml
 	EndProjectSection
 EndProject
@@ -37,7 +36,24 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDDTemplateService.Domain",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDDTemplateServices.Insfrastructure", "src\Services\DDDTemplateServices\DDDTemplateServices.Insfrastructure\DDDTemplateServices.Insfrastructure.csproj", "{BA1587DB-711E-4CC1-8096-DDF6AFB394AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDDTemplateServices.Persistence", "src\Services\DDDTemplateServices\DDDTemplateServices.Persistence\DDDTemplateServices.Persistence.csproj", "{F9860BEB-B07D-4DD1-86CB-341D8EA3E61B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDDTemplateServices.Persistence", "src\Services\DDDTemplateServices\DDDTemplateServices.Persistence\DDDTemplateServices.Persistence.csproj", "{F9860BEB-B07D-4DD1-86CB-341D8EA3E61B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdminIdentityServices", "AdminIdentityServices", "{DCFAF1D3-AE2A-4501-81C6-E877A80BDE16}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminIdentityService", "src\Services\AdminIdentityServices\AdminIdentityService\AdminIdentityService.csproj", "{90C9DBC7-B891-4AEB-B14D-E8B09F07134E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminIdentityService.Application", "src\Services\AdminIdentityServices\AdminIdentityService.Application\AdminIdentityService.Application.csproj", "{5D89E6E2-D399-4DD1-A8FF-CA24C057C320}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminIdentityService.Domain", "src\Services\AdminIdentityServices\AdminIdentityService.Domain\AdminIdentityService.Domain.csproj", "{786F3AD0-42D5-46E3-92DD-0C0369461D64}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminIdentityService.Insfrastructure", "src\Services\AdminIdentityServices\AdminIdentityService.Insfrastructure\AdminIdentityService.Insfrastructure.csproj", "{918C720A-4A81-43FC-9C63-1731C3ABABBF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminIdentityService.Persistence", "src\Services\AdminIdentityServices\AdminIdentityService.Persistence\AdminIdentityService.Persistence.csproj", "{F4111513-0825-4EFE-AD38-4656FD0E29D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10F7B0C7-45B9-483B-981B-98DB193F5DCB}"
+	ProjectSection(SolutionItems) = preProject
+		.env = .env
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +89,26 @@ Global
 		{F9860BEB-B07D-4DD1-86CB-341D8EA3E61B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9860BEB-B07D-4DD1-86CB-341D8EA3E61B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9860BEB-B07D-4DD1-86CB-341D8EA3E61B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90C9DBC7-B891-4AEB-B14D-E8B09F07134E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90C9DBC7-B891-4AEB-B14D-E8B09F07134E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90C9DBC7-B891-4AEB-B14D-E8B09F07134E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90C9DBC7-B891-4AEB-B14D-E8B09F07134E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D89E6E2-D399-4DD1-A8FF-CA24C057C320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D89E6E2-D399-4DD1-A8FF-CA24C057C320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D89E6E2-D399-4DD1-A8FF-CA24C057C320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D89E6E2-D399-4DD1-A8FF-CA24C057C320}.Release|Any CPU.Build.0 = Release|Any CPU
+		{786F3AD0-42D5-46E3-92DD-0C0369461D64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{786F3AD0-42D5-46E3-92DD-0C0369461D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{786F3AD0-42D5-46E3-92DD-0C0369461D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{786F3AD0-42D5-46E3-92DD-0C0369461D64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{918C720A-4A81-43FC-9C63-1731C3ABABBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{918C720A-4A81-43FC-9C63-1731C3ABABBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{918C720A-4A81-43FC-9C63-1731C3ABABBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{918C720A-4A81-43FC-9C63-1731C3ABABBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4111513-0825-4EFE-AD38-4656FD0E29D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4111513-0825-4EFE-AD38-4656FD0E29D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4111513-0825-4EFE-AD38-4656FD0E29D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4111513-0825-4EFE-AD38-4656FD0E29D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +126,12 @@ Global
 		{0E74B418-30DF-49A0-9CA2-2282CC710A0D} = {015F1C49-DD82-4583-B04B-350CCF648ED8}
 		{BA1587DB-711E-4CC1-8096-DDF6AFB394AB} = {015F1C49-DD82-4583-B04B-350CCF648ED8}
 		{F9860BEB-B07D-4DD1-86CB-341D8EA3E61B} = {015F1C49-DD82-4583-B04B-350CCF648ED8}
+		{DCFAF1D3-AE2A-4501-81C6-E877A80BDE16} = {D8DBA8D6-5816-4397-986F-7CFDA4E34379}
+		{90C9DBC7-B891-4AEB-B14D-E8B09F07134E} = {DCFAF1D3-AE2A-4501-81C6-E877A80BDE16}
+		{5D89E6E2-D399-4DD1-A8FF-CA24C057C320} = {DCFAF1D3-AE2A-4501-81C6-E877A80BDE16}
+		{786F3AD0-42D5-46E3-92DD-0C0369461D64} = {DCFAF1D3-AE2A-4501-81C6-E877A80BDE16}
+		{918C720A-4A81-43FC-9C63-1731C3ABABBF} = {DCFAF1D3-AE2A-4501-81C6-E877A80BDE16}
+		{F4111513-0825-4EFE-AD38-4656FD0E29D8} = {DCFAF1D3-AE2A-4501-81C6-E877A80BDE16}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2729A3C8-CA91-4AD7-9988-C5AAAC81FA51}

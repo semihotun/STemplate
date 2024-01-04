@@ -3,7 +3,7 @@
     {
       "DownstreamPathTemplate": "/api/{controller}/{everything}",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/mail/{controller}/{everything}",
+      "UpstreamPathTemplate": "/DDDTemplateService/{controller}/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
       "UpstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -17,9 +17,27 @@
         "DurationOfBreak": 1000,
         "TimeoutValue": 100000
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{controller}/{everything}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/AdminIdentityService/{controller}/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "UpstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 4001
+        }
+      ],
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 100000
+      }
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://webapigateway:5001"
+    "BaseUrl": "http://webapigateway:4000"
   }
 }
