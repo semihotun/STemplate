@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Text;
@@ -12,9 +14,11 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Caching.Redis
     {
         private static readonly ConcurrentDictionary<string, bool> CacheKeys = new();
         private readonly IDistributedCache _distributedCache;
-        public RedisCacheManager(IDistributedCache distributedCache)
+        private readonly IConfiguration _configuration;
+        public RedisCacheManager(IDistributedCache distributedCache, IConfiguration configuration)
         {
             _distributedCache = distributedCache;
+            _configuration = configuration;
         }
         public string GetKey(string region, string methodName, object arg)
         {
@@ -46,6 +50,21 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Caching.Redis
         public async Task<T> GetAsync<T>(string key, Func<Task<T>> factory, CancellationToken cancellation = default)
            where T : class
         {
+            T? cachedValue = await GetAsync<T>(key, cancellation);
+            if (cachedValue is not null)
+            {
+                return (T)cachedValue;
+            }
+            cachedValue = await factory();
+            await SetAsync(key, cachedValue, cancellation);
+            return (T)cachedValue;
+        }
+        public async Task<T> GetAsync<T>(IRequest<T> arg, Func<Task<T>> factory, CancellationToken cancellation = default)
+         where T : class
+        {
+            var region = _configuration["RegionName"];
+            var methodName = arg.GetType().FullName?.Replace(region + ".Application.Handlers.", "");
+            var key = $"{region}:{methodName}({BuildKey(arg)})";
             T? cachedValue = await GetAsync<T>(key, cancellation);
             if (cachedValue is not null)
             {
