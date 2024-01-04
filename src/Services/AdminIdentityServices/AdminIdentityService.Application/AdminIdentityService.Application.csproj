@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="DomainEventHandlers\" />
+    <Folder Include="Features\" />
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\AdminIdentityService.Domain\AdminIdentityService.Domain.csproj" />
+		<ProjectReference Include="..\AdminIdentityService.Insfrastructure\AdminIdentityService.Insfrastructure.csproj" />
+		<ProjectReference Include="..\AdminIdentityService.Persistence\AdminIdentityService.Persistence.csproj" />
+	</ItemGroup>
+</Project>

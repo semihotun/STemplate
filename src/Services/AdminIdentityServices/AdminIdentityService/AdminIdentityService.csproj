@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<InvariantGlobalization>false</InvariantGlobalization>
+    <UserSecretsId>3dd8945d-e978-4bfc-b199-ec6253cb56d7</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..\..</DockerfileContext>
+  </PropertyGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\AdminIdentityService.Application\AdminIdentityService.Application.csproj" />
+	  <ProjectReference Include="..\AdminIdentityService.Domain\AdminIdentityService.Domain.csproj" />
+	  <ProjectReference Include="..\AdminIdentityService.Insfrastructure\AdminIdentityService.Insfrastructure.csproj" />
+	  <ProjectReference Include="..\AdminIdentityService.Persistence\AdminIdentityService.Persistence.csproj" />
+	</ItemGroup>
+</Project>
