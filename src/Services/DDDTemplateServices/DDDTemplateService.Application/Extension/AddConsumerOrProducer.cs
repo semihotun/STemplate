@@ -4,7 +4,7 @@ using MassTransit;
 namespace DDDTemplateService.Application.Extension
 {
     /// <summary>
-    /// 
+    ///  Add Consumer Or Producer
     /// </summary>
     public static class AddConsumerOrProducer
     {

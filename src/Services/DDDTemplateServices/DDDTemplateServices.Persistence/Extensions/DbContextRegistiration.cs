@@ -14,6 +14,8 @@ namespace DDDTemplateServices.Persistence.Extensions
         /// <returns></returns>
         public static IServiceCollection ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
         {
+            var regionName = configuration["RegionName"] + "SqlConnectionString";
+            var connectionString = configuration[regionName];
             services.AddEntityFrameworkSqlServer().AddDbContext<CoreDbContext>(option =>
             {
                 option.UseSqlServer(configuration["ConnectionString"],
@@ -26,7 +28,7 @@ namespace DDDTemplateServices.Persistence.Extensions
                 });
             });
             var optionBuilder = new DbContextOptionsBuilder<CoreDbContext>()
-                .UseSqlServer(configuration["ConnectionString"]);
+                .UseSqlServer(connectionString);
             using (var ctx = new CoreDbContext(optionBuilder.Options, null))
             {
                 if (!ctx.Database.EnsureCreated())
