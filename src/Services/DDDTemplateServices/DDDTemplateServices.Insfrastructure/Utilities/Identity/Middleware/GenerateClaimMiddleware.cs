@@ -35,7 +35,7 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Identity.Middleware
                     return task;
                 });
             var integrationEvent = new AddAdminRoleIntegrationEvent(await Task.WhenAll(methods));
-            if (integrationEvent is not null)
+            if (integrationEvent.RoleName.Length != 0)
             {
                 await _bus.Publish<AddAdminRoleIntegrationEvent>(integrationEvent);
             }
