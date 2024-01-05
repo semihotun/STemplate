@@ -32,6 +32,9 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+#Env File
+.env
+
 #GrafanaData
 Docker/MetricData
 Docker/PrometheusData
