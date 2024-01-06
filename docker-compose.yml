@@ -22,31 +22,6 @@ services:
         delay: 3s
         max_attempts: 5
         window: 60s
-  dddtemplateservice:
-    image: ${Docker_Registry}-dddtemplateservice
-    build:
-      context: .
-      dockerfile: src/Services/DDDTemplateServices/DDDTemplateService/Dockerfile
-    container_name: c_dddtemplateservice
-    environment:
-      - ASPNETCORE_ENVIRONMENT=${Stage}
-      - ASPNETCORE_URLS=http://+:4033
-      - ServiceConfig__serviceName=c_dddtemplateservice
-    ports:
-      - "4033:4033"
-    networks:
-      - net_backendservices
-    env_file:
-      - ./.env
-    depends_on:
-      - webapigateway
-      - adminidentityservice
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 3s
-        max_attempts: 5
-        window: 60s
   adminidentityservice:
     image: ${Docker_Registry}-adminidentityservice
     build:

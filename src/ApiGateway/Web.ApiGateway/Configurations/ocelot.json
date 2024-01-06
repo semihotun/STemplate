@@ -3,24 +3,6 @@
     {
       "DownstreamPathTemplate": "/api/{controller}/{everything}",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/DDDTemplateService/{controller}/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
-      "UpstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 4033
-        }
-      ],
-      "QoSOptions": {
-        "ExceptionsAllowedBeforeBreaking": 3,
-        "DurationOfBreak": 1000,
-        "TimeoutValue": 100000
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/{controller}/{everything}",
-      "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/AdminIdentityService/{controller}/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
       "UpstreamScheme": "http",

@@ -1,0 +1,4 @@
+You can change the known location for user templates in Tools > Options > Projects and Solutions > Locations.
+
+Copy DDDTemplate.zip to TemplateLocations
+
