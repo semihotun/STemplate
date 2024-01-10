@@ -24,19 +24,16 @@ namespace AdminIdentityService.Insfrastructure.Utilities.Identity.Middleware
             if (!notIgnorePath.Any(x => x == path) && isAllowAnonymous is null && endPoint is not null)
             {
                 //Check Login in
-                if (httpContext.User.Identity?.IsAuthenticated != false)
+                if ((httpContext.User.Identity?.IsAuthenticated) == false)
                 {
-                    //Check Role
-                    var regionPath = path.Replace("/api", _configuration["RegionName"]).ToLower();
-                    var userRoles = httpContext.User
-                        .FindAll(ClaimTypes.Role)
-                        .Any(x => x.Value == regionPath);
-                    if (!userRoles)
-                    {
-                        throw new UnauthorizedAccessException(UserNotLogged);
-                    }
+                    throw new UnauthorizedAccessException(UserNotLogged);
                 }
-                else
+                //Check Role
+                var regionPath = path.Replace("/api", _configuration["RegionName"]).ToLower();
+                var userRoles = httpContext.User
+                    .FindAll(ClaimTypes.Role)
+                    .Any(x => x.Value == regionPath);
+                if (!userRoles)
                 {
                     throw new UnauthorizedAccessException(UserNotLogged);
                 }
