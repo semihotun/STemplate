@@ -8,17 +8,14 @@ namespace AdminIdentityService.Persistence.Context
     /// <summary>
     /// Custom db context
     /// </summary>
-    public class CoreDbContext : DbContext, ICoreDbContext
+    public class CoreDbContext(DbContextOptions<CoreDbContext> options, IMediator? mediator) : DbContext(options), ICoreDbContext
     {
         public const string DEFAULT_SCHEMA = "CoreDbContextSchema";
-        public CoreDbContext(DbContextOptions<CoreDbContext> options, IMediator? mediator) : base(options)
-        {
-            _mediator = mediator;
-        }
+
         public DbSet<AdminUser> AdminUser { get; set; }
         public DbSet<AdminRole> AdminRole { get; set; }
         public DbSet<AdminUserRole> AdminUserRole { get; set; }
-        private IMediator? _mediator { get; set; }
+        private IMediator? Mediator { get; } = mediator;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var assm = Assembly.GetExecutingAssembly();
@@ -38,12 +35,12 @@ namespace AdminIdentityService.Persistence.Context
             {
                 await strategy.ExecuteAsync(async () =>
                 {
-                    using (var tx = Context.Database.BeginTransaction())
+                    await using (var tx = Context.Database.BeginTransaction())
                     {
                         try
                         {
                             result = await action();
-                            await _mediator.DispatchDomainEventsAsync(Context);
+                            await Mediator.DispatchDomainEventsAsync(Context);
                             await Context.SaveChangesAsync();
                             tx.Commit();
                         }
@@ -56,12 +53,9 @@ namespace AdminIdentityService.Persistence.Context
                     successAction?.Invoke();
                 });
             }
-            catch (Exception ex)
+            catch (Exception ex) when (exceptionAction != null)
             {
-                if (exceptionAction == null)
-                    throw;
-                else
-                    exceptionAction(ex);
+                exceptionAction(ex);
             }
             return result;
         }

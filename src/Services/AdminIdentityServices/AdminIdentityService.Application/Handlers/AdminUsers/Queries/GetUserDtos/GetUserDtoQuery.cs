@@ -5,8 +5,8 @@ namespace AdminIdentityService.Application.Handlers.AdminUsers.Queries.GetUserDt
 {
     public record GetUserDtoQuery : IRequest<DataResult<GetUserDto>>
     {
-        public string Email { get; set; }
-        public GetUserDtoQuery(string email)
+        public string? Email { get; set; }
+        public GetUserDtoQuery(string? email)
         {
             Email = email;
         }

@@ -14,6 +14,6 @@
         public required byte[] PasswordSalt { get; set; }
         public required byte[] PasswordHash { get; set; }
         public bool Status { get; set; }
-        public IEnumerable<AdminUserRole>? AdminUserRoles { get; set; } = new List<AdminUserRole>();
+        public IEnumerable<AdminUserRole> AdminUserRoles { get; set; } = new List<AdminUserRole>();
     }
 }

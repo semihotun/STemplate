@@ -4,7 +4,7 @@ using DDDTemplateServices.Insfrastructure.Utilities.Assemblies;
 using System.Reflection;
 namespace DDDTemplateService.Extensions
 {
-    public class ApiAssemblyExtensions
+    public static class ApiAssemblyExtensions
     {
         public static Assembly[] GetLibrariesAssemblies()
         {

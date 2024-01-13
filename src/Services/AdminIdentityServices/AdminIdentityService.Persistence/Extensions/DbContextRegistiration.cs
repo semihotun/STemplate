@@ -7,7 +7,7 @@ namespace AdminIdentityService.Persistence.Extensions
     public static class DbContextRegistiration
     {
         /// <summary>
-        /// Add DbContext 
+        /// Add DbContext
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>

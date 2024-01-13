@@ -3,7 +3,7 @@ namespace AdminIdentityService.Domain.AggregateModels
 {
     public class AdminRole(string role) : BaseEntity
     {
-        public string Role { get; private set; } = role;
-        public ICollection<AdminUserRole> AdminUserRoles { get; private set; } = new List<AdminUserRole>();
+        public string Role { get; } = role;
+        public ICollection<AdminUserRole> AdminUserRoles { get; } = new List<AdminUserRole>();
     }
 }

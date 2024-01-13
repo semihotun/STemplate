@@ -18,25 +18,28 @@ namespace AdminIdentityService.Insfrastructure.Utilities.Grid.PagedList
         {
             if (source == null)
                 return new PagedList<T>();
-            var result = new PagedList<T>();
-            result.PageIndex = pageIndex;
-            result.PageSize = Math.Max(pageSize, 1);
-            result.TotalCount = source.Count();
+            var result = new PagedList<T>
+            {
+                PageIndex = pageIndex,
+                PageSize = Math.Max(pageSize, 1),
+                TotalCount = source.Count()
+            };
             result.TotalPages = result.TotalCount / result.PageSize;
-            if (result.PageSize < result.TotalCount)
-                result.Data = await source.Skip((result.PageIndex - 1) * result.PageSize)
+            result.Data = result.PageSize < result.TotalCount
+                ? await source.Skip((result.PageIndex - 1) * result.PageSize)
                     .Take(pageSize)
-                    .ToListAsync();
-            else
-                result.Data = await source.ToListAsync();
+                    .ToListAsync()
+                : await source.ToListAsync();
             if (result.TotalCount % pageSize > 0)
                 result.TotalPages++;
             var sourceType = source.ElementType;
             result.PropertyInfos = sourceType.GetProperties().Select(x =>
             {
-                var data = new GridPropertyInfo();
-                data.PropertyType = x.PropertyType.Name;
-                data.PropertyName = char.ToLowerInvariant(x.Name[0]) + x.Name.Substring(1);
+                var data = new GridPropertyInfo
+                {
+                    PropertyType = x.PropertyType.Name,
+                    PropertyName = char.ToLowerInvariant(x.Name[0]) + x.Name[1..]
+                };
                 return data;
             });
             return result;
@@ -59,9 +62,11 @@ namespace AdminIdentityService.Insfrastructure.Utilities.Grid.PagedList
                 propertyInfoList = selector.Method.ReturnType.GetProperties()
                     .Select(x =>
                     {
-                        var data = new GridPropertyInfo();
-                        data.PropertyType = x.PropertyType.Name;
-                        data.PropertyName = char.ToLowerInvariant(x.Name[0]) + x.Name.Substring(1);
+                        var data = new GridPropertyInfo
+                        {
+                            PropertyType = x.PropertyType.Name,
+                            PropertyName = char.ToLowerInvariant(x.Name[0]) + x.Name[1..]
+                        };
                         return data;
                     });
             }

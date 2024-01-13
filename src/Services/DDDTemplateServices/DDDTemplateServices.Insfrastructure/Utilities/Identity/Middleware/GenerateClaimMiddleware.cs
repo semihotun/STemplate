@@ -23,7 +23,7 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Identity.Middleware
                              x.GetCustomAttribute<AllowAnonymousAttribute>() == null)
                 .Select(data =>
                 {
-                    var task = Task.Run(() =>
+                    return Task.Run(() =>
                     {
                         var controllerName = data.DeclaringType?.Name.Replace("Controller", "").ToLower();
                         var httpMethodAttribute = data.GetCustomAttributes().OfType<HttpMethodAttribute>().FirstOrDefault();
@@ -32,7 +32,6 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Identity.Middleware
                           : $"{regionName}/{controllerName}/{data.Name}";
                         return methodPath;
                     });
-                    return task;
                 });
             var integrationEvent = new AddAdminRoleIntegrationEvent(await Task.WhenAll(methods));
             if (integrationEvent.RoleName.Length != 0)

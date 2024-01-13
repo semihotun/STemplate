@@ -4,17 +4,13 @@ using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 namespace DDDTemplateServices.Insfrastructure.Utilities.Identity.Middleware
 {
-    public class ClaimMiddleware
+    public class ClaimMiddleware(RequestDelegate next, IConfiguration configuration)
     {
-        private string[] notIgnorePath = { "/metrics", "/healthcheck" };
+        private readonly string[] notIgnorePath = ["/metrics", "/healthcheck"];
         public static string UserNotLogged => "Kullanıcı Giriş yapmadı";
-        private readonly RequestDelegate _next;
-        private readonly IConfiguration _configuration;
-        public ClaimMiddleware(RequestDelegate next, IConfiguration configuration)
-        {
-            _next = next;
-            _configuration = configuration;
-        }
+        private readonly RequestDelegate _next = next;
+        private readonly IConfiguration _configuration = configuration;
+
         public async Task InvokeAsync(HttpContext httpContext)
         {
             var path = httpContext.Request.Path.Value;
@@ -28,7 +24,7 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Identity.Middleware
                     throw new UnauthorizedAccessException(UserNotLogged);
                 }
                 //Check Role
-                var regionPath = path.Replace("/api", _configuration["RegionName"]).ToLower();
+                var regionPath = path?.Replace("/api", _configuration["RegionName"]).ToLower();
                 var userRoles = httpContext.User
                     .FindAll(ClaimTypes.Role)
                     .Any(x => x.Value == regionPath);

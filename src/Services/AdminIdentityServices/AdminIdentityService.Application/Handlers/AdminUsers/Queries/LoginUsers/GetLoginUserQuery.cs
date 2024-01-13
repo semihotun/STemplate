@@ -5,7 +5,7 @@ namespace AdminIdentityService.Application.Handlers.AdminUsers.Queries.LoginUser
 {
     public record GetLoginUserQuery : IRequest<DataResult<AccessToken>>
     {
-        public string? Email { get; set; }
-        public string? Password { get; set; }
+        public required string Email { get; set; }
+        public required string Password { get; set; }
     }
 }

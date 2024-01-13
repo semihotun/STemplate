@@ -12,6 +12,9 @@
     <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Riok.Mapperly" Version="3.3.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\DDDTemplateService.Domain\DDDTemplateService.Domain.csproj" />
     <ProjectReference Include="..\DDDTemplateServices.Insfrastructure\DDDTemplateServices.Insfrastructure.csproj" />
     <ProjectReference Include="..\DDDTemplateServices.Persistence\DDDTemplateServices.Persistence.csproj" />

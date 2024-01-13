@@ -9,20 +9,20 @@ namespace AdminIdentityService.Insfrastructure.Utilities.Security.Jwt
     public class TokenService : ITokenService
     {
         private readonly TokenOptions _tokenOptions;
-        private DateTime _tokenExpiration;
-        public IConfiguration _configuration { get; }
+        private readonly DateTime _tokenExpiration;
+        public IConfiguration Configuration { get; }
         public TokenService(IConfiguration configuration)
         {
-            _configuration = configuration;
-            _tokenOptions = _configuration.GetSection("TokenOptions").Get<TokenOptions>() ?? new TokenOptions();
+            Configuration = configuration;
+            _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>() ?? new TokenOptions();
             _tokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
         }
-        public string DecodeToken(string input)
+        public static string DecodeToken(string input)
         {
             var handler = new JwtSecurityTokenHandler();
             if (input.StartsWith("Bearer "))
             {
-                input = input.Substring("Bearer ".Length);
+                input = input["Bearer ".Length..];
             }
             return handler.ReadJwtToken(input).ToString();
         }
@@ -45,31 +45,16 @@ namespace AdminIdentityService.Insfrastructure.Utilities.Security.Jwt
             GetUserDto user,
             SigningCredentials signingCredentials)
         {
-            try
-            {
-                var jwts = new JwtSecurityToken(
-                      tokenOptions.Issuer,
-                      tokenOptions.Audience,
-                      expires: _tokenExpiration,
-                      notBefore: DateTime.Now,
-                      claims: SetClaims(user),
-                      signingCredentials: signingCredentials);
-                return jwts;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            var jwt = new JwtSecurityToken(
-                tokenOptions.Issuer,
-                tokenOptions.Audience,
-                expires: _tokenExpiration,
-                notBefore: DateTime.Now,
-                claims: SetClaims(user),
-                signingCredentials: signingCredentials);
-            return jwt;
+            var jwts = new JwtSecurityToken(
+                  tokenOptions.Issuer,
+                  tokenOptions.Audience,
+                  claims: SetClaims(user),
+                  notBefore: DateTime.Now,
+                  expires: _tokenExpiration,
+                  signingCredentials: signingCredentials);
+            return jwts;
         }
-        private IEnumerable<Claim> SetClaims(GetUserDto user)
+        private static List<Claim> SetClaims(GetUserDto user)
         {
             var claims = new List<Claim>();
             claims.AddNameIdentifier(user.Id.ToString());

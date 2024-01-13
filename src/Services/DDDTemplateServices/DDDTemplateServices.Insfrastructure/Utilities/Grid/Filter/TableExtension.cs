@@ -2,7 +2,7 @@
 namespace DDDTemplateServices.Insfrastructure.Utilities.Grid.Filter
 {
     /// <summary>
-    /// all setting expression for dynamic grid 
+    /// all setting expression for dynamic grid
     /// </summary>
     public static class TableExtension
     {

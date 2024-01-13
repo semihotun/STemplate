@@ -9,7 +9,7 @@ namespace AdminIdentityService.Application.Extension
     /// </summary>
     public static class AddConsumerOrProducer
     {
-        public static void AddPublishers(this IRabbitMqBusFactoryConfigurator cfg)
+        public static void AddPublishers()
         {
         }
         public static void AddConsumers(this IRabbitMqBusFactoryConfigurator cfg, IBusRegistrationContext ctx)

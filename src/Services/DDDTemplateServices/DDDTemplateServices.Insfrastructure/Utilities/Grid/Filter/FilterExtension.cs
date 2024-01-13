@@ -18,7 +18,7 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Grid.Filter
         {
             Expression finalExpression = Expression.Constant(true);
             var parameter = Expression.Parameter(typeof(T), "x");
-            if (filtermodel.FilterModelList != null && filtermodel.FilterModelList.Count() > 0)
+            if (filtermodel.FilterModelList?.Count > 0)
             {
                 foreach (var item in filtermodel.FilterModelList)
                 {

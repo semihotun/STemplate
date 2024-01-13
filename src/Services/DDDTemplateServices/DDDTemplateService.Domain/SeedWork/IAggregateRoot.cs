@@ -3,7 +3,5 @@
     /// <summary>
     /// Aggregate Root
     /// </summary>
-    public interface IAggregateRoot
-    {
-    }
+    public interface IAggregateRoot;
 }

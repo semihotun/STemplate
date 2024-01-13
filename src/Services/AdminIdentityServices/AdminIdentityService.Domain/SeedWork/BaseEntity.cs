@@ -2,7 +2,7 @@
 namespace AdminIdentityService.Domain.SeedWork
 {
     /// <summary>
-    /// Mian Entity
+    /// Base Entity
     /// </summary>
     public abstract class BaseEntity : IEntity
     {
@@ -13,7 +13,7 @@ namespace AdminIdentityService.Domain.SeedWork
         public IReadOnlyCollection<INotification>? DomainEvents => domainEvents?.AsReadOnly();
         public void AddDomainEvent(INotification eventItem)
         {
-            domainEvents = domainEvents ?? new List<INotification>();
+            domainEvents ??= [];
             domainEvents.Add(eventItem);
         }
         public void RemoveDomainEvents(INotification eventItem)
@@ -26,11 +26,11 @@ namespace AdminIdentityService.Domain.SeedWork
         }
         public bool IsTransient()
         {
-            return Id == default(Guid);
+            return Id == default;
         }
         public override bool Equals(object? obj)
         {
-            if (obj == null || !(obj is BaseEntity))
+            if (obj == null || obj is not BaseEntity)
                 return false;
             if (Object.ReferenceEquals(this, obj))
                 return true;
@@ -51,12 +51,14 @@ namespace AdminIdentityService.Domain.SeedWork
                 return _requestedHashCode.Value;
             }
             else
+            {
                 return base.GetHashCode();
+            }
         }
         public static bool operator ==(BaseEntity left, BaseEntity right)
         {
             if (Object.Equals(left, null))
-                return (Object.Equals(right, null)) ? true : false;
+                return Equals(right, null);
             else
                 return left.Equals(right);
         }

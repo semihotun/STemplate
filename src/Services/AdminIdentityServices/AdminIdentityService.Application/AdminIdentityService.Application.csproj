@@ -9,6 +9,9 @@
     <Folder Include="Features\" />
     <Folder Include="Helpers\" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Riok.Mapperly" Version="3.3.0" />
+  </ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\AdminIdentityService.Domain\AdminIdentityService.Domain.csproj" />
 		<ProjectReference Include="..\AdminIdentityService.Insfrastructure\AdminIdentityService.Insfrastructure.csproj" />

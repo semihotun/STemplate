@@ -4,14 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 namespace AdminIdentityService.Persistence.GenericRepository
 {
-    public class Repository<TEntity> : IRepository<TEntity>
+    public class Repository<TEntity>(ICoreDbContext context) : IRepository<TEntity>
           where TEntity : class, IEntity
     {
-        protected readonly ICoreDbContext Context;
-        public Repository(ICoreDbContext context)
-        {
-            Context = context;
-        }
+        protected readonly ICoreDbContext Context = context;
+
         public TEntity? GetById(int Id)
         {
             return Context.Set<TEntity>().Find(Id);

@@ -3,20 +3,12 @@
     /// <summary>
     /// dynamic grid filter models
     /// </summary>
-    public class FilterModel
+    public class FilterModel(string propertyName, string filterType, string filter, bool jsonOrXml, string? andOrOperation)
     {
-        public string PropertyName { get; set; }
-        public string FilterType { get; set; }
-        public string Filter { get; set; }
-        public bool JsonOrXml { get; set; }
-        public string? AndOrOperation { get; set; }
-        public FilterModel(string propertyName, string filterType, string filter, bool jsonOrXml, string? andOrOperation)
-        {
-            PropertyName = propertyName;
-            FilterType = filterType;
-            Filter = filter;
-            JsonOrXml = jsonOrXml;
-            AndOrOperation = andOrOperation;
-        }
+        public string PropertyName { get; set; } = propertyName;
+        public string FilterType { get; set; } = filterType;
+        public string Filter { get; set; } = filter;
+        public bool JsonOrXml { get; set; } = jsonOrXml;
+        public string? AndOrOperation { get; set; } = andOrOperation;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AdminIdentityService.Persistence.Constant;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,12 +18,11 @@ namespace AdminIdentityService.Persistence.Extensions
         public static WebApplicationBuilder MigrateDbContext<TContext>(this WebApplicationBuilder host, Action<TContext, IServiceProvider> seeder)
         where TContext : DbContext
         {
-            var services = host.Services.BuildServiceProvider(); ;
+            var services = host.Services.BuildServiceProvider();
             var logger = services.GetRequiredService<ILogger<TContext>>();
             var context = services.GetRequiredService<TContext>();
             try
             {
-                logger.LogInformation($"Migrating db associated with context {typeof(TContext).Name} ");
                 var rety = Policy.Handle<System.Data.SqlClient.SqlException>()
                     .WaitAndRetry(new TimeSpan[]
                     {
@@ -31,11 +31,11 @@ namespace AdminIdentityService.Persistence.Extensions
                             TimeSpan.FromSeconds(8),
                     });
                 rety.Execute(() => InvokeSeeder(seeder, context, services));
-                logger.LogInformation($"Migrated db with context {typeof(TContext).Name} ");
+                logger.LogInformation(PersistenceConstant.MigratedDbContext + typeof(TContext).Name);
             }
             catch (Exception)
             {
-                logger.LogError($"An error occoured migration the database used on context {typeof(TContext).Name}");
+                logger.LogError(PersistenceConstant.MigrationError + typeof(TContext).Name);
             }
             return host;
         }

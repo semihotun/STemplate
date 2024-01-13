@@ -7,16 +7,11 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.MediatorBehaviour.Valida
 /// </summary>
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
-public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly IEnumerable<IValidator<TRequest>> _validators;
-    public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
-    {
-        //Fluent Validation Remove Casstle Autofac
-        //this.validators = validators.Where(x => x.GetType().FullName != "Castle.Proxies.IValidator`1Proxy");
-        _validators = validators;
-    }
+    private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
+
     public async Task<TResponse> Handle(TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)

@@ -1,7 +1,7 @@
 ﻿namespace DDDTemplateServices.Insfrastructure.Utilities.Grid.PagedList
 {
     /// <summary>
-    /// paged list for grid 
+    /// paged list for grid
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class PagedList<T> : IPagedList<T>
@@ -16,7 +16,7 @@
         public IEnumerable<GridPropertyInfo> PropertyInfos { get; set; }
         public PagedList()
         {
-            Data = new List<T>();
+            Data = [];
             PageIndex = 0;
             PageSize = 0;
             TotalCount = 0;

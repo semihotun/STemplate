@@ -3,9 +3,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace AdminIdentityService.Insfrastructure.Utilities.ApiDoc.Swagger
 {
     /// <summary>
-    /// Add Auth Header 
+    /// Add Auth Header
     /// </summary>
-#nullable disable
+    #nullable disable
     public class AddAuthHeaderOperationFilter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation,
@@ -26,7 +26,7 @@ namespace AdminIdentityService.Insfrastructure.Utilities.ApiDoc.Swagger
             };
             operation.Security = new List<OpenApiSecurityRequirement>
             {
-                new OpenApiSecurityRequirement { [jwtbearerScheme] = new string[] { } }
+                new() { [jwtbearerScheme] = Array.Empty<string>() }
             };
         }
     }

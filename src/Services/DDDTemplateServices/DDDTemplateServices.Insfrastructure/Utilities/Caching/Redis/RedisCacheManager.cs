@@ -10,16 +10,12 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Caching.Redis
     /// <summary>
     /// use redis for cache
     /// </summary>
-    public class RedisCacheManager : ICacheService
+    public class RedisCacheManager(IDistributedCache distributedCache, IConfiguration configuration) : ICacheService
     {
         private static readonly ConcurrentDictionary<string, bool> CacheKeys = new();
-        private readonly IDistributedCache _distributedCache;
-        private readonly IConfiguration _configuration;
-        public RedisCacheManager(IDistributedCache distributedCache, IConfiguration configuration)
-        {
-            _distributedCache = distributedCache;
-            _configuration = configuration;
-        }
+        private readonly IDistributedCache _distributedCache = distributedCache;
+        private readonly IConfiguration _configuration = configuration;
+
         public string GetKey(string region, string methodName, object arg)
         {
             return $"{region}:{methodName}({BuildKey(arg)})";
@@ -93,7 +89,7 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Caching.Redis
                 .Select(y => RemovePatternAsync(y, cancellation));
             await Task.WhenAll(tasks);
         }
-        private string? BuildKey(object arg)
+        private static string? BuildKey(object arg)
         {
             if (arg != null)
             {
@@ -101,12 +97,12 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.Caching.Redis
                 var paramValues = arg.GetType()
                     .GetProperties()
                     .Select(p => p.GetValue(arg)?.ToString() ?? string.Empty);
-                sb.Append(string.Join('_', paramValues));
+                sb.AppendJoin('_', paramValues);
                 return sb.ToString();
             }
             return null;
         }
-        private DistributedCacheEntryOptions GetDistributedCacheEntryOptions(int ttlSecond = 60)
+        private static DistributedCacheEntryOptions GetDistributedCacheEntryOptions(int ttlSecond = 60)
         {
             return new DistributedCacheEntryOptions
             {

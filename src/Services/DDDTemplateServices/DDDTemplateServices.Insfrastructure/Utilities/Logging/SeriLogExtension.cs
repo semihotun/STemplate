@@ -26,7 +26,7 @@ public static class SerilogExtension
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
             .MinimumLevel.Override("System", LogEventLevel.Information)
             .Enrich.FromLogContext()
-            .Enrich.WithProperty("ApplicationName", $"eCommerce")
+            .Enrich.WithProperty("ApplicationName", "eCommerce")
             .Enrich.WithCorrelationId()
             .Enrich.WithExceptionDetails()
             .Filter.ByExcluding(Matching.FromSource("Microsoft.AspNetCore.StaticFiles"))

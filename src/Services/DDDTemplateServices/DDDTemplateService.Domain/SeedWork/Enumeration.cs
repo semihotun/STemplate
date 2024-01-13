@@ -7,8 +7,8 @@ namespace DDDTemplateService.Domain.SeedWork
 #nullable disable
     public abstract class Enumeration : IComparable
     {
-        public string Name { get; private set; }
-        public int Id { get; private set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
         protected Enumeration(int id, string name) => (Id, Name) = (id, name);
         public override string ToString() => Name;
         public static IEnumerable<T> GetAll<T>() where T : Enumeration =>
@@ -44,9 +44,7 @@ namespace DDDTemplateService.Domain.SeedWork
         public static T Parse<T, K>(K value, string description, Func<T, bool> predicate) where T : Enumeration
         {
             var matchingItem = GetAll<T>().FirstOrDefault(predicate);
-            if (matchingItem == null)
-                throw new InvalidOperationException($"'{value}' is not valid {description} in {typeof(T)}");
-            return matchingItem;
+            return (T)matchingItem ?? throw new InvalidOperationException($"'{value}' is not valid {description} in {typeof(T)}");
         }
         public int CompareTo(object other) => Id.CompareTo(((Enumeration)other).Id);
     }

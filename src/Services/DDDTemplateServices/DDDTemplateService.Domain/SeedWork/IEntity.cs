@@ -1,6 +1,4 @@
 ﻿namespace DDDTemplateService.Domain.SeedWork
 {
-    public interface IEntity
-    {
-    }
+    public interface IEntity;
 }

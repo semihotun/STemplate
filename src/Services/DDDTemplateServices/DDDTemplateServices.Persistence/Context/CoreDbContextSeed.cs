@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DDDTemplateServices.Persistence.Constant;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -10,10 +11,10 @@ namespace DDDTemplateServices.Persistence.Context
     /// </summary>
     public class CoreDbContextSeed
     {
-        public async Task SeedAsync(CoreDbContext context,
+        public static async Task SeedAsync(CoreDbContext context,
             ILogger<CoreDbContextSeed> logger)
         {
-            var policy = CreatePolicy(logger, nameof(CoreDbContextSeed));
+            var policy = CreatePolicy(logger);
             await policy.ExecuteAsync(async () =>
             {
                 using (context)
@@ -23,16 +24,13 @@ namespace DDDTemplateServices.Persistence.Context
                 }
             });
         }
-        private AsyncRetryPolicy CreatePolicy(ILogger<CoreDbContextSeed> logger, string prefix, int retries = 3)
+        private static AsyncRetryPolicy CreatePolicy(ILogger<CoreDbContextSeed> logger, int retries = 3)
         {
             return Policy.Handle<SqlException>().
                 WaitAndRetryAsync(
                 retryCount: retries,
-                sleepDurationProvider: retry => System.TimeSpan.FromSeconds(5),
-                onRetry: (exception, timeSpan, retry, ctx) =>
-                {
-                    logger.LogWarning("Exception message");
-                });
+                sleepDurationProvider: _ => System.TimeSpan.FromSeconds(5),
+                onRetry: (exception, timeSpan, retry) => logger.LogWarning(PersistenceConstant.ExceptionMessageTemplate + exception.Message + timeSpan + retry));
         }
     }
 }

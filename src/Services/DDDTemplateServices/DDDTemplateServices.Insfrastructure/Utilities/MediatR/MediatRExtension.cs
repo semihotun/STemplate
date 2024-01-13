@@ -17,10 +17,7 @@ namespace DDDTemplateServices.Insfrastructure.Utilities.MediatR
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
             builderAction?.Invoke(builder);
-            builder.Services.AddMediatR(cfg =>
-            {
-                cfg.RegisterServicesFromAssemblies(assembly);
-            });
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assembly));
             return builder;
         }
     }

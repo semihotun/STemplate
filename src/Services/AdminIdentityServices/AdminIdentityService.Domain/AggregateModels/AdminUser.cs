@@ -8,13 +8,13 @@ namespace AdminIdentityService.Domain.AggregateModels
         byte[] passwordHash,
         bool status) : BaseEntity, IAggregateRoot
     {
-        public string FirstName { get; private set; } = firstName;
-        public string LastName { get; private set; } = lastName;
-        public string Email { get; private set; } = email;
-        public byte[] PasswordSalt { get; private set; } = passwordSalt;
-        public byte[] PasswordHash { get; private set; } = passwordHash;
-        public bool Status { get; private set; } = status;
-        public ICollection<AdminUserRole> AdminUserRoles { get; private set; } = new List<AdminUserRole>();
+        public string FirstName { get; } = firstName;
+        public string LastName { get; } = lastName;
+        public string Email { get; } = email;
+        public byte[] PasswordSalt { get; } = passwordSalt;
+        public byte[] PasswordHash { get; } = passwordHash;
+        public bool Status { get; } = status;
+        public ICollection<AdminUserRole> AdminUserRoles { get; } = new List<AdminUserRole>();
         public void AddAdminUserRole(Guid roleId)
         {
             var orderItem = new AdminUserRole(base.Id, roleId);

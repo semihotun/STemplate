@@ -17,7 +17,7 @@ namespace AdminIdentityService.Application.Handlers.AdminUsers.Queries.GetUserDt
         public async Task<DataResult<GetUserDto>> Handle(GetUserDtoQuery request, CancellationToken cancellationToken)
         {
             var data = from us in _context.Query<AdminUser>()
-                       where us.Status == true & us.Email == request.Email
+                       where us.Status && us.Email == request.Email
                        let adminUserRoles = (from usr in _context.Query<AdminUserRole>().DefaultIfEmpty()
                                              where usr.AdminUserId == us.Id
                                              join ar in _context.Query<AdminRole>() on usr.AdminRoleId equals ar.Id
@@ -37,7 +37,7 @@ namespace AdminIdentityService.Application.Handlers.AdminUsers.Queries.GetUserDt
                            Status = us.Status,
                            AdminUserRoles = adminUserRoles,
                        };
-            var result = await data.FirstOrDefaultAsync();
+            var result = await data.FirstOrDefaultAsync(cancellationToken);
             if (result == null)
             {
                 return new ErrorDataResult<GetUserDto>(Messages.UserNotFound);

@@ -25,7 +25,7 @@ namespace AdminIdentityService.Application.Handlers.AdminUsers.Queries.LoginUser
               {
                   var user = await _mediator.Send(new GetUserDtoQuery(request.Email));
                   if (!user.Success) return new ErrorDataResult<AccessToken>(Messages.UserNotFound);
-                  if (!HashingHelper.VerifyPasswordHash(request.Password, user.Data.PasswordSalt, user.Data.PasswordHash))
+                  if (!HashingHelper.VerifyPasswordHash(request.Password, user.Data!.PasswordSalt, user.Data.PasswordHash))
                   {
                       return new ErrorDataResult<AccessToken>(Messages.PasswordError);
                   }

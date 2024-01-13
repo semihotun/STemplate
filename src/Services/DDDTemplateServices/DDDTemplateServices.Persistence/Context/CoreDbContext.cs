@@ -7,14 +7,10 @@ namespace DDDTemplateServices.Persistence.Context
     /// <summary>
     /// Custom db context
     /// </summary>
-    public class CoreDbContext : DbContext, ICoreDbContext
+    public class CoreDbContext(DbContextOptions<CoreDbContext> options, IMediator? mediator) : DbContext(options), ICoreDbContext
     {
         public const string DEFAULT_SCHEMA = "CoreDbContextSchema";
-        public CoreDbContext(DbContextOptions<CoreDbContext> options, IMediator? mediator) : base(options)
-        {
-            _mediator = mediator;
-        }
-        private IMediator? _mediator;
+        private readonly IMediator? _mediator = mediator;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var assm = Assembly.GetExecutingAssembly();
@@ -34,7 +30,7 @@ namespace DDDTemplateServices.Persistence.Context
             {
                 await strategy.ExecuteAsync(async () =>
                 {
-                    using (var tx = Context.Database.BeginTransaction())
+                    await using (var tx = Context.Database.BeginTransaction())
                     {
                         try
                         {
@@ -52,12 +48,9 @@ namespace DDDTemplateServices.Persistence.Context
                     successAction?.Invoke();
                 });
             }
-            catch (Exception ex)
+            catch (Exception ex) when (exceptionAction != null)
             {
-                if (exceptionAction == null)
-                    throw;
-                else
-                    exceptionAction(ex);
+                exceptionAction(ex);
             }
             return result;
         }

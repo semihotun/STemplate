@@ -11,7 +11,7 @@ namespace Web.ApiGateway.Extension
         /// <returns></returns>
         public static WebApplicationBuilder AddOcelotSetting(this WebApplicationBuilder builder)
         {
-            builder.Configuration.AddJsonFile($"Configurations/ocelot.json", optional: false, reloadOnChange: true);
+            builder.Configuration.AddJsonFile("Configurations/ocelot.json", optional: false, reloadOnChange: true);
             builder.Services.AddOcelot(builder.Configuration).AddPolly();
             return builder;
         }

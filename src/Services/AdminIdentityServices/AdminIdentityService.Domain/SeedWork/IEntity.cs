@@ -1,6 +1,4 @@
 ﻿namespace AdminIdentityService.Domain.SeedWork
 {
-    public interface IEntity
-    {
-    }
+    public interface IEntity;
 }

@@ -7,9 +7,9 @@
     {
         protected static bool EqualOperator(ValueObject left, ValueObject right)
         {
-            if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
+            if (left is null ^ right is null)
                 return false;
-            return ReferenceEquals(left, null) || left.Equals(right);
+            return left?.Equals(right) != false;
         }
         protected static bool NotEqualOperator(ValueObject left, ValueObject right)
         {
@@ -28,7 +28,7 @@
         public override int GetHashCode()
         {
             return GetEqualityComponents()
-                .Select(x => x != null ? x.GetHashCode() : 0)
+                .Select(x => (x?.GetHashCode()) ?? 0)
                 .Aggregate((x, y) => x ^ y);
         }
     }

@@ -42,10 +42,7 @@ namespace AdminIdentityService.Insfrastructure.Utilities.ServiceBus
                 e.ExchangeType = ExchangeType.Direct;
                 e.Exclude = true;
             });
-            cfg.Send<T>(e =>
-            {
-                e.UseRoutingKeyFormatter(context => context.Message.GetType().Name.Underscore());
-            });
+            cfg.Send<T>(e => e.UseRoutingKeyFormatter(context => context.Message.GetType().Name.Underscore()));
             return cfg;
         }
     }
