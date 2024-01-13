@@ -18,7 +18,7 @@ namespace AdminIdentityService.Persistence.Extensions
             var connectionString = configuration[regionName];
             services.AddEntityFrameworkSqlServer().AddDbContext<CoreDbContext>(option =>
             {
-                option.UseSqlServer(configuration["ConnectionString"],
+                option.UseSqlServer(connectionString,
                 sqlServerOptionsAction: sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(
