@@ -7,7 +7,7 @@
     <ProjectGuid>a4f9067c-342d-489c-b008-b49b7e6f9ffb</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>mailservice</DockerServiceName>
+    <DockerServiceName>webapigateway</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

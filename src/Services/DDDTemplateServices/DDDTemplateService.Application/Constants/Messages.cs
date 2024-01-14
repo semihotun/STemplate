@@ -1,8 +1,11 @@
-﻿namespace AdminIdentityService.Application.Constants
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DDDTemplateService.Application.Constants
 {
-    /// <summary>
-    /// Maybe there will language support for messages in the future.
-    /// </summary>
     public static class Messages
     {
         public static string Added => "Eklendi";

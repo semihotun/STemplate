@@ -6,6 +6,7 @@ using AdminIdentityService.Insfrastructure.Utilities.Security.Hashing;
 using AdminIdentityService.Persistence.Context;
 using AdminIdentityService.Persistence.GenericRepository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 namespace AdminIdentityService.Application.Handlers.AdminUsers.Commands.RegisterUser
 {
     public record RegisterUserCommand(string Email, string Password, string FirstName, string LastName) : IRequest<Result>

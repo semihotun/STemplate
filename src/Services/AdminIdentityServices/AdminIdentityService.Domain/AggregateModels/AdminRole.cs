@@ -1,9 +1,13 @@
 ﻿using AdminIdentityService.Domain.SeedWork;
 namespace AdminIdentityService.Domain.AggregateModels
 {
-    public class AdminRole(string role) : BaseEntity
+    public class AdminRole : BaseEntity
     {
-        public string Role { get; init; } = role;
-        public ICollection<AdminUserRole> AdminUserRoles { get; init; } = [];
+        public AdminRole(string role)
+        {
+            Role = role;
+        }
+        public string Role { get; private set; }
+        public ICollection<AdminUserRole> AdminUserRoles { get; private set; } = [];
     }
 }

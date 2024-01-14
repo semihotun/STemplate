@@ -7,6 +7,7 @@ namespace DDDTemplateService.Domain.SeedWork
     public abstract class BaseEntity : IEntity
     {
         public virtual Guid Id { get; protected set; }
+        public bool Deleted { get; set; }
         public DateTime CreateDate { get; set; }
         int? _requestedHashCode;
         private List<INotification>? domainEvents;

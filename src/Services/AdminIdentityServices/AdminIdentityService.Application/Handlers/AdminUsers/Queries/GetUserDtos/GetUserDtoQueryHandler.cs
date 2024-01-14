@@ -5,6 +5,7 @@ using AdminIdentityService.Insfrastructure.Utilities.Identity.Claims;
 using AdminIdentityService.Persistence.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using AdminUserRole = AdminIdentityService.Domain.AggregateModels.AdminUserRole;
 namespace AdminIdentityService.Application.Handlers.AdminUsers.Queries.GetUserDtos
 {
     public record GetUserDtoQueryHandler : IRequestHandler<GetUserDtoQuery, DataResult<GetUserDto>>
