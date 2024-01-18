@@ -13,7 +13,7 @@ namespace AdminIdentityService.Persistence.GenericRepository
         void RemoveRange(List<T> entity);
         T? GetById(int Id);
         IEnumerable<T> GetList(Expression<Func<T, bool>>? expression = null);
-        Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>>? expression = null);
+        Task<IEnumerable<T>> ToListAsync(Expression<Func<T, bool>>? expression = null);
         T? Get(Expression<Func<T, bool>> expression);
         Task<T?> GetAsync(Expression<Func<T, bool>> expression);
         int GetCount(Expression<Func<T, bool>>? expression = null);

@@ -55,7 +55,7 @@ namespace DDDTemplateServices.Persistence.GenericRepository
         {
             return expression == null ? Context.Set<TEntity>().AsNoTracking() : Context.Set<TEntity>().Where(expression).AsNoTracking();
         }
-        public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>>? expression = null)
+        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>>? expression = null)
         {
             return expression == null ? await Context.Set<TEntity>().ToListAsync() :
                  await Context.Set<TEntity>().Where(expression).ToListAsync();
