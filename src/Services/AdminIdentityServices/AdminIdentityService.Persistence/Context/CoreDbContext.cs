@@ -12,9 +12,9 @@ namespace AdminIdentityService.Persistence.Context
     {
         public const string DEFAULT_SCHEMA = "CoreDbContextSchema";
 
-        public DbSet<AdminUser> AdminUser { get; set; }
-        public DbSet<AdminRole> AdminRole { get; set; }
-        public DbSet<AdminUserRole> AdminUserRole { get; set; }
+        private DbSet<AdminUser> AdminUser { get; set; }
+        private DbSet<AdminRole> AdminRole { get; set; }
+        private DbSet<AdminUserRole> AdminUserRole { get; set; }
         private IMediator? Mediator { get; } = mediator;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
