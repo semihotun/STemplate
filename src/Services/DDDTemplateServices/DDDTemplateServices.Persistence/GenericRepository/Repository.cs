@@ -9,9 +9,13 @@ namespace DDDTemplateServices.Persistence.GenericRepository
     {
         protected readonly ICoreDbContext Context = context;
 
-        public TEntity? GetById(int Id)
+        public TEntity? GetById(Guid Id)
         {
             return Context.Set<TEntity>().Find(Id);
+        }
+        public async Task<TEntity?> GetByIdAsync(Guid Id)
+        {
+            return await Context.Set<TEntity>().FindAsync(Id);
         }
         public TEntity Add(TEntity entity)
         {
@@ -51,11 +55,11 @@ namespace DDDTemplateServices.Persistence.GenericRepository
         {
             return await Context.Set<TEntity>().FirstOrDefaultAsync(expression);
         }
-        public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>>? expression = null)
+        public IEnumerable<TEntity> GetEnumerable(Expression<Func<TEntity, bool>>? expression = null)
         {
             return expression == null ? Context.Set<TEntity>().AsNoTracking() : Context.Set<TEntity>().Where(expression).AsNoTracking();
         }
-        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>>? expression = null)
+        public async Task<IList<TEntity>> ToListAsync(Expression<Func<TEntity, bool>>? expression = null)
         {
             return expression == null ? await Context.Set<TEntity>().ToListAsync() :
                  await Context.Set<TEntity>().Where(expression).ToListAsync();
