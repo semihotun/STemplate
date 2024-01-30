@@ -1,5 +1,6 @@
 ﻿using AdminIdentityService.Application.Assemblies;
 using AdminIdentityService.Application.Extension;
+using AdminIdentityService.Insfrastructure.Utilities.ApiDoc.Swagger;
 using AdminIdentityService.Insfrastructure.Utilities.Caching.Redis;
 using AdminIdentityService.Insfrastructure.Utilities.Cors;
 using AdminIdentityService.Insfrastructure.Utilities.Identity;
@@ -18,9 +19,8 @@ namespace AdminIdentityService.Extensions
         public static void AddStartupServices(this WebApplicationBuilder builder)
         {
             builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
             builder.Services.AddHttpContextAccessor();
+            builder.AddCustomSwaggerGen();
             builder.AddCors();
             builder.Services.AddMvc();
             //Log-Cache-Mediatr-FluentValidation-Mass transit

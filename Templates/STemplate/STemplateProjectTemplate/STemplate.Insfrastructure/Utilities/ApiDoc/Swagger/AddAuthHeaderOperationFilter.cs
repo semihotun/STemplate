@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 namespace STemplate.Insfrastructure.Utilities.ApiDoc.Swagger
 {
@@ -11,10 +12,11 @@ namespace STemplate.Insfrastructure.Utilities.ApiDoc.Swagger
         public void Apply(OpenApiOperation operation,
             OperationFilterContext context)
         {
-            var isAuthorized = context.MethodInfo
-                .GetCustomAttributes(true).Any(x => x.GetType().Name == "AuthorizeControl") ||
-                context.MethodInfo.DeclaringType.GetCustomAttributes(true).Any(x => x.GetType().Name == "AuthorizeControl");
-            if (!isAuthorized)
+            var hasAllowAnonymous = context.MethodInfo
+                     .GetCustomAttributes(true).Any(x => x.GetType() == typeof(AllowAnonymousAttribute)) ||
+                     context.MethodInfo.DeclaringType.GetCustomAttributes(true).Any(x => x.GetType() == typeof(AllowAnonymousAttribute));
+
+            if (hasAllowAnonymous)
             {
                 return;
             }

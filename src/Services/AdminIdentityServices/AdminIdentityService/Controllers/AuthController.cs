@@ -9,7 +9,7 @@ namespace AdminIdentityService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IMediator mediator): ControllerBase
+    public class AuthController(IMediator mediator) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;
         /// <summary>
@@ -44,6 +44,34 @@ namespace AdminIdentityService.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand createUser)
+        {
+            var result = await _mediator.Send(createUser);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
+        [HttpPost("ss")]
+        public async Task<IActionResult> Ss([FromBody] RegisterUserCommand createUser)
+        {
+            var result = await _mediator.Send(createUser);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
+        [HttpPost("Dd")]
+        public async Task<IActionResult> Dd([FromBody] RegisterUserCommand createUser)
         {
             var result = await _mediator.Send(createUser);
             if (result.Success)

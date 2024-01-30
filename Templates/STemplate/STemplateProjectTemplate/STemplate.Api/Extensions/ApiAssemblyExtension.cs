@@ -11,10 +11,7 @@ namespace STemplate.Extensions
             var application = ApplicationAssemblyExtension.GetApplicationAssembly();
             var domain = DomainAssemblyExtension.GetDomainAssembly();
             var insfrastructure = InsfrastructureAssemblyExtension.GetInsfrastructureAssembly();
-            return new Assembly[]
-            {
-               application,domain,insfrastructure
-            };
+            return [application, domain, insfrastructure];
         }
     }
 }

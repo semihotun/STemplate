@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using STemplate.Application.Assemblies;
 using STemplate.Application.Extension;
+using STemplate.Insfrastructure.Utilities.ApiDoc.Swagger;
 using STemplate.Insfrastructure.Utilities.Caching.Redis;
 using STemplate.Insfrastructure.Utilities.Cors;
 using STemplate.Insfrastructure.Utilities.Identity;
@@ -17,7 +18,7 @@ namespace STemplate.Extensions
         public static void AddStartupServices(this WebApplicationBuilder builder)
         {
             builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
+            builder.AddCustomSwaggerGen();
             builder.Services.AddSwaggerGen();
             builder.Services.AddHttpContextAccessor();
             builder.AddCors();

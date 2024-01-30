@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 namespace AdminIdentityService.Insfrastructure.Utilities.ApiDoc.Swagger
 {
@@ -7,18 +8,16 @@ namespace AdminIdentityService.Insfrastructure.Utilities.ApiDoc.Swagger
     /// </summary>
     public static class SwaggerServiceCollectionExtension
     {
-        public static void AddCustomSwaggerGen(this IServiceCollection services,
-            string Title,
-            string Description)
+        public static void AddCustomSwaggerGen(this WebApplicationBuilder builder)
         {
-            services.AddSwaggerGen(c =>
+            builder.Services.AddSwaggerGen(c =>
             {
                 c.CustomSchemaIds(type => type.ToString());
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = Title,
-                    Description = Description,
+                    Title = builder.Configuration["RegionName"],
+                    Description = builder.Configuration["RegionName"] + "Web API Project",
                 });
                 c.OperationFilter<AddAuthHeaderOperationFilter>();
                 c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
