@@ -10,7 +10,7 @@ Healthcheck ------> Prometheus<br>
 Metrics ----------> Prometheus,Grafana<br>
 
 If you want, you can use this template for your services <br>
-https://github.com/semihotun/eCommerceProject/blob/main/Templates/DDDTemplate.zip
+https://github.com/semihotun/eCommerceProject/tree/main/Templates/ProjectTemplateSetup)https://github.com/semihotun/eCommerceProject/tree/main/Templates/ProjectTemplateSetup
 
 
 
