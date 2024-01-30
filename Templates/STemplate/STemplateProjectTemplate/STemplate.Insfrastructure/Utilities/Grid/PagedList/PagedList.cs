@@ -1,5 +1,4 @@
-﻿using DDDTemplateService.Insfrastructure.Utilities.Grid.PagedList;
-namespace AdminIdentityService.Insfrastructure.Utilities.Grid.PagedList
+﻿namespace STemplate.Insfrastructure.Utilities.Grid.PagedList
 {
     /// <summary>
     /// paged list for grid

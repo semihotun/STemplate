@@ -1,4 +1,4 @@
-﻿namespace DDDTemplateService.Insfrastructure.Utilities.Grid.PagedList
+﻿namespace STemplate.Insfrastructure.Utilities.Grid.PagedList
 {
     /// <summary>
     /// Grid Property

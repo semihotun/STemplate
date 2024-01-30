@@ -1,6 +1,5 @@
-﻿using DDDTemplateService.Insfrastructure.Utilities.Grid.PagedList;
-using Microsoft.EntityFrameworkCore;
-namespace AdminIdentityService.Insfrastructure.Utilities.Grid.PagedList
+﻿using Microsoft.EntityFrameworkCore;
+namespace STemplate.Insfrastructure.Utilities.Grid.PagedList
 {
     public static class PagedListExtension
     {
@@ -35,12 +34,11 @@ namespace AdminIdentityService.Insfrastructure.Utilities.Grid.PagedList
             var sourceType = source.ElementType;
             result.PropertyInfos = sourceType.GetProperties().Select(x =>
             {
-                var data = new GridPropertyInfo
+                return new GridPropertyInfo
                 {
                     PropertyType = x.PropertyType.Name,
                     PropertyName = char.ToLowerInvariant(x.Name[0]) + x.Name[1..]
                 };
-                return data;
             });
             return result;
         }
@@ -62,12 +60,11 @@ namespace AdminIdentityService.Insfrastructure.Utilities.Grid.PagedList
                 propertyInfoList = selector.Method.ReturnType.GetProperties()
                     .Select(x =>
                     {
-                        var data = new GridPropertyInfo
+                        return new GridPropertyInfo
                         {
                             PropertyType = x.PropertyType.Name,
                             PropertyName = char.ToLowerInvariant(x.Name[0]) + x.Name[1..]
                         };
-                        return data;
                     });
             }
             else
