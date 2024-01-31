@@ -3,7 +3,7 @@ using Generator.Business.ServiceCollection;
 using Generator.Business.VsStore;
 using Generator.Consts;
 
-namespace GenerateHandler.Commands;
+namespace Generator.Commands;
 
 /// <summary>
 /// Generator Setting Command
