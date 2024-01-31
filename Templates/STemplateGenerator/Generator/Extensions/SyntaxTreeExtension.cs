@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Generator.Extensions;
@@ -76,5 +77,20 @@ internal static class SyntaxTreeExtension
             }
         }
         return root;
+    }
+    /// <summary>
+    /// Get all using
+    /// </summary>
+    /// <param name="tree"></param>
+    /// <param name="namespaceString"></param>
+    /// <returns></returns>
+    internal static List<string> GetAllUsing(this SyntaxTree tree, string namespaceString)
+    {
+        var root = tree.GetCompilationUnitRoot();
+        if (IsGetTargetNamespace(root, namespaceString, out var namespaceSyntax))
+        {
+            return (root.Usings.AddRange(namespaceSyntax.Usings)).Select(x => x.UsingKeyword.Text).ToList();
+        }
+        return null;
     }
 }

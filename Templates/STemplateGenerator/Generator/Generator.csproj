@@ -48,6 +48,20 @@
     <Compile Include="Business\Mapper\CreateAddMapperlyMapperManager.cs" />
     <Compile Include="Business\Mapper\ICreateAddMapperlyMapperManager.cs" />
     <Compile Include="Business\Mapper\Models\CreateAddMethodRequest.cs" />
+    <Compile Include="Business\MediatR\Template\IMediatrTemplate.cs" />
+    <Compile Include="Business\MediatR\Template\MediatrTemplate.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Command\GetCommandConstructorStringRequestModel.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Command\GetCommandHandlerPrimaryConstructorStringRequestModel.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Command\GetCommandRequestHandlerUsingRequestModel.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Command\GetCommandRequestUsingRequestModel.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Dto\GetDtoRequestHandlerUsing.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Dto\GetDtoRequestUsingRequestModel.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Base\GetRequestModel.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Base\IsAggregateUsingRequestModel.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Query\GetQueryConstructorStringRequestModel.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Query\GetQueryHandlerPrimaryConstructorStringRequestModel.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Query\GetQueryRequestHandlerUsingRequestModel.cs" />
+    <Compile Include="Business\MediatR\Template\Models\Query\GetQueryRequestUsingRequestModel.cs" />
     <Compile Include="Business\ServiceCollection\CustomServiceCollection.cs" />
     <Compile Include="Business\VsStore\IVsWritableSettingsStoreManager.cs" />
     <Compile Include="Business\VsStore\RequestModel\GetMySettingRequestModel.cs" />
@@ -59,6 +73,8 @@
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\SyntaxTreeExtension.cs" />
     <Compile Include="Helpers\FolderHelper.cs" />
+    <Compile Include="Models\OperationEnum.cs" />
+    <Compile Include="Models\SyntaxPropertyInfo.cs" />
     <Compile Include="Models\VsWritableSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GeneratorPackage.cs" />
@@ -123,7 +139,6 @@
     <Folder Include="Business\MediatR\Delete\" />
     <Folder Include="Business\MediatR\GetById\" />
     <Folder Include="Business\MediatR\Grid\" />
-    <Folder Include="Business\MediatR\Template\" />
     <Folder Include="Business\MediatR\Update\" />
     <Folder Include="IncludeToolFormModels\" />
     <Folder Include="ManuelMapper\" />

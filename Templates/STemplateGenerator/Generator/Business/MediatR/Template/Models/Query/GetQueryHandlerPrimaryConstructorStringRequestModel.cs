@@ -1,0 +1,2 @@
+﻿namespace Generator.Business.MediatR.Template.Models.Query;
+internal record GetQueryHandlerPrimaryConstructorParametersRequestModel(string RepositoryClassName);
