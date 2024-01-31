@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<Extern href="stdidcmd.h" />
+	<Extern href="vsshlids.h" />
+	<Include href="KnownImageIds.vsct" />
+	<Include href="VSGlobals.vsct" />
+	<Commands package="Generator">
+		<Groups>
+			<Group guid="Generator" id="GeneratorItemNodeGroup" priority="0x0600">
+				<Parent guid="Generator" id="GeneratorItemNodeSubMenu" />
+			</Group>
+			<Group guid="Generator" id="GeneratorSettingNodeGroup" priority="0x0600">
+				<Parent guid="Generator" id="GeneratorSettingSubMenu" />
+			</Group>
+		</Groups>
+		<Menus>
+			<Menu guid="Generator" id="GeneratorItemNodeSubMenu" type="Menu" priority="0x9999">
+				<Parent guid="VSMainMenu" id="ItemNode.OpenGroup" />
+				<Strings>
+					<ButtonText>Generator Menu</ButtonText>
+				</Strings>
+			</Menu>
+			<Menu guid="Generator" id="GeneratorSettingSubMenu" type="Menu" priority="0x9999">
+				<Parent guid="VSMainMenu" id="Extensions.DefaultGroup" />
+				<Strings>
+					<ButtonText>Generator Setting</ButtonText>
+				</Strings>
+			</Menu>
+		</Menus>
+		<Buttons>
+			<Button guid="Generator" id="GeneratorSettingsCommand" type="Button" priority="0x01"  >
+				<Parent guid="Generator" id="GeneratorSettingNodeGroup" />
+				<Icon guid="ImageCatalogGuid" id="CheckBoxChecked" />
+				<CommandFlag>TogglePatternAvailable</CommandFlag>
+				<Strings>
+					<ButtonText>Different File</ButtonText>
+					<LocCanonicalName>.ContextMenu.GeneratorSettingsCommand</LocCanonicalName>
+				</Strings>
+			</Button>
+			<Button guid="Generator" id="ClassCreateVoidCommand" type="Button" priority="0x01"  >
+				<Parent guid="Generator" id="GeneratorItemNodeGroup" />
+				<Icon guid="ImageCatalogGuid" id="GenerateFile" />
+				<CommandFlag>IconIsMoniker</CommandFlag>
+				<Strings>
+					<ButtonText>Create Voids (Aggregate Class)</ButtonText>
+					<LocCanonicalName>.ContextMenu.ClassCreateVoidCommand</LocCanonicalName>
+				</Strings>
+			</Button>
+			<Button guid="Generator" id="MediatRCreateAddHandlerCommand" type="Button" priority="0x02">
+				<Parent guid="Generator" id="GeneratorItemNodeGroup" />
+				<Icon guid="ImageCatalogGuid" id="GenerateFile" />
+				<CommandFlag>IconIsMoniker</CommandFlag>
+				<Strings>
+					<ButtonText>Add Handlers</ButtonText>
+					<LocCanonicalName>.ContextMenu.MediatRCreateAddHandlerCommand</LocCanonicalName>
+				</Strings>
+			</Button>
+			<Button guid="Generator" id="MediatRCreateDeleteHandlerCommand" type="Button" priority="0x03">
+				<Parent guid="Generator" id="GeneratorItemNodeGroup" />
+				<Icon guid="ImageCatalogGuid" id="GenerateFile" />
+				<CommandFlag>IconIsMoniker</CommandFlag>
+				<Strings>
+					<ButtonText>Delete Handlers</ButtonText>
+					<LocCanonicalName>.ContextMenu.MediatRCreateDeleteHandlerCommand</LocCanonicalName>
+				</Strings>
+			</Button>
+			<Button guid="Generator" id="MediatRCreateUpdateHandlerCommand" type="Button" priority="0x04">
+				<Parent guid="Generator" id="GeneratorItemNodeGroup" />
+				<Icon guid="ImageCatalogGuid" id="GenerateFile" />
+				<CommandFlag>IconIsMoniker</CommandFlag>
+				<Strings>
+					<ButtonText>Update Handlers</ButtonText>
+					<LocCanonicalName>.ContextMenu.MediatRCreateUpdateHandlerCommand</LocCanonicalName>
+				</Strings>
+			</Button>
+			<Button guid="Generator" id="MediatRCreateGetByIdHandlerCommand" type="Button" priority="0x05">
+				<Parent guid="Generator" id="GeneratorItemNodeGroup" />
+				<Icon guid="ImageCatalogGuid" id="GenerateFile" />
+				<CommandFlag>IconIsMoniker</CommandFlag>
+				<Strings>
+					<ButtonText>GetById Handlers</ButtonText>
+					<LocCanonicalName>.ContextMenu.MediatRCreateGetByIdHandlerCommand</LocCanonicalName>
+				</Strings>
+			</Button>
+			<Button guid="Generator" id="MediatRCreateCQRSCommand" type="Button" priority="0x06">
+				<Parent guid="Generator" id="GeneratorItemNodeGroup" />
+				<Icon guid="ImageCatalogGuid" id="GenerateFile" />
+				<CommandFlag>IconIsMoniker</CommandFlag>
+				<Strings>
+					<ButtonText>Command And Query</ButtonText>
+					<LocCanonicalName>.ContextMenu.MediatRCreateCQRSCommand</LocCanonicalName>
+				</Strings>
+			</Button>
+			<Button guid="Generator" id="MediatRCreateGridHandlerCommand" type="Button" priority="0x07">
+				<Parent guid="Generator" id="GeneratorItemNodeGroup" />
+				<Icon guid="ImageCatalogGuid" id="GenerateFile" />
+				<CommandFlag>IconIsMoniker</CommandFlag>
+				<Strings>
+					<ButtonText>Generate Datatable</ButtonText>
+					<LocCanonicalName>.ContextMenu.MediatRCreateGridHandlerCommand</LocCanonicalName>
+				</Strings>
+			</Button>
+		</Buttons>
+	</Commands>
+	<Symbols>
+		<GuidSymbol name="Generator" value="{76154e61-6153-49ca-bfcd-f3f884812e3d}">
+			<IDSymbol name="MyMenuGroup" value="0x0001" />
+			<IDSymbol name="GeneratorItemNodeGroup" value="0x0002" />
+			<IDSymbol name="MediatRCreateAddHandlerCommand" value="0x0100" />
+			<IDSymbol name="GeneratorItemNodeSubMenu" value="0x011100" />
+			<IDSymbol name="MediatRCreateDeleteHandlerCommand" value="0x0010" />
+			<IDSymbol name="MediatRCreateUpdateHandlerCommand" value="0x0210" />
+			<IDSymbol name="MediatRCreateGridHandlerCommand" value="0x0202" />
+			<IDSymbol name="MediatRCreateGetByIdHandlerCommand" value="0x0201" />
+			<IDSymbol name="GeneratorSettingNodeGroup" value="0x0101" />
+			<IDSymbol name="GeneratorSettingSubMenu" value="0x0102" />
+			<IDSymbol name="GeneratorSettingsCommand" value="0x0103" />
+			<IDSymbol name="MediatRCreateCQRSCommand" value="0x0111" />
+			<IDSymbol name="ClassCreateVoidCommand" value="0x01112" />
+		</GuidSymbol>
+	</Symbols>
+</CommandTable>
