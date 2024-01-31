@@ -1,7 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Generator.Const;
+using Generator.Models;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Generator.Extensions;
@@ -92,5 +95,67 @@ internal static class SyntaxTreeExtension
             return (root.Usings.AddRange(namespaceSyntax.Usings)).Select(x => x.UsingKeyword.Text).ToList();
         }
         return null;
+    }
+    /// <summary>
+    /// Get Class Properties With File Path
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
+    internal static bool IsGetClassPropertiesWithFilePath(string filePath, out IEnumerable<PropertyDeclarationSyntax> classProperties)
+    {
+        classProperties = filePath.GetSyntaxTree().GetClassProperties(Path.GetFileNameWithoutExtension(filePath));
+        return classProperties is not null;
+    }
+    /// <summary>
+    /// Get SyntaxTree
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
+    internal static SyntaxTree GetSyntaxTree(this string filePath)
+    {
+        return CSharpSyntaxTree.ParseText(File.ReadAllText(filePath));
+    }
+    /// <summary>
+    /// Do you want to Record add code //|| m is RecordDeclarationSyntax recordDeclaration && recordDeclaration.Identifier.ValueText == className
+    /// </summary>
+    /// <param name="syntaxTree"></param>
+    /// <param name="className"></param>
+    /// <returns></returns>
+    internal static IEnumerable<PropertyDeclarationSyntax> GetClassProperties(this SyntaxTree syntaxTree, string className)
+    {
+        var classOrRecordDeclaration = syntaxTree.GetRoot().DescendantNodes().OfType<MemberDeclarationSyntax>()
+            .FirstOrDefault(m =>
+                m is ClassDeclarationSyntax classDeclaration && classDeclaration.Identifier.ValueText == className
+            );
+        if (classOrRecordDeclaration is not ClassDeclarationSyntax classDeclaration)
+        {
+            VS.MessageBox.ShowWarning(Message.IsNotDescribeClass);
+            return null;
+        }
+        return classDeclaration.Members.OfType<PropertyDeclarationSyntax>();
+    }
+    /// <summary>
+    ///  Generate Property Source Code
+    /// </summary>
+    /// <param name="properties"></param>
+    /// <returns></returns>
+    internal static List<SyntaxPropertyInfo> CreatePropertiesSourceCode(this IEnumerable<PropertyDeclarationSyntax> properties)
+    {
+        var propertiesString = new List<SyntaxPropertyInfo>();
+        foreach (var property in properties)
+        {
+            propertiesString.Add(new SyntaxPropertyInfo(property.Type, property.Identifier.ValueText));
+        }
+        return propertiesString;
+    }
+    /// <summary>
+    /// Add Guid Id and propertiesSourceCode to propertystring
+    /// </summary>
+    /// <param name="propertiesSourceCode"></param>
+    /// <returns></returns>
+    public static List<SyntaxPropertyInfo> AddIdSyntaxPropertyInfo(this List<SyntaxPropertyInfo> propertiesSourceCode)
+    {
+        propertiesSourceCode.Add(new SyntaxPropertyInfo(SyntaxFactory.ParseTypeName("System.Guid"), "Id"));
+        return propertiesSourceCode;
     }
 }

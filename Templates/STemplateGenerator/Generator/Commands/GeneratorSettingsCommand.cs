@@ -1,5 +1,4 @@
-﻿using Generator;
-using Generator.Business.ServiceCollection;
+﻿using Generator.Business.ServiceCollection;
 using Generator.Business.VsStore;
 using Generator.Consts;
 
