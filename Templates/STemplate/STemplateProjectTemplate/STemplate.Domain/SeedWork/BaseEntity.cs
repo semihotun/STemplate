@@ -56,14 +56,14 @@ namespace STemplate.Domain.SeedWork
                 return base.GetHashCode();
             }
         }
-        public static bool operator ==(BaseEntity left, BaseEntity right)
+        public static bool operator == (BaseEntity? left, BaseEntity? right)
         {
             if (Object.Equals(left, null))
                 return Equals(right, null);
             else
                 return left.Equals(right);
         }
-        public static bool operator !=(BaseEntity left, BaseEntity right)
+        public static bool operator != (BaseEntity? left, BaseEntity? right)
         {
             return !(left == right);
         }
