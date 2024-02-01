@@ -2,6 +2,7 @@
 using Generator.Business.MediatR.Create;
 using Generator.Business.MediatR.Delete;
 using Generator.Business.MediatR.Template;
+using Generator.Business.MediatR.Update;
 using Generator.Business.VsStore;
 namespace Generator.Business.ServiceCollection;
 
@@ -15,4 +16,5 @@ internal static class CustomServiceCollection
     public static ICreateAddMapperlyMapperManager CreateAddMapperlyMapperManager() => new CreateAddMapperlyMapperManager();
     public static IVsWritableSettingsStoreManager VsWritableSettingsStoreManager() => new VsWritableSettingsStoreManager();
     public static IMediatrTemplate MediatrTemplate() => new MediatrTemplate();
+    public static IMediatRCreateUpdateMethodManager MediatRCreateUpdateMethodManager() => new MediatRCreateUpdateMethodManager();
 }

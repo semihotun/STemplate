@@ -68,6 +68,8 @@
     <Compile Include="Business\MediatR\Template\Models\Query\GetQueryHandlerPrimaryConstructorStringRequestModel.cs" />
     <Compile Include="Business\MediatR\Template\Models\Query\GetQueryRequestHandlerUsingRequestModel.cs" />
     <Compile Include="Business\MediatR\Template\Models\Query\GetQueryRequestUsingRequestModel.cs" />
+    <Compile Include="Business\MediatR\Update\IMediatRCreateUpdateMethodManager.cs" />
+    <Compile Include="Business\MediatR\Update\MediatRCreateUpdateMethodManager.cs" />
     <Compile Include="Business\ServiceCollection\CustomServiceCollection.cs" />
     <Compile Include="Business\VsStore\IVsWritableSettingsStoreManager.cs" />
     <Compile Include="Business\VsStore\RequestModel\GetMySettingRequestModel.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="Commands\GeneratorSettingsCommand.cs" />
     <Compile Include="Commands\MediatRCreateAddHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateDeleteHandlerCommand.cs" />
+    <Compile Include="Commands\MediatRCreateUpdateHandlerCommand.cs" />
     <Compile Include="Consts\Message.cs" />
     <Compile Include="Consts\PathConst.cs" />
     <Compile Include="Consts\SettingsStoreConst.cs" />
@@ -153,7 +156,6 @@
     <Folder Include="Business\Dtos\" />
     <Folder Include="Business\MediatR\GetById\" />
     <Folder Include="Business\MediatR\Grid\" />
-    <Folder Include="Business\MediatR\Update\" />
     <Folder Include="IncludeToolFormModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
