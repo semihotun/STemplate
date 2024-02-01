@@ -1,4 +1,5 @@
-﻿using Generator.Business.Mapper;
+﻿using Generator.Business.Classes;
+using Generator.Business.Mapper;
 using Generator.Business.MediatR.Create;
 using Generator.Business.MediatR.Delete;
 using Generator.Business.MediatR.GetById;
@@ -12,6 +13,7 @@ namespace Generator.Business.ServiceCollection;
 /// </summary>
 internal static class CustomServiceCollection
 {
+    public static IClassesMethodManager ClassesMethodManager() => new ClassesMethodManager();
     public static IMediatRCreateGetByIdMethodManager MediatRCreateGetByIdMethodManager() => new MediatRCreateGetByIdMethodManager();
     public static IMediatRCreateDeleteMethodManager MediatRCreateDeleteMethodManager() => new MediatRCreateDeleteMethodManager();
     public static IMediatRCreateAddMethodManager MediatRCreateAddMethodManager() => new MediatRCreateAddMethodManager();

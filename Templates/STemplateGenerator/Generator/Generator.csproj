@@ -45,6 +45,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Business\Classes\ClassesMethodManager.cs" />
+    <Compile Include="Business\Classes\IClassesMethodManager.cs.cs" />
+    <Compile Include="Business\Classes\Models\GenerateVoidRequestModel.cs" />
+    <Compile Include="Business\Classes\Models\SyntaxSemanticPropertyInfo.cs" />
     <Compile Include="Business\Mapper\CreateAddMapperlyMapperManager.cs" />
     <Compile Include="Business\Mapper\ICreateAddMapperlyMapperManager.cs" />
     <Compile Include="Business\Mapper\Models\CreateAddMethodRequest.cs" />
@@ -77,8 +81,10 @@
     <Compile Include="Business\VsStore\RequestModel\GetMySettingRequestModel.cs" />
     <Compile Include="Business\VsStore\RequestModel\SetMySettingRequestModel.cs" />
     <Compile Include="Business\VsStore\VsWritableSettingsStoreManager.cs" />
+    <Compile Include="Commands\ClassCreateVoidCommand.cs" />
     <Compile Include="Commands\GeneratorSettingsCommand.cs" />
     <Compile Include="Commands\MediatRCreateAddHandlerCommand.cs" />
+    <Compile Include="Commands\MediatRCreateCQRSCommand.cs" />
     <Compile Include="Commands\MediatRCreateDeleteHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateGetByIdHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateUpdateHandlerCommand.cs" />
