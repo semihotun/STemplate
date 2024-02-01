@@ -55,7 +55,7 @@ internal class MediatRCreateGetByIdMethodManager : IMediatRCreateGetByIdMethodMa
     /// <param name="requestString"></param>
     /// <returns></returns>
     private string GetCreateGetByIdMethodRequestHandlerString(GetRequestModel requestString) =>
-        _mediatRTemplate.GetRequestHandlerString(requestString).FormatCsharpDocumentCode().Replace(", ", ", \r\n\t\t");
+        _mediatRTemplate.GetRequestHandlerString(requestString).FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t");
     /// <summary>
     /// Get Create Delete Method Request String
     /// </summary>
@@ -63,7 +63,7 @@ internal class MediatRCreateGetByIdMethodManager : IMediatRCreateGetByIdMethodMa
     /// <returns></returns>
     private string GetCreateGetByIdMethodRequestString(GetRequestModel request)
     {
-        return _mediatRTemplate.GetRequestString(request).FormatCsharpDocumentCode().Replace(", ", ", \r\n\t\t");
+        return _mediatRTemplate.GetRequestString(request).FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t");
     }
     /// <summary>
     /// Get Create Delete Method Request Handler Inner String

@@ -75,14 +75,14 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
     /// <param name="requestString"></param>
     /// <returns></returns>
     private string GetCreateAddMethodRequestHandler(GetRequestModel requestString) =>
-        _mediatRTemplate.GetRequestHandlerString(requestString).FormatCsharpDocumentCode().Replace(", ", ", \r\n\t\t");
+        _mediatRTemplate.GetRequestHandlerString(requestString).FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t");
     /// <summary>
     /// Request Tempalte
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
     private string GetCreateAddMethodRequestString(GetRequestModel request) =>
-        _mediatRTemplate.GetRequestString(request).FormatCsharpDocumentCode().Replace(", ", ", \r\n\t\t");
+        _mediatRTemplate.GetRequestString(request).FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t");
     /// <summary>
     /// Handler Template
     /// </summary>

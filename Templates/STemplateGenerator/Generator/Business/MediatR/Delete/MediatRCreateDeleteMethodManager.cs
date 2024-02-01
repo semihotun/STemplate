@@ -54,7 +54,7 @@ internal class MediatRCreateDeleteMethodManager : IMediatRCreateDeleteMethodMana
     /// <param name="requestString"></param>
     /// <returns></returns>
     private string GetCreateDeleteMethodRequestHandlerString(GetRequestModel requestString) =>
-        _mediatRTemplate.GetRequestHandlerString(requestString).FormatCsharpDocumentCode().Replace(", ", ", \r\n\t\t");
+        _mediatRTemplate.GetRequestHandlerString(requestString).FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t");
     /// <summary>
     /// Get Create Delete Method Request String
     /// </summary>
@@ -62,7 +62,7 @@ internal class MediatRCreateDeleteMethodManager : IMediatRCreateDeleteMethodMana
     /// <returns></returns>
     private string GetCreateDeleteMethodRequestString(GetRequestModel request)
     {
-        return _mediatRTemplate.GetRequestString(request).FormatCsharpDocumentCode().Replace(", ", ", \r\n\t\t");
+        return _mediatRTemplate.GetRequestString(request).FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t");
     }
     /// <summary>
     /// Get Create Delete Method Request Handler Inner String

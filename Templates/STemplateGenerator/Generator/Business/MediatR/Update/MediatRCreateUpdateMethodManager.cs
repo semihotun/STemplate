@@ -47,7 +47,7 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
     /// <param name="requestString"></param>
     /// <returns></returns>
     private string GetCreateUpdateMethodRequestHandlerString(GetRequestModel requestString) =>
-        _mediatRTemplate.GetRequestHandlerString(requestString).FormatCsharpDocumentCode().Replace(", ", ", \r\n\t\t");
+        _mediatRTemplate.GetRequestHandlerString(requestString).FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t");
     /// <summary>
     /// Map CreateMediatRAddMethodRequest to  GetRequestModel
     /// </summary>
@@ -66,7 +66,7 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
     /// <param name="request"></param>
     /// <returns></returns>
     private string GetCreateUpdateMethodRequestString(GetRequestModel request) =>
-        _mediatRTemplate.GetRequestString(request).FormatCsharpDocumentCode().Replace(", ", ", \r\n\t\t");
+        _mediatRTemplate.GetRequestString(request).FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t");
     /// <summary>
     /// Handler Template
     /// </summary>
