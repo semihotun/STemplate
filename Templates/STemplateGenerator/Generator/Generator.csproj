@@ -49,6 +49,9 @@
     <Compile Include="Business\Classes\IClassesMethodManager.cs.cs" />
     <Compile Include="Business\Classes\Models\GenerateVoidRequestModel.cs" />
     <Compile Include="Business\Classes\Models\SyntaxSemanticPropertyInfo.cs" />
+    <Compile Include="Business\Dtos\DtoCreatorManager.cs" />
+    <Compile Include="Business\Dtos\IDtoCreatorManager.cs" />
+    <Compile Include="Business\Dtos\RequestModel\CreateDtoRequestModel.cs" />
     <Compile Include="Business\Mapper\CreateAddMapperlyMapperManager.cs" />
     <Compile Include="Business\Mapper\ICreateAddMapperlyMapperManager.cs" />
     <Compile Include="Business\Mapper\Models\CreateAddMethodRequest.cs" />
@@ -102,6 +105,7 @@
     <Compile Include="Models\CreateAggregateClassRequest.cs" />
     <Compile Include="Models\MethodParametersObjectForMediatrAddHandler.cs" />
     <Compile Include="Models\OperationEnum.cs" />
+    <Compile Include="Models\PropertyInfoByClass.cs" />
     <Compile Include="Models\SyntaxPropertyInfo.cs" />
     <Compile Include="Models\VsWritableSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,7 +166,6 @@
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Business\Dtos\" />
     <Folder Include="Business\MediatR\Grid\" />
     <Folder Include="IncludeToolFormModels\" />
   </ItemGroup>
