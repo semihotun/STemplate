@@ -158,4 +158,30 @@ internal static class SyntaxTreeExtension
         propertiesSourceCode.Add(new SyntaxPropertyInfo(SyntaxFactory.ParseTypeName("System.Guid"), "Id"));
         return propertiesSourceCode;
     }
+    /// <summary>
+    /// Add PagedList Filter Model
+    /// </summary>
+    /// <param name="propertiesSourceCode"></param>
+    /// <returns></returns>
+    public static List<SyntaxPropertyInfo> AddPagedListFilterModel(this List<SyntaxPropertyInfo> propertiesSourceCode)
+    {
+        propertiesSourceCode.Add(new SyntaxPropertyInfo(
+            SyntaxFactory.ParseTypeName("PagedListFilterModel"),
+            "PagedListFilterModel"));
+        return propertiesSourceCode;
+    }
+    /// <summary>
+    /// Primary Constructer with Generate Property Source Code
+    /// </summary>
+    /// <param name="properties"></param>
+    /// <returns></returns>
+    internal static string CreatePrimaryConstructerPropertiesSourceCode(this IEnumerable<PropertyDeclarationSyntax> properties)
+    {
+        var propertiesString = new List<string>();
+        foreach (var property in properties)
+        {
+            propertiesString.Add($"{property.Type} {property.Identifier.ValueText}, \n");
+        }
+        return String.Join(",\n", propertiesString);
+    }
 }

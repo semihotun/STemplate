@@ -63,6 +63,10 @@
     <Compile Include="Business\MediatR\Delete\MediatRCreateDeleteMethodManager.cs" />
     <Compile Include="Business\MediatR\GetById\IMediatRCreateGetByIdMethodManager.cs" />
     <Compile Include="Business\MediatR\GetById\MediatRCreateGetByIdMethodManager.cs" />
+    <Compile Include="Business\MediatR\Grid\IMediatRCreateGridManager.cs" />
+    <Compile Include="Business\MediatR\Grid\MediatRCreateGridManager.cs" />
+    <Compile Include="Business\MediatR\Grid\RequestModel\GridGenerateVeriables.cs" />
+    <Compile Include="Business\MediatR\Grid\RequestModel\WriteFileAllAsync.cs" />
     <Compile Include="Business\MediatR\Template\IMediatrTemplate.cs" />
     <Compile Include="Business\MediatR\Template\MediatrTemplate.cs" />
     <Compile Include="Business\MediatR\Template\Models\Command\GetCommandConstructorStringRequestModel.cs" />
@@ -90,16 +94,27 @@
     <Compile Include="Commands\MediatRCreateCQRSCommand.cs" />
     <Compile Include="Commands\MediatRCreateDeleteHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateGetByIdHandlerCommand.cs" />
+    <Compile Include="Commands\MediatRCreateGridHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateUpdateHandlerCommand.cs" />
     <Compile Include="Consts\Message.cs" />
     <Compile Include="Consts\PathConst.cs" />
     <Compile Include="Consts\SettingsStoreConst.cs" />
+    <Compile Include="Extensions\CsharpExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\SyntaxTreeExtension.cs" />
     <Compile Include="Helpers\ClassMethodHelper.cs" />
     <Compile Include="Helpers\EnvDTEHelper.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\FolderHelper.cs" />
+    <Compile Include="Helpers\SemanticHelper.cs" />
+    <Compile Include="IncludeToolForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IncludeToolForm.Designer.cs">
+      <DependentUpon>IncludeToolForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IncludeToolFormModels\SemanticClassPropertiesModel.cs" />
+    <Compile Include="IncludeToolFormModels\SyntaxSemanticGridPropertyInfo.cs" />
     <Compile Include="ManuelMapper\ManuelMapper.cs" />
     <Compile Include="Models\CqrsEnum.cs" />
     <Compile Include="Models\CreateAggregateClassRequest.cs" />
@@ -147,9 +162,13 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Design" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Community.VisualStudio.VSCT" Version="16.0.29.6" PrivateAssets="all" />
@@ -166,8 +185,9 @@
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Business\MediatR\Grid\" />
-    <Folder Include="IncludeToolFormModels\" />
+    <EmbeddedResource Include="IncludeToolForm.resx">
+      <DependentUpon>IncludeToolForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

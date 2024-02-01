@@ -1,8 +1,11 @@
 ﻿using Generator.Business.Mapper.Models;
 using Generator.Business.MediatR.Create.Models;
+using Generator.Business.MediatR.Grid.RequestModel;
 using Generator.Business.MediatR.Template.Models.Base;
 using Generator.Business.MediatR.Template.Models.Command;
+using Generator.Business.MediatR.Template.Models.Dto;
 using Generator.Business.MediatR.Template.Models.Query;
+using Generator.Extensions;
 using Generator.Models;
 using System.Collections.Generic;
 using System.IO;
@@ -83,5 +86,25 @@ internal static class ManuelMapper
             ProjectName: request.ProjectName,
             DifferentFile: request.DifferentFile,
             NameSpaceString: request.NameSpaceString);
+    }
+    public static GetDtoRequestHandlerUsing GetDtoRequestUsing(this GridGenerateVeriables request)
+    {
+        return new GetDtoRequestHandlerUsing(ProjectName: request.ProjectName, DbTableClassName: request.DbTableName);
+    }
+    public static CreateAggregateClassRequest GetCreateAggregateClassRequest(this GridGenerateVeriables gridGenerateVeriables, string dtoFilePath)
+    {
+        return new CreateAggregateClassRequest(
+                   className: gridGenerateVeriables.DtoName,
+                   projectName: gridGenerateVeriables.ProjectName,
+                   differentFile: gridGenerateVeriables.DifferentFile,
+                   classPath: dtoFilePath,
+                   operation: OperationEnum.Get,
+                   commandOrQuery: CqrsEnum.Query,
+                   returnType: $"DataResult<IPagedList<{gridGenerateVeriables.DtoName}>>",
+                   isAggregateUsing: false,
+                   isMapper: false,
+                   requestName: $"Get{gridGenerateVeriables.DtoName}Query",
+                   classMainHandlersPath: dtoFilePath.Replace($"Queries\\Dtos\\{gridGenerateVeriables.DtoName}.cs", ""),
+                   nameSpaceString: $"{gridGenerateVeriables.ProjectName}.Application.Handlers.{gridGenerateVeriables.DbTableName.Plurualize()}.Queries");
     }
 }

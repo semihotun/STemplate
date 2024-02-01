@@ -11,6 +11,7 @@ internal class DtoCreatorManager : IDtoCreatorManager
 {
     /// <summary>
     /// Create Dto
+    /// Add this for class {String.Join("\n", request.Properties.Select(x => x.PropertyString))}
     /// </summary>
     /// <param name="request"></param>
     public async Task CreateDtoAsync(CreateDtoRequest request)
@@ -23,10 +24,7 @@ internal class DtoCreatorManager : IDtoCreatorManager
         }
         File.WriteAllText(request.FilePath,
          $@"namespace {PathConst.GetHandlerNameSpaceString(request.ProjectName, request.DbTableName.Plurualize(), CqrsEnum.Query)}.Dtos;
-                            public record {request.FileName}(Guid Id ,{String.Join(",", request.Properties.Select(x => x.PrimaryConstructerString))}){{
-                                   public Guid Id {{get;}} = Id;
-                                   {String.Join("\n", request.Properties.Select(x => x.PropertyString))}
-                                }}
-                            ".FormatCsharpDocumentCode());
+                            public record {request.FileName}(Guid Id ,{String.Join(",", request.Properties.Select(x => x.PrimaryConstructerString))});
+                            ".FormatCsharpDocumentCode().Replace(", ",",\n"));
     }
 }

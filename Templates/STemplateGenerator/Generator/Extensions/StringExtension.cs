@@ -22,9 +22,10 @@ public static class StringExtension
     /// <returns></returns>
     public static string RemoveFromTap(this string classText)
     {
-        const string reduceMultiSpace = "[ ]{2,}";
-        var line = Regex.Replace(classText.Replace("\r", " "), reduceMultiSpace, " ");
-        return " " + line.TrimStart();
+        var line = Regex.Replace(classText.Replace("\r", " "), "[ ]{2,}", " ");
+        return Regex.Replace
+            (Regex.Replace(" " + line.TrimStart(), @"^\s", string.Empty, RegexOptions.Multiline),
+            @"\s+$", string.Empty, RegexOptions.Multiline);
     }
     /// <summary>
     /// Frit letter upper case
