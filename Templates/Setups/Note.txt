@@ -1,0 +1,5 @@
+Tr
+Vsıx'ları kurun generator ve template için
+
+En
+Install the Vsıxes, one for the generator and one for the project template
