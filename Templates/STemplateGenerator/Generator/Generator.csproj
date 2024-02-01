@@ -54,6 +54,8 @@
     <Compile Include="Business\MediatR\Create\Models\GetClassGenerateMethod.cs" />
     <Compile Include="Business\MediatR\Delete\IMediatRCreateDeleteMethodManager.cs" />
     <Compile Include="Business\MediatR\Delete\MediatRCreateDeleteMethodManager.cs" />
+    <Compile Include="Business\MediatR\GetById\IMediatRCreateGetByIdMethodManager.cs" />
+    <Compile Include="Business\MediatR\GetById\MediatRCreateGetByIdMethodManager.cs" />
     <Compile Include="Business\MediatR\Template\IMediatrTemplate.cs" />
     <Compile Include="Business\MediatR\Template\MediatrTemplate.cs" />
     <Compile Include="Business\MediatR\Template\Models\Command\GetCommandConstructorStringRequestModel.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="Commands\GeneratorSettingsCommand.cs" />
     <Compile Include="Commands\MediatRCreateAddHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateDeleteHandlerCommand.cs" />
+    <Compile Include="Commands\MediatRCreateGetByIdHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateUpdateHandlerCommand.cs" />
     <Compile Include="Consts\Message.cs" />
     <Compile Include="Consts\PathConst.cs" />
@@ -154,7 +157,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Business\Dtos\" />
-    <Folder Include="Business\MediatR\GetById\" />
     <Folder Include="Business\MediatR\Grid\" />
     <Folder Include="IncludeToolFormModels\" />
   </ItemGroup>
