@@ -12,11 +12,7 @@ namespace AdminIdentityService.Insfrastructure.Utilities.ApiDoc.Swagger
         public void Apply(OpenApiOperation operation,
             OperationFilterContext context)
         {
-            var hasAllowAnonymous = context.MethodInfo
-                      .GetCustomAttributes(true).Any(x => x.GetType() == typeof(AllowAnonymousAttribute)) ||
-                      context.MethodInfo.DeclaringType.GetCustomAttributes(true).Any(x => x.GetType() == typeof(AllowAnonymousAttribute));
-
-            if (hasAllowAnonymous)
+            if (context.ApiDescription.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any())
             {
                 return;
             }

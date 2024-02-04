@@ -2,20 +2,22 @@ using AdminIdentityService.Extensions;
 using AdminIdentityService.Insfrastructure.Utilities.Exceptions.GlobalEror;
 using AdminIdentityService.Insfrastructure.Utilities.Identity.Middleware;
 using AdminIdentityService.Insfrastructure.Utilities.Ioc;
+using Carter;
 using Prometheus;
-using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 builder.AddStartupServices();
 var app = builder.Build();
-//WebUI
 app.UseSwagger();
-app.UseSwaggerUI();
+app.MapCarter();
 if (!app.Environment.IsDevelopment())
 {
     //Metrics
     app.UseHttpMetrics();
     app.MapMetrics();
     app.UseHttpsRedirection();
+    //WebUI
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 //Core
 app.UseCors();
@@ -24,8 +26,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 //MiddleWare
-await app.GenerateDbRole(Assembly.GetExecutingAssembly());
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<ClaimMiddleware>();
 ServiceTool.ServiceProvider = app.Services;
-app.Run();
+var task = app.RunAsync();
+_= app.GenerateDbRole();
+await task;

@@ -10,13 +10,9 @@ namespace STemplate.Insfrastructure.Utilities.ApiDoc.Swagger
     public class AddAuthHeaderOperationFilter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation,
-            OperationFilterContext context)
+           OperationFilterContext context)
         {
-            var hasAllowAnonymous = context.MethodInfo
-                     .GetCustomAttributes(true).Any(x => x.GetType() == typeof(AllowAnonymousAttribute)) ||
-                     context.MethodInfo.DeclaringType.GetCustomAttributes(true).Any(x => x.GetType() == typeof(AllowAnonymousAttribute));
-
-            if (hasAllowAnonymous)
+            if (context.ApiDescription.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any())
             {
                 return;
             }

@@ -11,6 +11,7 @@ using AdminIdentityService.Insfrastructure.Utilities.ServiceBus;
 using AdminIdentityService.Persistence.Context;
 using AdminIdentityService.Persistence.Extensions;
 using AdminIdentityService.Persistence.GenericRepository;
+using Carter;
 using FluentValidation;
 namespace AdminIdentityService.Extensions
 {
@@ -18,8 +19,10 @@ namespace AdminIdentityService.Extensions
     {
         public static void AddStartupServices(this WebApplicationBuilder builder)
         {
+            builder.Services.AddCarter();
             builder.Services.AddControllers();
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddEndpointsApiExplorer();
             builder.AddCustomSwaggerGen();
             builder.AddCors();
             builder.Services.AddMvc();

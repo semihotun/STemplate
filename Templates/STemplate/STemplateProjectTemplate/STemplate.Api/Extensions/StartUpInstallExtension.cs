@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Carter;
+using FluentValidation;
 using STemplate.Application.Assemblies;
 using STemplate.Application.Extension;
 using STemplate.Insfrastructure.Utilities.ApiDoc.Swagger;
@@ -17,10 +18,11 @@ namespace STemplate.Extensions
     {
         public static void AddStartupServices(this WebApplicationBuilder builder)
         {
+            builder.Services.AddCarter();
             builder.Services.AddControllers();
-            builder.AddCustomSwaggerGen();
-            builder.Services.AddSwaggerGen();
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.AddCustomSwaggerGen();
             builder.AddCors();
             builder.Services.AddMvc();
             //Log-Cache-Mediatr-FluentValidation-Mass transit

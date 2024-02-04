@@ -4,18 +4,20 @@ using STemplate.Insfrastructure.Utilities.Identity.Middleware;
 using STemplate.Insfrastructure.Utilities.Ioc;
 using Prometheus;
 using System.Reflection;
+using Carter;
 var builder = WebApplication.CreateBuilder(args);
 builder.AddStartupServices();
 var app = builder.Build();
-//WebUI
-app.UseSwagger();
-app.UseSwaggerUI();
+app.MapCarter();
 if (!app.Environment.IsDevelopment())
 {
     //Metrics
     app.UseHttpMetrics();
     app.MapMetrics();
     app.UseHttpsRedirection();
+    //WebUI
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 //Core
 app.UseCors();
@@ -23,8 +25,9 @@ app.UseStaticFiles();
 app.UseAuthorization();
 app.MapControllers();
 //MiddleWare
-await app.GenerateDbRole(Assembly.GetExecutingAssembly());
+ServiceTool.ServiceProvider = app.Services;
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<ClaimMiddleware>();
-ServiceTool.ServiceProvider = app.Services;
-app.Run();
+var task = app.RunAsync();
+_ = app.GenerateDbRole();
+await task;

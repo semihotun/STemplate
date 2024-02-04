@@ -7,6 +7,8 @@
     <UserSecretsId>3dd8945d-e978-4bfc-b199-ec6253cb56d7</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..\..</DockerfileContext>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\AdminIdentityService.Application\AdminIdentityService.Application.csproj" />
@@ -15,6 +17,8 @@
 	  <ProjectReference Include="..\AdminIdentityService.Persistence\AdminIdentityService.Persistence.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Carter" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
 		<PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />

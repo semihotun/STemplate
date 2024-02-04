@@ -11,7 +11,6 @@ namespace AdminIdentityService.Persistence.Context
     public class CoreDbContext(DbContextOptions<CoreDbContext> options, IMediator? mediator) : DbContext(options), ICoreDbContext
     {
         public const string DEFAULT_SCHEMA = "CoreDbContextSchema";
-
         private DbSet<AdminUser> AdminUser { get; set; }
         private DbSet<AdminRole> AdminRole { get; set; }
         private DbSet<AdminUserRole> AdminUserRole { get; set; }
