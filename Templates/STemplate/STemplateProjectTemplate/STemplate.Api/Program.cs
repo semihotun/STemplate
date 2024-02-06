@@ -1,10 +1,9 @@
+using Carter;
+using Prometheus;
 using STemplate.Extensions;
 using STemplate.Insfrastructure.Utilities.Exceptions.GlobalEror;
 using STemplate.Insfrastructure.Utilities.Identity.Middleware;
 using STemplate.Insfrastructure.Utilities.Ioc;
-using Prometheus;
-using System.Reflection;
-using Carter;
 var builder = WebApplication.CreateBuilder(args);
 builder.AddStartupServices();
 var app = builder.Build();
@@ -15,10 +14,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpMetrics();
     app.MapMetrics();
     app.UseHttpsRedirection();
-    //WebUI
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
+//WebUI
+app.UseSwagger();
+app.UseSwaggerUI();
 //Core
 app.UseCors();
 app.UseStaticFiles();

@@ -11,10 +11,8 @@ namespace AdminIdentityService.Insfrastructure.Utilities.Cors
         {
             builder.Services.AddCors(options =>
             options.AddDefaultPolicy(policy => policy
-              .WithOrigins("https://localhost:4000",
-              "https://localhost:4001",
-              "http://localhost:4000",
-              "http://localhost:4001")
+              .WithOrigins($"https://{builder.Configuration["HostAdress"]}:4000",
+              $"http://{builder.Configuration["HostAdress"]}:4000")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials()));

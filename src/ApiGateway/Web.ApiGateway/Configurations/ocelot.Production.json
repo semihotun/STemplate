@@ -1,10 +1,2 @@
 {
-  "GlobalConfiguration": {
-    "BaseUrl": "http://web.apigateway:2000",
-    "ServiceDiscoveryProvider": {
-      "Host": "s_consul",
-      "Port": 8500,
-      "Type": "Consul"
-    }
-  }
 }

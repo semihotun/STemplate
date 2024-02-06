@@ -7,7 +7,6 @@ using Prometheus;
 var builder = WebApplication.CreateBuilder(args);
 builder.AddStartupServices();
 var app = builder.Build();
-app.UseSwagger();
 app.MapCarter();
 if (!app.Environment.IsDevelopment())
 {
@@ -15,10 +14,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpMetrics();
     app.MapMetrics();
     app.UseHttpsRedirection();
-    //WebUI
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
+//WebUI
+app.UseSwagger();
+app.UseSwaggerUI();
 //Core
 app.UseCors();
 app.UseStaticFiles();

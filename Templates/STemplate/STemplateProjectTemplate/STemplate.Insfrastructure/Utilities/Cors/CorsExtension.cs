@@ -10,15 +10,13 @@ namespace STemplate.Insfrastructure.Utilities.Cors
         public static WebApplicationBuilder AddCors(this WebApplicationBuilder builder)
         {
             builder.Services.AddCors(options =>
-            options.AddDefaultPolicy(policy => policy
-              .WithOrigins("https://localhost:4000",
-              "https://localhost:4033",
-              "http://localhost:4000",
-              "http://localhost:4033")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials()));
-            return builder;
+              options.AddDefaultPolicy(policy => policy
+                .WithOrigins($"https://{builder.Configuration["HostAdress"]}:4000",
+                $"http://{builder.Configuration["HostAdress"]}:4000")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()));
+                return builder;
         }
     }
 }

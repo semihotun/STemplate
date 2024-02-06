@@ -3,7 +3,6 @@ using AdminIdentityService.Application.Handlers.AdminUsers.Queries.LoginUsers;
 using AdminIdentityService.Domain.Result;
 using AdminIdentityService.Insfrastructure.Utilities.Security.Jwt;
 using Carter;
-using Carter.OpenApi;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,14 +17,18 @@ namespace AdminIdentityService.Endpoints
             group.MapPost("/login", Login)
                 .Produces(StatusCodes.Status200OK, typeof(DataResult<AccessToken>))
                 .AllowAnonymous()
-                .IncludeInOpenApi();
+                .WithOpenApi(operation => new(operation)
+                {
+                    Summary = "Login Page"
+                });
 
             group.MapPost("/register", Register)
              .Produces(StatusCodes.Status200OK, typeof(Result))
-             .AllowAnonymous();
-
-            group.MapPost("/deneme", Deneme)
-            .Produces(StatusCodes.Status200OK, typeof(DataResult<AccessToken>));
+             .AllowAnonymous()
+             .WithOpenApi(operation => new(operation)
+             {
+                 Summary = "Register Page"
+             });
         }
         public static async Task<IResult> Login([FromBody] GetLoginUserQuery loginModel, ISender sender)
         {
@@ -37,15 +40,6 @@ namespace AdminIdentityService.Endpoints
             return Results.BadRequest(result);
         }
         public static async Task<IResult> Register([FromBody] RegisterUserCommand createUser, ISender sender)
-        {
-            var result = await sender.Send(createUser);
-            if (result.Success)
-            {
-                return Results.Ok(result);
-            }
-            return Results.BadRequest(result);
-        }
-        public static async Task<IResult> Deneme([FromBody] RegisterUserCommand createUser, ISender sender)
         {
             var result = await sender.Send(createUser);
             if (result.Success)
