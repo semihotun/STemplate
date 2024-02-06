@@ -24,7 +24,6 @@ namespace Web.ApiGateway.Extension
             {
                 builder.AddOcelotProductionSetting();
             }
-            builder.Services.AddSwaggerForOcelot(builder.Configuration);
         }
     }
 }

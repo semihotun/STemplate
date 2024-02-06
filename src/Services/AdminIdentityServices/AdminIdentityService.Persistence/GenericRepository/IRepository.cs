@@ -11,6 +11,7 @@ namespace AdminIdentityService.Persistence.GenericRepository
         void Remove(T entity);
         void RemoveRange(List<T> entity);
         Task<bool> AnyAsync(Expression<Func<T, bool>> expression);
+        bool Any(Expression<Func<T, bool>> expression);
         Task<T?> GetByIdAsync(Guid Id);
         #region GetAsync
         Task<T?> GetAsync(Expression<Func<T, bool>> expression);

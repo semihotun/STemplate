@@ -38,6 +38,10 @@ namespace AdminIdentityService.Persistence.GenericRepository
         {
             return await Context.Set<TEntity>().AnyAsync(expression);
         }
+        public bool Any(Expression<Func<TEntity, bool>> expression)
+        {
+            return Context.Set<TEntity>().Any(expression);
+        }
         public async Task<TEntity?> GetByIdAsync(Guid Id)
         {
             return await Context.Set<TEntity>().FindAsync(Id);
