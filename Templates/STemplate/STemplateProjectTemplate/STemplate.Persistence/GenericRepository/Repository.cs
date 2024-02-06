@@ -5,23 +5,9 @@ using System.Linq.Expressions;
 namespace STemplate.Persistence.GenericRepository
 {
     public class Repository<TEntity>(ICoreDbContext context) : IRepository<TEntity>
-          where TEntity : class, IEntity
+             where TEntity : class, IEntity
     {
-        protected readonly ICoreDbContext Context = context;
-
-        public TEntity? GetById(Guid Id)
-        {
-            return Context.Set<TEntity>().Find(Id);
-        }
-        public async Task<TEntity?> GetByIdAsync(Guid Id)
-        {
-            return await Context.Set<TEntity>().FindAsync(Id);
-        }
-        public TEntity Add(TEntity entity)
-        {
-            var data = Context.Set<TEntity>().Add(entity);
-            return data.Entity;
-        }
+        private readonly ICoreDbContext Context = context;
         public void AddRange(List<TEntity> entity)
         {
             Context.Set<TEntity>().AddRange(entity);
@@ -39,57 +25,84 @@ namespace STemplate.Persistence.GenericRepository
         {
             Context.Set<TEntity>().Remove(entity);
         }
-        public void RemoveRange(List<TEntity> entity)
-        {
-            Context.Set<TEntity>().RemoveRange(entity);
-        }
-        public TEntity? Get(Expression<Func<TEntity, bool>> expression)
-        {
-            return Context.Set<TEntity>().FirstOrDefault(expression);
-        }
-        public bool Any(Expression<Func<TEntity, bool>> expression)
-        {
-            return Context.Set<TEntity>().Any(expression);
-        }
-        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> expression)
-        {
-            return await Context.Set<TEntity>().FirstOrDefaultAsync(expression);
-        }
-        public IEnumerable<TEntity> GetEnumerable(Expression<Func<TEntity, bool>>? expression = null)
-        {
-            return expression == null ? Context.Set<TEntity>().AsNoTracking() : Context.Set<TEntity>().Where(expression).AsNoTracking();
-        }
-        public async Task<IList<TEntity>> ToListAsync(Expression<Func<TEntity, bool>>? expression = null)
-        {
-            return expression == null ? await Context.Set<TEntity>().ToListAsync() :
-                 await Context.Set<TEntity>().Where(expression).ToListAsync();
-        }
-        public IQueryable<TEntity> Query()
-        {
-            return Context.Set<TEntity>();
-        }
-        public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>>? expression = null)
-        {
-            if (expression == null)
-                return await Context.Set<TEntity>().CountAsync();
-            else
-                return await Context.Set<TEntity>().CountAsync(expression);
-        }
-        public int GetCount(Expression<Func<TEntity, bool>>? expression = null)
-        {
-            if (expression == null)
-                return Context.Set<TEntity>().Count();
-            else
-                return Context.Set<TEntity>().Count(expression);
-        }
         public async Task<TEntity> AddAsync(TEntity entity)
         {
             var data = await Context.Set<TEntity>().AddAsync(entity);
             return data.Entity;
         }
+        public void RemoveRange(List<TEntity> entity)
+        {
+            Context.Set<TEntity>().RemoveRange(entity);
+        }
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
         {
             return await Context.Set<TEntity>().AnyAsync(expression);
         }
+        public async Task<TEntity?> GetByIdAsync(Guid Id)
+        {
+            return await Context.Set<TEntity>().FindAsync(Id);
+        }
+        #region Get 
+        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            return await Context.Set<TEntity>().FirstOrDefaultAsync(expression);
+        }
+        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> expression, params Expression<Func<TEntity, object>>[] includes)
+        {
+            var query = Context.Set<TEntity>().AsQueryable();
+            foreach (var item in includes)
+            {
+                query.Include(item);
+            }
+            return await query.FirstOrDefaultAsync(expression);
+        }
+        #endregion
+        #region ToListAsync
+        public async Task<IList<TEntity>> ToListAsync()
+        {
+            return await Context.Set<TEntity>().ToListAsync();
+        }
+        public async Task<IList<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            return await Context.Set<TEntity>().Where(expression).ToListAsync();
+        }
+        public async Task<IList<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> expression, params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Context.Set<TEntity>();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.Where(expression).ToListAsync();
+        }
+        public async Task<IList<TEntity>> ToListAsync(Expression<Func<TEntity, bool>>? expression = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Context.Set<TEntity>();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            if (expression != null)
+            {
+                query = query.Where(expression);
+            }
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+            return await query.ToListAsync();
+        }
+        #endregion
+        #region GetCountAsync
+        public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            return await Context.Set<TEntity>().CountAsync(expression);
+        }
+        public async Task<int> GetCountAsync()
+        {
+            return await Context.Set<TEntity>().CountAsync();
+        }
+        #endregion
+        public IQueryable<TEntity> Query() => Context.Set<TEntity>();
     }
 }
