@@ -11,6 +11,7 @@ namespace AdminIdentityService.Application.Extension
     {
         public static void AddPublishers(this IRabbitMqBusFactoryConfigurator cfg)
         {
+            cfg.AddDirectProducer<AddAdminRoleIntegrationEvent>();
         }
         public static void AddConsumers(this IRabbitMqBusFactoryConfigurator cfg, IBusRegistrationContext ctx)
         {
