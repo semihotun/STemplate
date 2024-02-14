@@ -56,7 +56,7 @@ internal class MediatrTemplate : IMediatrTemplate
     /// <returns></returns>
     public string GetCommandConstructorString(GetCommandConstructorStringRequestModel request)
     {
-        return $@"{(request.IsMapper ? $"private readonly {request.RepositoryClassName}Mapper _blogMapper = new ();" : "")}
+        return $@"{(request.IsMapper ? $"private readonly {request.RepositoryClassName}Mapper _{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Mapper = new ();" : "")}
                       private readonly IRepository<{request.RepositoryClassName}> _{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository = {request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository;
                       private readonly ICoreDbContext _coreDbContext = coreDbContext;
                       private readonly ICacheService _cacheService = cacheService;
