@@ -5,6 +5,7 @@ using STemplate.Application.Extension;
 using STemplate.Insfrastructure.Utilities.ApiDoc.Swagger;
 using STemplate.Insfrastructure.Utilities.Caching.Redis;
 using STemplate.Insfrastructure.Utilities.Cors;
+using STemplate.Insfrastructure.Utilities.HangFire;
 using STemplate.Insfrastructure.Utilities.Identity;
 using STemplate.Insfrastructure.Utilities.Logging;
 using STemplate.Insfrastructure.Utilities.MediatR;
@@ -29,6 +30,7 @@ namespace STemplate.Extensions
             builder.AddSerilog();
             builder.AddRedis();
             var assembly = ApiAssemblyExtensions.GetLibrariesAssemblies();
+            builder.AddHangFire(assembly);
             builder.Services.ConfigureDbContext(builder.Configuration);
             builder.AddMediatR(assembly);
             builder.Services.AddValidatorsFromAssembly(ApplicationAssemblyExtension.GetApplicationAssembly(), includeInternalTypes: true);

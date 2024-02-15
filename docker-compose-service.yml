@@ -156,7 +156,38 @@ services:
       - s_elasticsearch
     networks:
       - net_backendservices
-
+  s_mongo-express:
+    container_name: c_mongo-express
+    image: mongo-express
+    restart: always
+    ports:
+      - ${MongoExpress_Port}:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: s_mongo
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${Mongo_UserName}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${Mongo_Password}
+      ME_CONFIG_BASICAUTH_USERNAME: ${Mongo_UserName}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${Mongo_Password}
+      ME_CONFIG_MONGODB_URL: mongo://${Mongo_UserName}:${Mongo_Password}@s_mongo:${Mongo_Port}
+    networks:
+      - net_backendservices
+    depends_on:
+      - s_mongo
+    env_file:
+      - ./.env
+  s_mongo:
+    container_name: c_mongo
+    image: mongo
+    ports:
+      - ${Mongo_Port}:${Mongo_Port}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${Mongo_UserName}
+      MONGO_INITDB_ROOT_PASSWORD: ${Mongo_Password}
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env
 networks:
   net_frontend:
     driver: bridge

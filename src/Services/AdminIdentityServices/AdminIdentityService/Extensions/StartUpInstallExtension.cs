@@ -13,6 +13,7 @@ using AdminIdentityService.Persistence.Extensions;
 using AdminIdentityService.Persistence.GenericRepository;
 using Carter;
 using FluentValidation;
+using AdminIdentityService.Insfrastructure.Utilities.Hangfire;
 namespace AdminIdentityService.Extensions
 {
     public static class StartUpInstallExtension
@@ -30,6 +31,7 @@ namespace AdminIdentityService.Extensions
             builder.AddSerilog();
             builder.AddRedis();
             var assembly = ApiAssemblyExtensions.GetLibrariesAssemblies();
+            builder.AddHangFire(assembly);
             builder.Services.ConfigureDbContext(builder.Configuration);
             builder.AddMediatR(assembly);
             builder.Services.AddValidatorsFromAssembly(ApplicationAssemblyExtension.GetApplicationAssembly(), includeInternalTypes: true);
