@@ -13,7 +13,7 @@ namespace AdminIdentityService.Persistence.Extensions
         {
             var domainEntities = ctx.ChangeTracker
                                     .Entries<BaseEntity>()
-                                    .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Count != 0);
+                                    .Where(x => x.Entity.DomainEvents.Count != 0);
             var domainEvents = domainEntities.SelectMany(x => x.Entity.DomainEvents).ToList();
             domainEntities.ToList().ForEach(e => e.Entity.ClearDomainEvents());
             foreach (var domainEvent in domainEvents)

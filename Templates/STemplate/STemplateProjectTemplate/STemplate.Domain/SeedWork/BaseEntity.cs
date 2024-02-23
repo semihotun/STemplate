@@ -10,20 +10,19 @@ namespace STemplate.Domain.SeedWork
         public bool Deleted { get; set; }
         public DateTime CreateDate { get; set; }
         int? _requestedHashCode;
-        private List<INotification>? domainEvents;
-        public IReadOnlyCollection<INotification>? DomainEvents => domainEvents?.AsReadOnly();
+        private readonly List<INotification> _domainEvents = [];
+        public IReadOnlyCollection<INotification>? DomainEvents => _domainEvents?.AsReadOnly();
         public void AddDomainEvent(INotification eventItem)
         {
-            domainEvents ??= [];
-            domainEvents.Add(eventItem);
+            _domainEvents.Add(eventItem);
         }
         public void RemoveDomainEvents(INotification eventItem)
         {
-            domainEvents?.Remove(eventItem);
+            _domainEvents.Remove(eventItem);
         }
         public void ClearDomainEvents()
         {
-            domainEvents?.Clear();
+            _domainEvents.Clear();
         }
         public bool IsTransient()
         {
