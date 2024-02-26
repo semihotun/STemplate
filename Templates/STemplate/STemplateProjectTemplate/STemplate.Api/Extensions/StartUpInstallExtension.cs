@@ -13,11 +13,12 @@ using STemplate.Insfrastructure.Utilities.ServiceBus;
 using STemplate.Persistence.Context;
 using STemplate.Persistence.Extensions;
 using STemplate.Persistence.GenericRepository;
+
 namespace STemplate.Extensions
 {
     public static class StartUpInstallExtension
     {
-        public static void AddStartupServices(this WebApplicationBuilder builder)
+        public static async Task AddStartupServicesAsync(this WebApplicationBuilder builder)
         {
             builder.Services.AddCarter();
             builder.Services.AddControllers();
@@ -31,7 +32,7 @@ namespace STemplate.Extensions
             builder.AddRedis();
             var assembly = ApiAssemblyExtensions.GetLibrariesAssemblies();
             builder.AddHangFire(assembly);
-            builder.Services.ConfigureDbContext(builder.Configuration);
+            await builder.Services.ConfigureDbContextAsync(builder.Configuration);
             builder.AddMediatR(assembly);
             builder.Services.AddValidatorsFromAssembly(ApplicationAssemblyExtension.GetApplicationAssembly(), includeInternalTypes: true);
             builder.AddCustomMassTransit(assembly, (busRegistrationContext, busFactoryConfigurator) =>

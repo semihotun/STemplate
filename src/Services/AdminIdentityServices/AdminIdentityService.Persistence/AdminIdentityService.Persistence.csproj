@@ -25,5 +25,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\AdminIdentityService.Domain\AdminIdentityService.Domain.csproj" />
+	  <ProjectReference Include="..\AdminIdentityService.Insfrastructure\AdminIdentityService.Insfrastructure.csproj" />
 	</ItemGroup>
 </Project>

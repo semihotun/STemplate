@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\STemplate.Domain\STemplate.Domain.csproj" />
+    <ProjectReference Include="..\STemplate.Insfrastructure\STemplate.Insfrastructure.csproj" />
   </ItemGroup>
 	<ItemGroup>
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.1" />
@@ -21,7 +22,6 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="EntityConfigurations\" />
 	  <Folder Include="Migrations\" />
 	</ItemGroup>
 </Project>

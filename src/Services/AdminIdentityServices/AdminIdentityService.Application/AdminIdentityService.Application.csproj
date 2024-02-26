@@ -8,6 +8,7 @@
     <Folder Include="DomainEventHandlers\" />
     <Folder Include="Features\" />
     <Folder Include="Helpers\" />
+    <Folder Include="Jobs\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Riok.Mapperly" Version="3.3.0" />

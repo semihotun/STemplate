@@ -30,15 +30,6 @@ services:
       - REDIS_PASSWORD=${Redis__Password}
       - REDIS_PORT=${Redis__Port}
       - REDIS_REPLICATION_MODE=master
-  redisinsight:
-    container_name: c_redisinsight
-    image: redislabs/redisinsight:latest
-    networks:
-      - net_backendservices
-    ports:
-      -  ${RedisInsight_Port}:${RedisInsight_Port}
-    env_file:
-      - ./.env
   s_sqlserver:
     container_name: c_sqlserver
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -50,6 +41,8 @@ services:
     environment:
       - ACCEPT_EULA=${SQL_User}
       - MSSQL_SA_PASSWORD=${SQL_Password}
+      - MSSQL_PID=Standard
+      - MSSQL_AGENT_ENABLED=true
     volumes:
       - sqlserver_data:/var/opt/mssql/data
       - sqlserver_log:/var/opt/mssql/log
@@ -137,45 +130,6 @@ services:
       - "${Elastic_UDP_Port}:9300"
     networks:
       - net_backendservices
-  s_kibana:
-    container_name: c_kibana
-    image: docker.elastic.co/kibana/kibana:7.10.2
-    env_file:
-      - ./.env
-    environment:
-      - ELASTICSEARCH_HOSTS=["http://s_elasticsearch:${Elastic_TCP_Port}"]
-      - elasticsearch.sniffOnStart=true
-      - ES_JAVA_OPTS=-Xms3g -Xmx3g
-      - xpack.infra.sources.default.metricAlias=metricbeat-*
-      - XPACK_MONITORING_KIBANA_COLLECTION_ENABLED=false
-      - ELASTIC_PASSWORD=${ElasticSearch_Password}
-      - ELASTICSEARCH_USERNAME=${ElasticSearch_UserName}
-    ports:
-      - "${Kibana_Port}:${Kibana_Port}"
-    depends_on:
-      - s_elasticsearch
-    networks:
-      - net_backendservices
-  s_mongo-express:
-    container_name: c_mongo-express
-    image: mongo-express
-    restart: always
-    ports:
-      - ${MongoExpress_Port}:8081
-    environment:
-      ME_CONFIG_MONGODB_SERVER: s_mongo
-      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${Mongo_UserName}
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${Mongo_Password}
-      ME_CONFIG_BASICAUTH_USERNAME: ${Mongo_UserName}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${Mongo_Password}
-      ME_CONFIG_MONGODB_URL: mongo://${Mongo_UserName}:${Mongo_Password}@s_mongo:${Mongo_Port}
-    networks:
-      - net_backendservices
-    depends_on:
-      - s_mongo
-    env_file:
-      - ./.env
   s_mongo:
     container_name: c_mongo
     image: mongo
@@ -188,6 +142,53 @@ services:
       - net_backendservices
     env_file:
       - ./.env
+  s_zookeeper:
+    container_name: c_zookeeper
+    image: debezium/zookeeper
+    ports:
+      - "${Zookeeper_Port}:${Zookeeper_Port}"
+      - "2888:2888"
+      - "3888:3888"
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env
+  s_kafka:
+    container_name: c_kafka
+    image: debezium/kafka
+    ports:
+      - "${Kafka_TCP_Port}:${Kafka_TCP_Port}"
+      - "${Kafka_External_Tcp}:${Kafka_External_Tcp}"
+    depends_on:
+      - s_zookeeper
+    environment:
+      - ZOOKEEPER_CONNECT=s_zookeeper:${Zookeeper_Port}
+      - KAFKA_ADVERTISED_LISTENERS=LISTENER_EXT://s_kafka:${Kafka_External_Tcp},LISTENER_INT://s_kafka:${Kafka_TCP_Port}
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_INT:PLAINTEXT,LISTENER_EXT:PLAINTEXT
+      - KAFKA_LISTENERS=LISTENER_INT://s_kafka:${Kafka_TCP_Port},LISTENER_EXT://s_kafka:${Kafka_External_Tcp}
+      - KAFKA_INTER_BROKER_LISTENER_NAME=LISTENER_INT
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env
+  s_debeziumconnect:
+    container_name: c_debeziumconnect
+    image: debezium/connect
+    ports:
+      - ${Debeziumconnect_Port}:${Debeziumconnect_Port}
+    environment:
+      - BOOTSTRAP_SERVERS=s_kafka:${Kafka_TCP_Port}
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - STATUS_STORAGE_TOPIC=my_connect_statuses
+    depends_on:
+      - s_zookeeper
+      - s_kafka
+    networks:
+      - net_backendservices
+    env_file:
+      - ./.env  
 networks:
   net_frontend:
     driver: bridge

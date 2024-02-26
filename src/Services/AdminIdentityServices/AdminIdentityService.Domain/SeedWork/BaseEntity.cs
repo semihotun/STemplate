@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using Newtonsoft.Json;
 namespace AdminIdentityService.Domain.SeedWork
 {
     /// <summary>
@@ -10,13 +10,14 @@ namespace AdminIdentityService.Domain.SeedWork
         public bool Deleted { get; set; }
         public DateTime CreateDate { get; set; }
         int? _requestedHashCode;
-        private readonly List<INotification> _domainEvents = [];
-        public IReadOnlyCollection<INotification>? DomainEvents => _domainEvents?.AsReadOnly();
-        public void AddDomainEvent(INotification eventItem)
+        private readonly List<IObjectNotification> _domainEvents = [];
+        [JsonIgnore]
+        public IReadOnlyCollection<IObjectNotification>? DomainEvents => _domainEvents?.AsReadOnly();
+        public void AddDomainEvent(IObjectNotification eventItem)
         {
             _domainEvents.Add(eventItem);
         }
-        public void RemoveDomainEvents(INotification eventItem)
+        public void RemoveDomainEvents(IObjectNotification eventItem)
         {
             _domainEvents.Remove(eventItem);
         }

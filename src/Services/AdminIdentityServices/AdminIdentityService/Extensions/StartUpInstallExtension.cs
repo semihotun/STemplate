@@ -3,6 +3,7 @@ using AdminIdentityService.Application.Extension;
 using AdminIdentityService.Insfrastructure.Utilities.ApiDoc.Swagger;
 using AdminIdentityService.Insfrastructure.Utilities.Caching.Redis;
 using AdminIdentityService.Insfrastructure.Utilities.Cors;
+using AdminIdentityService.Insfrastructure.Utilities.Hangfire;
 using AdminIdentityService.Insfrastructure.Utilities.Identity;
 using AdminIdentityService.Insfrastructure.Utilities.Logging;
 using AdminIdentityService.Insfrastructure.Utilities.MediatR;
@@ -13,38 +14,37 @@ using AdminIdentityService.Persistence.Extensions;
 using AdminIdentityService.Persistence.GenericRepository;
 using Carter;
 using FluentValidation;
-using AdminIdentityService.Insfrastructure.Utilities.Hangfire;
-namespace AdminIdentityService.Extensions
+
+namespace AdminIdentityService.Extensions;
+
+public static class StartUpInstallExtension
 {
-    public static class StartUpInstallExtension
+    public static async Task AddStartupServicesAsync(this WebApplicationBuilder builder)
     {
-        public static void AddStartupServices(this WebApplicationBuilder builder)
+        builder.Services.AddCarter();
+        builder.Services.AddControllers();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.AddCustomSwaggerGen();
+        builder.AddCors();
+        builder.Services.AddMvc();
+        //Log-Cache-Mediatr-FluentValidation-Mass transit
+        builder.AddSerilog();
+        builder.AddRedis();
+        var assembly = ApiAssemblyExtensions.GetLibrariesAssemblies();
+        builder.AddHangFire(assembly);
+        await builder.Services.ConfigureDbContextAsync(builder.Configuration);
+        builder.AddMediatR(assembly);
+        builder.Services.AddValidatorsFromAssembly(ApplicationAssemblyExtension.GetApplicationAssembly(), includeInternalTypes: true);
+        builder.AddCustomMassTransit(assembly, (busRegistrationContext, busFactoryConfigurator) =>
         {
-            builder.Services.AddCarter();
-            builder.Services.AddControllers();
-            builder.Services.AddHttpContextAccessor();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.AddCustomSwaggerGen();
-            builder.AddCors();
-            builder.Services.AddMvc();
-            //Log-Cache-Mediatr-FluentValidation-Mass transit
-            builder.AddSerilog();
-            builder.AddRedis();
-            var assembly = ApiAssemblyExtensions.GetLibrariesAssemblies();
-            builder.AddHangFire(assembly);
-            builder.Services.ConfigureDbContext(builder.Configuration);
-            builder.AddMediatR(assembly);
-            builder.Services.AddValidatorsFromAssembly(ApplicationAssemblyExtension.GetApplicationAssembly(), includeInternalTypes: true);
-            builder.AddCustomMassTransit(assembly, (busRegistrationContext, busFactoryConfigurator) =>
-            {
-                busFactoryConfigurator.AddConsumers(busRegistrationContext);
-                busFactoryConfigurator.AddPublishers();
-            });
-            builder.AddIdentitySettings();
-            //Service Registered
-            builder.Services.AddTransient<ITokenService, TokenService>();
-            builder.Services.AddScoped<ICoreDbContext, CoreDbContext>();
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        }
+            busFactoryConfigurator.AddConsumers(busRegistrationContext);
+            busFactoryConfigurator.AddPublishers();
+        });
+        builder.AddIdentitySettings();
+        //Service Registered
+        builder.Services.AddTransient<ITokenService, TokenService>();
+        builder.Services.AddScoped<ICoreDbContext, CoreDbContext>();
+        builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
 }

@@ -1,58 +1,124 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using STemplate.Persistence.Extensions;
+using STemplate.Domain.Result;
+using STemplate.Domain.SeedWork;
+using STemplate.Insfrastructure.Utilities.Outboxes;
 using System.Reflection;
-namespace STemplate.Persistence.Context
+namespace STemplate.Persistence.Context;
+
+/// <summary>
+/// Custom db context
+/// </summary>
+public class CoreDbContext(DbContextOptions<CoreDbContext> options, IMediator? mediator) : DbContext(options), ICoreDbContext
 {
-    /// <summary>
-    /// Custom db context
-    /// </summary>
-    public class CoreDbContext(DbContextOptions<CoreDbContext> options, IMediator? mediator) : DbContext(options), ICoreDbContext
+    public const string DEFAULT_SCHEMA = "CoreDbContextSchema";
+    private IMediator? Mediator { get; } = mediator;
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public const string DEFAULT_SCHEMA = "CoreDbContextSchema";
-        private readonly IMediator? _mediator = mediator;
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            var assm = Assembly.GetExecutingAssembly();
-            modelBuilder.ApplyConfigurationsFromAssembly(assm);
-        }
-        public IQueryable<TEntity> Query<TEntity>() where TEntity : class
-        {
-            return Set<TEntity>().AsQueryable();
-        }
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
+    public IQueryable<TEntity> Query<TEntity>() where TEntity : class
+    {
+        return Set<TEntity>().AsQueryable();
+    }
 #nullable disable
-        public async Task<TResult> BeginTransaction<TResult>(Func<Task<TResult>> action, Action successAction = null, Action<Exception> exceptionAction = null)
+    public async Task<T> BeginTransaction<T>(Func<Task<T>> action)
+        where T : Result
+    {
+        var result = default(T);
+        var strategy = this.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(async () =>
         {
-            var result = default(TResult);
-            var Context = this;
-            var strategy = Context.Database.CreateExecutionStrategy();
+            await using var tx = this.Database.BeginTransaction();
             try
             {
-                await strategy.ExecuteAsync(async () =>
-                {
-                    await using (var tx = Context.Database.BeginTransaction())
-                    {
-                        try
-                        {
-                            result = await action();
-                            await _mediator.DispatchDomainEventsAsync(Context);
-                            await Context.SaveChangesAsync();
-                            tx.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            tx.Rollback();
-                            throw;
-                        }
-                    }
-                    successAction?.Invoke();
-                });
+                result = await action();
+                if (!result.Success) return;
+                await DispatchDomainEventsAsync();
+                await this.SaveChangesAsync();
+                tx.Commit();
             }
-            catch (Exception ex) when (exceptionAction != null)
+            catch (Exception ex)
             {
-                exceptionAction(ex);
+                tx.Rollback();
+                throw new Exception("TransactionError", ex);
             }
-            return result;
+        });
+        return result;
+    }
+    public async Task<T> BeginTransactionNotDispatcher<T>(Func<Task<T>> action)
+    where T : Result
+    {
+        var result = default(T);
+        var strategy = this.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(async () =>
+        {
+            await using var tx = this.Database.BeginTransaction();
+            try
+            {
+                result = await action();
+                if (!result.Success) return;
+                await this.SaveChangesAsync();
+                tx.Commit();
+            }
+            catch (Exception ex)
+            {
+                tx.Rollback();
+                throw new Exception("TransactionError", ex);
+            }
+        });
+        return result;
+    }
+    public async Task<T> BeginTransactionAndCreateOutbox<T>(Func<Action<IOutboxMessage>, Task<T>> action)
+       where T : Result
+    {
+        var result = default(T);
+        var strategy = this.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(async () =>
+        {
+            await using var tx = this.Database.BeginTransaction();
+            try
+            {
+                IOutboxMessage message = null;
+                result = await action.Invoke(msg => message = msg);
+                if (!result.Success) return;
+                await DispatchDomainEventsOutboxAsync(message);
+                await this.SaveChangesAsync();
+                tx.Commit();
+            }
+            catch (Exception ex)
+            {
+                tx.Rollback();
+                throw new Exception("TransactionError", ex);
+            }
+        });
+        return result;
+    }
+    public async Task DispatchDomainEventsOutboxAsync(IOutboxMessage message)
+    {
+        var outbox = new Outbox();
+        outbox.InitOutbox(message);
+        var domainEntities = this.ChangeTracker
+                        .Entries<BaseEntity>()
+                        .Where(x => x.Entity.DomainEvents.Count != 0);
+        var domainEvents = domainEntities.SelectMany(x => x.Entity.DomainEvents).ToList();
+        domainEntities.ToList().ForEach(e => e.Entity.ClearDomainEvents());
+        foreach (var domainEvent in domainEvents)
+        {
+            var domainEventData = await Mediator.Send(domainEvent);
+            outbox.AddDomainEventDictionary(domainEventData?.GetType()?.Name ?? domainEvent.GetType().Name, domainEventData);
         }
+        outbox.DomainEventDictionaryToContent();
+        await this.Set<Outbox>().AddAsync(outbox);
+    }
+    private async Task DispatchDomainEventsAsync()
+    {
+        var domainEntities = this.ChangeTracker
+                                .Entries<BaseEntity>()
+                                .Where(x => x.Entity.DomainEvents.Count != 0);
+        var domainEvents = domainEntities.SelectMany(x => x.Entity.DomainEvents).ToList();
+        domainEntities.ToList().ForEach(e => e.Entity.ClearDomainEvents());
+        foreach (var domainEvent in domainEvents)
+            await Mediator.Send(domainEvent);
     }
 }
