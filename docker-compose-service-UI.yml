@@ -50,8 +50,6 @@ services:
       - ELASTICSEARCH_USERNAME=${ElasticSearch_UserName}
     ports:
       - "${Kibana_Port}:${Kibana_Port}"
-    depends_on:
-      - s_elasticsearch
     networks:
       - net_backendservices
   s_mongo-express:
@@ -70,8 +68,6 @@ services:
       ME_CONFIG_MONGODB_URL: mongo://${Mongo_UserName}:${Mongo_Password}@s_mongo:${Mongo_Port}
     networks:
       - net_backendservices
-    depends_on:
-      - s_mongo
     env_file:
       - ./.env     
 networks:
