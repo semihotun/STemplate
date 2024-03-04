@@ -10,6 +10,7 @@ using STemplate.Insfrastructure.Utilities.Identity;
 using STemplate.Insfrastructure.Utilities.Logging;
 using STemplate.Insfrastructure.Utilities.MediatR;
 using STemplate.Insfrastructure.Utilities.ServiceBus;
+using STemplate.Insfrastructure.Utilities.Telemetry;
 using STemplate.Persistence.Context;
 using STemplate.Persistence.Extensions;
 using STemplate.Persistence.GenericRepository;
@@ -29,6 +30,7 @@ namespace STemplate.Extensions
             builder.Services.AddMvc();
             //Log-Cache-Mediatr-FluentValidation-Mass transit
             builder.AddSerilog();
+            builder.AddTelemeter();
             builder.AddRedis();
             var assembly = ApiAssemblyExtensions.GetLibrariesAssemblies();
             builder.AddHangFire(assembly);

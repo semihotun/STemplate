@@ -9,6 +9,7 @@ using AdminIdentityService.Insfrastructure.Utilities.Logging;
 using AdminIdentityService.Insfrastructure.Utilities.MediatR;
 using AdminIdentityService.Insfrastructure.Utilities.Security.Jwt;
 using AdminIdentityService.Insfrastructure.Utilities.ServiceBus;
+using AdminIdentityService.Insfrastructure.Utilities.Telemetry;
 using AdminIdentityService.Persistence.Context;
 using AdminIdentityService.Persistence.Extensions;
 using AdminIdentityService.Persistence.GenericRepository;
@@ -31,6 +32,7 @@ public static class StartUpInstallExtension
         //Log-Cache-Mediatr-FluentValidation-Mass transit
         builder.AddSerilog();
         builder.AddRedis();
+        builder.AddTelemeter();
         var assembly = ApiAssemblyExtensions.GetLibrariesAssemblies();
         builder.AddHangFire(assembly);
         await builder.Services.ConfigureDbContextAsync(builder.Configuration);

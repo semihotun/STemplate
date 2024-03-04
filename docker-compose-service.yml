@@ -189,6 +189,13 @@ services:
       - net_backendservices
     env_file:
       - ./.env  
+  s_zipkin:
+    container_name: c_zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - net_backendservices
 networks:
   net_frontend:
     driver: bridge
