@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   s_debeziumui:
-    image: debezium/debezium-ui
+    image: debezium/debezium-ui:2.5
     container_name: c_debezium-ui
     ports:
       - "${Debezium_UI_Port}:${Debezium_UI_Port}"
@@ -14,7 +14,7 @@ services:
       - ./.env
   s_kafka-ui:
     container_name: c_kafka-ui
-    image: provectuslabs/kafka-ui
+    image: provectuslabs/kafka-ui:53a6553765a806eda9905c43bfcfe09da6812035
     ports:
       - "${Kafka_UI_Port}:${Kafka_UI_Port}"
     restart: always
@@ -54,7 +54,7 @@ services:
       - net_backendservices
   s_mongo-express:
     container_name: c_mongo-express
-    image: mongo-express
+    image: mongo-express:1.0.2-20-alpine3.19
     restart: always
     ports:
       - ${MongoExpress_Port}:8081

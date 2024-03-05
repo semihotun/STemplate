@@ -31,7 +31,7 @@ public static class DbContextRegistiration
         });
         var optionBuilder = new DbContextOptionsBuilder<CoreDbContext>()
             .UseSqlServer(connectionString);
-        await using (var ctx = new CoreDbContext(optionBuilder.Options, null))
+        await using (var ctx = new CoreDbContext(optionBuilder.Options))
         {
             if (ctx.Database.EnsureCreated())
             {

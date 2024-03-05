@@ -13,6 +13,7 @@ using AdminIdentityService.Insfrastructure.Utilities.Telemetry;
 using AdminIdentityService.Persistence.Context;
 using AdminIdentityService.Persistence.Extensions;
 using AdminIdentityService.Persistence.GenericRepository;
+using AdminIdentityService.Persistence.UnitOfWork;
 using Carter;
 using FluentValidation;
 
@@ -47,6 +48,7 @@ public static class StartUpInstallExtension
         //Service Registered
         builder.Services.AddTransient<ITokenService, TokenService>();
         builder.Services.AddScoped<ICoreDbContext, CoreDbContext>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
 }

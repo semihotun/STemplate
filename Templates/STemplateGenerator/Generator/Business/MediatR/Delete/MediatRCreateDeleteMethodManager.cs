@@ -72,7 +72,7 @@ internal class MediatRCreateDeleteMethodManager : IMediatRCreateDeleteMethodMana
     private string GetCreateDeleteMethodRequestHandlerInnerString(CreateAggregateClassRequest request)
     {
         var classFirstLetterLoverCase = request.ClassName.MakeFirstLetterLowerCaseWithRegex();
-        return $@"return await _coreDbContext.BeginTransaction<Result>(async () =>
+        return $@"return await _unitOfWork.BeginTransaction<Result>(async () =>
                                      {{     
                                         var data = await _{classFirstLetterLoverCase}Repository.GetAsync(p => p.Id == request.Id);
                                         if(data is not null)

@@ -75,7 +75,7 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
     private string GetCreateUpdateMethodRequestHandlerInnerString(CreateAggregateClassRequest request)
     {
         var firstLoverClassName = request.ClassName.MakeFirstLetterLowerCaseWithRegex();
-        return $@"return await _coreDbContext.BeginTransaction<Result>(async () =>
+        return $@"return await _unitOfWork.BeginTransaction<Result>(async () =>
                                      {{     
                                        var data = await _{firstLoverClassName}Repository.GetAsync(u => u.Id == request.Id);
                                        if(data is not null)

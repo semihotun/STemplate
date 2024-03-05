@@ -46,7 +46,7 @@ internal class MediatrTemplate : IMediatrTemplate
     public string GetCommandHandlerPrimaryConstructorParameters(GetCommandHandlerPrimaryConstructorParametersRequestModel request)
     {
         return @$"IRepository<{request.RepositoryClassName}>{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository,
-                      ICoreDbContext coreDbContext,
+                      IUnitOfWork unitOfWork,
                       ICacheService cacheService";
     }
     /// <summary>
@@ -58,7 +58,7 @@ internal class MediatrTemplate : IMediatrTemplate
     {
         return $@"{(request.IsMapper ? $"private readonly {request.RepositoryClassName}Mapper _{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Mapper = new ();" : "")}
                       private readonly IRepository<{request.RepositoryClassName}> _{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository = {request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository;
-                      private readonly ICoreDbContext _coreDbContext = coreDbContext;
+                      private readonly IUnitOfWork  _unitOfWork = unitOfWork;
                       private readonly ICacheService _cacheService = cacheService;
                     ";
     }
@@ -73,7 +73,7 @@ internal class MediatrTemplate : IMediatrTemplate
                   using {request.ProjectName}.Domain.Result;
                   {(!request.IsAggregateUsing ? $"using {request.ProjectName}.Domain.AggregateModels;" : "")}
                   {(request.DifferentFile ? "" : @$"
-                  using {request.ProjectName}.Persistence.Context;
+                  using {request.ProjectName}.Persistence.UnitOfWork;
                   using {request.ProjectName}.Persistence.GenericRepository;
                   using {request.ProjectName}.Insfrastructure.Utilities.Caching.Redis;
                   using {request.ProjectName}.Application.Constants;
@@ -89,7 +89,7 @@ internal class MediatrTemplate : IMediatrTemplate
     {
         return $@"using MediatR;
                   using {request.ProjectName}.Domain.Result;
-                  using {request.ProjectName}.Persistence.Context;
+                  using {request.ProjectName}.Persistence.UnitOfWork;
                   using {request.ProjectName}.Persistence.GenericRepository;
                   using {request.ProjectName}.Domain.AggregateModels;
                   using {request.ProjectName}.Insfrastructure.Utilities.Caching.Redis;                   

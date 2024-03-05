@@ -16,7 +16,7 @@ services:
       - ./.env
   s_redis:
     container_name: c_redis
-    image: redis
+    image: redis:7.2.4
     ports:
       - ${Redis__Port}:${Redis__Port}
     networks:
@@ -56,7 +56,7 @@ services:
   #   env_file:
   #     - ./.env
   s_prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v2.50.1
     container_name: c_prometheus
     restart: unless-stopped
     ports:
@@ -76,7 +76,7 @@ services:
     env_file:
       - ./.env       
   s_grafana:
-    image: grafana/grafana
+    image: grafana/grafana:10.2.4
     container_name: c_grafana
     ports:
       - "${Grafana_Port}:3000"
@@ -88,13 +88,13 @@ services:
     env_file:
       - ./.env
   s_node-exporter:
-    image: prom/node-exporter:latest
+    image: prom/node-exporter:v1.7.0
     container_name: c_node-exporter
     restart: unless-stopped
     expose:
       - 9100
   s_cadvisor:
-    image: google/cadvisor:latest
+    image: google/cadvisor:v0.33.0
     container_name: c_cadvisor
     restart: unless-stopped
     volumes:
@@ -132,7 +132,7 @@ services:
       - net_backendservices
   s_mongo:
     container_name: c_mongo
-    image: mongo
+    image: mongo:7.0.7-rc0
     ports:
       - ${Mongo_Port}:${Mongo_Port}
     environment:
@@ -144,7 +144,7 @@ services:
       - ./.env
   s_zookeeper:
     container_name: c_zookeeper
-    image: debezium/zookeeper
+    image: debezium/zookeeper:2.5.2.Final
     ports:
       - "${Zookeeper_Port}:${Zookeeper_Port}"
       - "2888:2888"
@@ -155,7 +155,7 @@ services:
       - ./.env
   s_kafka:
     container_name: c_kafka
-    image: debezium/kafka
+    image: debezium/kafka:2.5.2.Final
     ports:
       - "${Kafka_TCP_Port}:${Kafka_TCP_Port}"
       - "${Kafka_External_Tcp}:${Kafka_External_Tcp}"
@@ -173,7 +173,7 @@ services:
       - ./.env
   s_debeziumconnect:
     container_name: c_debeziumconnect
-    image: debezium/connect
+    image: debezium/connect:2.5.2.Final
     ports:
       - ${Debeziumconnect_Port}:${Debeziumconnect_Port}
     environment:
@@ -191,7 +191,7 @@ services:
       - ./.env  
   s_zipkin:
     container_name: c_zipkin
-    image: openzipkin/zipkin
+    image: openzipkin/zipkin:3
     ports:
       - "9411:9411"
     networks:
