@@ -1,4 +1,4 @@
-﻿using AdminIdentityService.Insfrastructure.Utilities.Kafka;
+﻿using AdminIdentityService.Persistence.Cdc.MssqlContext;
 using AdminIdentityService.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +37,7 @@ public static class DbContextRegistiration
             {
                 ctx.Database.Migrate();
                 CreateCdcForOutboxWithMssql(ctx);
-                await KafkaExtension.AddConnector(configuration);
+                await MssqlDbContextConnectorExtension.AddAllConnectorAsync(configuration);
             }
             else
             {
@@ -50,6 +50,5 @@ public static class DbContextRegistiration
     private static void CreateCdcForOutboxWithMssql(CoreDbContext ctx)
     {
         ctx.Database.ExecuteSqlRaw("EXEC sys.sp_cdc_enable_db;");
-        ctx.Database.ExecuteSqlRaw("EXEC sys.sp_cdc_enable_table @source_schema = N'dbo', @source_name = N'Outbox', @role_name = NULL;");
     }
 }

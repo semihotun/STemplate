@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using STemplate.Insfrastructure.Utilities.Kafka;
+using STemplate.Persistence.Cdc.MssqlContext;
 using STemplate.Persistence.Context;
 namespace STemplate.Persistence.Extensions;
 
@@ -36,7 +36,7 @@ public static class DbContextRegistiration
             {
                 ctx.Database.Migrate();
                 CreateCdcForOutboxWithMssql(ctx);
-                await KafkaExtension.AddConnector(configuration);
+                await MssqlDbContextConnectorExtension.AddAllConnectorAsync(configuration);
             }
             else
             {
@@ -49,6 +49,5 @@ public static class DbContextRegistiration
     private static void CreateCdcForOutboxWithMssql(CoreDbContext ctx)
     {
         ctx.Database.ExecuteSqlRaw("EXEC sys.sp_cdc_enable_db;");
-        ctx.Database.ExecuteSqlRaw("EXEC sys.sp_cdc_enable_table @source_schema = N'dbo', @source_name = N'Outbox', @role_name = NULL;");
     }
 }

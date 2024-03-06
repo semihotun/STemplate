@@ -1,6 +1,5 @@
-﻿namespace AdminIdentityService.Insfrastructure.Utilities.Outboxes;
-
-public enum State
+﻿namespace STemplate.Insfrastructure.Utilities.Outboxes;
+public enum OutboxState
 {
     Started = 1,
     Pending = 2,

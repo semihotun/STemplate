@@ -16,7 +16,7 @@ namespace STemplate.Insfrastructure.Utilities.Cors
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials()));
-                return builder;
+            return builder;
         }
     }
 }

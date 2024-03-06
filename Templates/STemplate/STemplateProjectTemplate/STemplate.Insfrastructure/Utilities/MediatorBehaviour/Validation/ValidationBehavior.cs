@@ -1,6 +1,6 @@
-﻿using STemplate.Insfrastructure.Utilities.MediatorBehaviour.Validation.Exceptions;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
+using STemplate.Insfrastructure.Utilities.MediatorBehaviour.Validation.Exceptions;
 namespace STemplate.Insfrastructure.Utilities.MediatorBehaviour.Validation;
 /// <summary>
 /// Validation pipeline

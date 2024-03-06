@@ -21,7 +21,7 @@ namespace AdminIdentityService.Insfrastructure.Utilities.Outboxes
         public string? IntegrationEventType { get; private set; }
         [JsonProperty]
         public string? Content { get; private set; } = "{}";
-        public State State { get; private set; }
+        public OutboxState State { get; private set; }
         private readonly Dictionary<string, object> DomainEventDictionary = [];
         public void InitOutbox(IOutboxMessage integrationEvent)
         {

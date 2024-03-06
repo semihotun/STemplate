@@ -21,6 +21,9 @@ if (!app.Environment.IsDevelopment())
     app.MapMetrics();
     app.UseHttpsRedirection();
 }
+app.UseHttpMetrics();
+app.MapMetrics();
+app.UseHttpsRedirection();
 //WebUI
 app.UseSwagger();
 app.UseSwaggerUI();

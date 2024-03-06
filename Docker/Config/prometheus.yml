@@ -10,15 +10,6 @@ alerting:
     static_configs:
     - targets: []
 scrape_configs:
-- job_name: DDDTemplateService
-  honor_timestamps: true
-  scrape_interval: 600s  
-  scrape_timeout: 115s  
-  metrics_path: /metrics
-  scheme: http  
-  static_configs:  
-  - targets:  
-    - host.docker.internal:4033
 - job_name: AdminIdentityService
   honor_timestamps: true
   scrape_interval: 600s  

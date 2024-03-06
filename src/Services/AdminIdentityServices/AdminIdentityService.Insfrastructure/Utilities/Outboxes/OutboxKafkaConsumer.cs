@@ -1,5 +1,4 @@
 ﻿using AdminIdentityService.Insfrastructure.Utilities.Kafka;
-using Confluent.Kafka;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,13 +19,7 @@ public static class OutboxKafkaConsumer
     /// <returns></returns>
     public static async Task AddOutboxKafkaConsumerAsync(this WebApplication webApplication, Assembly applicationAssembly)
     {
-        using IConsumer<Ignore, string> consumer = new ConsumerBuilder<Ignore, string>(new ConsumerConfig()
-        {
-            GroupId = $"{webApplication.Configuration["RegionName"]}",
-            BootstrapServers = $"s_kafka:{webApplication.Configuration["Kafka_External_Tcp"]}",
-            AutoOffsetReset = AutoOffsetReset.Earliest,
-            EnableAutoCommit = false
-        }).Build();
+        using var consumer = KafkaConsumerExtension.CreateKafkaConsumer(webApplication.Configuration);
         consumer.Subscribe($"{webApplication.Configuration["RegionName"]}.{webApplication.Configuration["RegionName"]}.dbo.Outbox");
         var bus = webApplication.Services.GetRequiredService<IBus>();
         var saveState = KafkaOutboxErrorState.NoError;
