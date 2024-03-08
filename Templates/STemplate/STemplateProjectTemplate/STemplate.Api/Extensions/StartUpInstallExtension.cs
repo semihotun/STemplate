@@ -14,6 +14,7 @@ using STemplate.Insfrastructure.Utilities.Telemetry;
 using STemplate.Persistence.Context;
 using STemplate.Persistence.Extensions;
 using STemplate.Persistence.GenericRepository;
+using STemplate.Persistence.SearchEngine;
 using STemplate.Persistence.UnitOfWork;
 
 namespace STemplate.Extensions
@@ -48,6 +49,8 @@ namespace STemplate.Extensions
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ICoreDbContext, CoreDbContext>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            await SearchEngineRegistration.MigrateElasticDbAsync(assembly, builder.Configuration);
+            builder.Services.AddScoped<ICoreSearchEngineContext, CoreSearchEngineContext>();
         }
     }
 }

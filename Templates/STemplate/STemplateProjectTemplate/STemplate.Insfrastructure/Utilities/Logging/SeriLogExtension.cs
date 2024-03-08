@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Filters;
 using Serilog.Formatting.Elasticsearch;
@@ -18,13 +16,8 @@ public static class SerilogExtension
     /// <returns></returns>
     public static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder)
     {
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
         Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(configuration)
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            .MinimumLevel.Override("System", LogEventLevel.Information)
+            .ReadFrom.Configuration(builder.Configuration)
             .Enrich.FromLogContext()
             .Enrich.WithProperty("ApplicationName", "eCommerce")
             .Enrich.WithCorrelationId()
@@ -32,7 +25,7 @@ public static class SerilogExtension
             .Filter.ByExcluding(Matching.FromSource("Microsoft.AspNetCore.StaticFiles"))
             .WriteTo.Async(writeTo => writeTo.Console(new JsonFormatter()))
             .WriteTo.Async(writeTo => writeTo.Elasticsearch(
-                new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"] ?? "http://host.docker.internal:9200"))
+                new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"] ?? "http://host.docker.internal:9200"))
                 {
                     TypeName = null,
                     AutoRegisterTemplate = true,

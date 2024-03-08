@@ -50,5 +50,6 @@ public static class DbContextRegistiration
     private static void CreateCdcForOutboxWithMssql(CoreDbContext ctx)
     {
         ctx.Database.ExecuteSqlRaw("EXEC sys.sp_cdc_enable_db;");
+        MssqlDbContextAddAllCdcTable.AddAllCdc(ctx);
     }
 }

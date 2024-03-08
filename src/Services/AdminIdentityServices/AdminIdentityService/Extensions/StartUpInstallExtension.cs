@@ -1,5 +1,6 @@
 ﻿using AdminIdentityService.Application.Assemblies;
 using AdminIdentityService.Application.Extension;
+using AdminIdentityService.Domain.Assemblies;
 using AdminIdentityService.Insfrastructure.Utilities.ApiDoc.Swagger;
 using AdminIdentityService.Insfrastructure.Utilities.Caching.Redis;
 using AdminIdentityService.Insfrastructure.Utilities.Cors;
@@ -13,6 +14,7 @@ using AdminIdentityService.Insfrastructure.Utilities.Telemetry;
 using AdminIdentityService.Persistence.Context;
 using AdminIdentityService.Persistence.Extensions;
 using AdminIdentityService.Persistence.GenericRepository;
+using AdminIdentityService.Persistence.SearchEngine;
 using AdminIdentityService.Persistence.UnitOfWork;
 using Carter;
 using FluentValidation;
@@ -50,5 +52,7 @@ public static class StartUpInstallExtension
         builder.Services.AddScoped<ICoreDbContext, CoreDbContext>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        await SearchEngineRegistration.MigrateElasticDbAsync(assembly,builder.Configuration);
+        builder.Services.AddScoped<ICoreSearchEngineContext, CoreSearchEngineContext>();
     }
 }
