@@ -4,50 +4,5 @@
 docker network create net_frontend
 docker network create net_backendservices
 
-/// Step 2 -> You can change the username and passwords below, save it as an .env file and run the project.
-
-SQL_Password=
-SQL_User=
-ElasticSearch_Password=
-TokenOptions__Audience=
-TokenOptions__Issuer=
-TokenOptions__AccessTokenExpiration=
-TokenOptions__SecurityKey=
-ElasticSearch_UserName=
-Redis__Password=
-Redis__User=
-RabbitMQ__UserName=
-RabbitMQ__Password=
-Stage=Development
-Docker_Registry=ecommerce
-WebApiGateway_Port=4000
-AdminIdentity_Port=4001
-RabbitMq_TCP_Port=5672
-RabbitMq_UI_Port=15672
-SQL_Host_Port=1457
-SQL_TCP_Port=1433
-Nginx_Port=8070
-Prometheus_Port=5100
-Grafana_Port=5200
-Elastic_TCP_Port=9200
-Elastic_UDP_Port=9300
-Kibana_Port=5601
-RedisInsight_Port=8001
-Redis__Host=s_redis
-Redis__Port=6379
-Redis__Ssl=false
-Redis__Ttl=60
-RabbitMQ__HostName=amqp://s_rabbitmq
-RabbitMQ__Port=${RabbitMq_TCP_Port}
-ElasticConfiguration__Uri=http://host.docker.internal:${Elastic_TCP_Port}"
-Serilog__IncludeScopes=false
-Serilog__MinimumLevel__Default=Information
-Serilog__MinimumLevel__Override__Microsoft=Information
-Serilog__MinimumLevel__Override__System=Warning
-AllowedHosts=*
-AdminIdentityServiceSqlConnectionString=data source=s_sqlserver;initial catalog=AdminIdentityService;persist security info=False;user id=${SQL_User};password=${SQL_Password};TrustServerCertificate=true;
-DDDTemplateServiceSqlConnectionString=data source=s_sqlserver;initial catalog=DDDTemplateService;persist security info=False;user id=${SQL_User};password=${SQL_Password};TrustServerCertificate=true;
-
-
-/// Step 3 ->run docker-compose.bat
-/// Step 4 ->docker-compose -f docker-compose.yml up -d
+/// Step 2 ->run docker-compose-service.bat
+/// Step 3 ->docker-compose -f docker-compose.yml up -d

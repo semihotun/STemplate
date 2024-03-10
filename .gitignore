@@ -33,7 +33,7 @@ bld/
 [Ll]ogs/
 
 #Env File
-.env
+
 
 #GrafanaData
 Docker/MetricData
