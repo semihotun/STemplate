@@ -55,55 +55,55 @@ services:
   #     - ${Nginx_Port}:80
   #   env_file:
   #     - ./.env
-  s_prometheus:
-    image: prom/prometheus:v2.50.1
-    container_name: c_prometheus
-    restart: unless-stopped
-    ports:
-      - "${Prometheus_Port}:9090"
-    environment:
-      - TZ=UTC
-    volumes:
-      - ./Docker/Config/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./Docker/PrometheusData:/prometheus/data
-    command:
-      - '--storage.tsdb.retention.time=0s'
-      - '--storage.tsdb.retention.size=2KB'
-      - '--config.file=/etc/prometheus/prometheus.yml'  
-    links:
-      - s_cadvisor:cadvisor
-      - s_node-exporter:node-exporter
-    env_file:
-      - ./.env       
-  s_grafana:
-    image: grafana/grafana:10.2.4
-    container_name: c_grafana
-    ports:
-      - "${Grafana_Port}:3000"
-    volumes:
-      - ./Docker/MetricData/grafana-data/data:/var/lib/grafana
-    links:
-      - s_prometheus:prometheus
-    restart: unless-stopped
-    env_file:
-      - ./.env
-  s_node-exporter:
-    image: prom/node-exporter:v1.7.0
-    container_name: c_node-exporter
-    restart: unless-stopped
-    expose:
-      - 9100
-  s_cadvisor:
-    image: google/cadvisor:v0.33.0
-    container_name: c_cadvisor
-    restart: unless-stopped
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    expose:
-      - 8080
+  # s_prometheus:
+  #   image: prom/prometheus:v2.50.1
+  #   container_name: c_prometheus
+  #   restart: unless-stopped
+  #   ports:
+  #     - "${Prometheus_Port}:9090"
+  #   environment:
+  #     - TZ=UTC
+  #   volumes:
+  #     - ./Docker/Config/prometheus.yml:/etc/prometheus/prometheus.yml
+  #     - ./Docker/PrometheusData:/prometheus/data
+  #   command:
+  #     - '--storage.tsdb.retention.time=0s'
+  #     - '--storage.tsdb.retention.size=2KB'
+  #     - '--config.file=/etc/prometheus/prometheus.yml'  
+  #   links:
+  #     - s_cadvisor:cadvisor
+  #     - s_node-exporter:node-exporter
+  #   env_file:
+  #     - ./.env       
+  # s_grafana:
+  #   image: grafana/grafana:10.2.4
+  #   container_name: c_grafana
+  #   ports:
+  #     - "${Grafana_Port}:3000"
+  #   volumes:
+  #     - ./Docker/MetricData/grafana-data/data:/var/lib/grafana
+  #   links:
+  #     - s_prometheus:prometheus
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ./.env
+  # s_node-exporter:
+  #   image: prom/node-exporter:v1.7.0
+  #   container_name: c_node-exporter
+  #   restart: unless-stopped
+  #   expose:
+  #     - 9100
+  # s_cadvisor:
+  #   image: google/cadvisor:v0.33.0
+  #   container_name: c_cadvisor
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:rw
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #   expose:
+  #     - 8080
   s_elasticsearch:
     container_name: c_elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2

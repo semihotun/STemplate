@@ -10,6 +10,15 @@ alerting:
     static_configs:
     - targets: []
 scrape_configs:
+- job_name: WebApiGateway
+  honor_timestamps: true
+  scrape_interval: 600s  
+  scrape_timeout: 595s  
+  metrics_path: /metrics
+  scheme: http  
+  static_configs:  
+  - targets:  
+    - host.docker.internal:4000
 - job_name: AdminIdentityService
   honor_timestamps: true
   scrape_interval: 600s  
@@ -19,3 +28,84 @@ scrape_configs:
   static_configs:  
   - targets:  
     - host.docker.internal:4001
+- job_name: BasketService
+  honor_timestamps: true
+  scrape_interval: 600s  
+  scrape_timeout: 595s  
+  metrics_path: /metrics
+  scheme: http  
+  static_configs:  
+  - targets:  
+    - host.docker.internal:4002 
+- job_name: CatalogService
+  honor_timestamps: true
+  scrape_interval: 600s  
+  scrape_timeout: 595s  
+  metrics_path: /metrics
+  scheme: http  
+  static_configs:  
+  - targets:  
+    - host.docker.internal:4003 
+- job_name: CustomerService
+  honor_timestamps: true
+  scrape_interval: 600s  
+  scrape_timeout: 595s  
+  metrics_path: /metrics
+  scheme: http  
+  static_configs:  
+  - targets:  
+    - host.docker.internal:4004  
+- job_name: NotificaitonService
+  honor_timestamps: true
+  scrape_interval: 600s  
+  scrape_timeout: 595s  
+  metrics_path: /metrics
+  scheme: http  
+  static_configs:  
+  - targets:  
+    - host.docker.internal:4005 
+- job_name: OrderService
+  honor_timestamps: true
+  scrape_interval: 600s  
+  scrape_timeout: 595s  
+  metrics_path: /metrics
+  scheme: http  
+  static_configs:  
+  - targets:  
+    - host.docker.internal:4006
+- job_name: PaymentService
+  honor_timestamps: true
+  scrape_interval: 600s  
+  scrape_timeout: 595s  
+  metrics_path: /metrics
+  scheme: http  
+  static_configs:  
+  - targets:  
+    - host.docker.internal:4007
+- job_name: ProductService
+  honor_timestamps: true
+  scrape_interval: 600s  
+  scrape_timeout: 595s  
+  metrics_path: /metrics
+  scheme: http  
+  static_configs:  
+  - targets:  
+    - host.docker.internal:4008
+- job_name: SearchBarService
+  honor_timestamps: true
+  scrape_interval: 600s  
+  scrape_timeout: 595s  
+  metrics_path: /metrics
+  scheme: http  
+  static_configs:  
+  - targets:  
+    - host.docker.internal:4009
+- job_name: ShippingService
+  honor_timestamps: true
+  scrape_interval: 600s  
+  scrape_timeout: 595s  
+  metrics_path: /metrics
+  scheme: http  
+  static_configs:  
+  - targets:  
+    - host.docker.internal:4010   
