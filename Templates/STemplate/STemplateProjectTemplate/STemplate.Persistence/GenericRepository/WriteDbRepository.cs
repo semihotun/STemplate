@@ -4,52 +4,64 @@ using STemplate.Persistence.Context;
 using System.Linq.Expressions;
 namespace STemplate.Persistence.GenericRepository
 {
-    public class Repository<TEntity>(ICoreDbContext context) : IRepository<TEntity>
-             where TEntity : class, IEntity
+    public class WriteDbRepository<TEntity> : IWriteDbRepository<TEntity>
+    where TEntity : BaseEntity, IEntity
     {
-        private readonly ICoreDbContext Context = context;
+        private readonly ICoreDbContext _writeContext;
+        public WriteDbRepository(ICoreDbContext writeContext)
+        {
+            _writeContext = writeContext;
+        }
         public void AddRange(List<TEntity> entity)
         {
-            Context.Set<TEntity>().AddRange(entity);
+            _writeContext.Set<TEntity>().AddRange(entity);
         }
         public async Task AddRangeAsync(IEnumerable<TEntity> entity)
         {
-            await Context.Set<TEntity>().AddRangeAsync(entity);
+            await _writeContext.Set<TEntity>().AddRangeAsync(entity);
         }
         public TEntity Update(TEntity entity)
         {
-            Context.Set<TEntity>().Update(entity);
+            _writeContext.Set<TEntity>().Update(entity);
             return entity;
         }
         public void Remove(TEntity entity)
         {
-            Context.Set<TEntity>().Remove(entity);
+            entity.Deleted = true;
+            _writeContext.Set<TEntity>().Update(entity);
         }
         public async Task<TEntity> AddAsync(TEntity entity)
         {
-            var data = await Context.Set<TEntity>().AddAsync(entity);
-            return data.Entity;
+            return (await _writeContext.Set<TEntity>().AddAsync(entity)).Entity;
         }
         public void RemoveRange(List<TEntity> entity)
         {
-            Context.Set<TEntity>().RemoveRange(entity);
+            foreach (var item in entity)
+            {
+                Remove(item);
+            }
         }
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
         {
-            return await Context.Set<TEntity>().AnyAsync(expression);
+            return await _writeContext.Query<TEntity>().AnyAsync(expression);
         }
         public async Task<TEntity?> GetByIdAsync(Guid Id)
         {
-            return await Context.Set<TEntity>().FindAsync(Id);
+            var entity = await _writeContext.Set<TEntity>().FindAsync(Id);
+            if (entity?.Deleted == false)
+            {
+                return entity;
+            }
+            return null;
         }
         #region Get 
         public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> expression)
         {
-            return await Context.Set<TEntity>().FirstOrDefaultAsync(expression);
+            return await _writeContext.Query<TEntity>().FirstOrDefaultAsync(expression);
         }
         public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> expression, params Expression<Func<TEntity, object>>[] includes)
         {
-            var query = Context.Set<TEntity>().AsQueryable();
+            var query = _writeContext.Query<TEntity>();
             foreach (var item in includes)
             {
                 query.Include(item);
@@ -60,15 +72,15 @@ namespace STemplate.Persistence.GenericRepository
         #region ToListAsync
         public async Task<IList<TEntity>> ToListAsync()
         {
-            return await Context.Set<TEntity>().ToListAsync();
+            return await _writeContext.Query<TEntity>().ToListAsync();
         }
         public async Task<IList<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> expression)
         {
-            return await Context.Set<TEntity>().Where(expression).ToListAsync();
+            return await _writeContext.Query<TEntity>().Where(expression).ToListAsync();
         }
         public async Task<IList<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> expression, params Expression<Func<TEntity, object>>[] includes)
         {
-            IQueryable<TEntity> query = Context.Set<TEntity>();
+            IQueryable<TEntity> query = _writeContext.Query<TEntity>();
             foreach (var include in includes)
             {
                 query = query.Include(include);
@@ -77,7 +89,7 @@ namespace STemplate.Persistence.GenericRepository
         }
         public async Task<IList<TEntity>> ToListAsync(Expression<Func<TEntity, bool>>? expression = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, params Expression<Func<TEntity, object>>[] includes)
         {
-            IQueryable<TEntity> query = Context.Set<TEntity>();
+            IQueryable<TEntity> query = _writeContext.Query<TEntity>();
             foreach (var include in includes)
             {
                 query = query.Include(include);
@@ -96,13 +108,13 @@ namespace STemplate.Persistence.GenericRepository
         #region GetCountAsync
         public async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> expression)
         {
-            return await Context.Set<TEntity>().CountAsync(expression);
+            return await _writeContext.Query<TEntity>().CountAsync(expression);
         }
         public async Task<int> GetCountAsync()
         {
-            return await Context.Set<TEntity>().CountAsync();
+            return await _writeContext.Query<TEntity>().CountAsync();
         }
         #endregion
-        public IQueryable<TEntity> Query() => Context.Set<TEntity>();
+        public IQueryable<TEntity> Query() => _writeContext.Query<TEntity>();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using STemplate.Domain.SeedWork;
 using System.Reflection;
 namespace STemplate.Persistence.Context;
 
@@ -12,8 +13,8 @@ public class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbContext(
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
-    public IQueryable<TEntity> Query<TEntity>() where TEntity : class
+    public IQueryable<TEntity> Query<TEntity>() where TEntity : BaseEntity
     {
-        return Set<TEntity>().AsQueryable();
+        return Set<TEntity>().AsQueryable().Where(x => !x.Deleted);
     }
 }

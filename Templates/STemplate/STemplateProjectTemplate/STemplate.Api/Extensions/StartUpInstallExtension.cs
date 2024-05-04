@@ -48,7 +48,8 @@ namespace STemplate.Extensions
             //Service Registered
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ICoreDbContext, CoreDbContext>();
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped(typeof(IWriteDbRepository<>), typeof(WriteDbRepository<>));
+            builder.Services.AddScoped(typeof(IReadDbRepository<>), typeof(ReadDbRepository<>));
             await SearchEngineRegistration.MigrateElasticDbAsync(assembly, builder.Configuration);
             builder.Services.AddScoped<ICoreSearchEngineContext, CoreSearchEngineContext>();
         }
