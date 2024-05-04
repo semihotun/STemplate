@@ -28,6 +28,17 @@ public static class DbContextRegistiration
                     errorNumbersToAdd: null);
             });
         });
+        services.AddEntityFrameworkSqlServer().AddDbContext<CoreDbReadContext>(option =>
+        {
+            option.UseSqlServer(connectionString,
+            sqlServerOptionsAction: sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 15,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null);
+            });
+        },ServiceLifetime.Transient);
         var optionBuilder = new DbContextOptionsBuilder<CoreDbContext>()
             .UseSqlServer(connectionString);
         await using (var ctx = new CoreDbContext(optionBuilder.Options))
@@ -37,6 +48,7 @@ public static class DbContextRegistiration
                 ctx.Database.Migrate();
                 CreateCdcForOutboxWithMssql(ctx);
                 await MssqlDbContextConnectorExtension.AddAllConnectorAsync(configuration);
+                ctx.SeedAsync().GetAwaiter().GetResult();
             }
             else
             {
