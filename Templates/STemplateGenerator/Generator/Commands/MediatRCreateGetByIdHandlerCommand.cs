@@ -57,7 +57,7 @@ internal class MediatRCreateGetByIdHandlerCommand : BaseCommand<MediatRCreateGet
                     classPath: projectItem.FileNames[0],
                     operation: OperationEnum.Get,
                     commandOrQuery: CqrsEnum.Query,
-                    returnType: $"DataResult<{className}>",
+                    returnType: $"Result<{className}>",
                     isAggregateUsing: _mediatrTemplate.IsAggregateUsing(new(projectName, classProperties)),
                     isMapper: false,
                     requestName: $"Get{className}ByIdQuery"

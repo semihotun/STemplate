@@ -96,7 +96,7 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
                                             {String.Join("\n", await request.GetClassGenerateMethodStringAsync())}
                                             await _{request.ClassName.MakeFirstLetterLowerCaseWithRegex()}Repository.AddAsync(data); 
                                             await _cacheService.RemovePatternAsync(""{request.ProjectName}:{request.ClassName.Plurualize()}"");
-                                            return new SuccessResult(Messages.Added);
+                                            return Result.SuccessResult(Messages.Added);
                                      }});";
     }
     #endregion

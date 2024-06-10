@@ -113,10 +113,10 @@ internal class MediatRCreateGridManager : IMediatRCreateGridManager
     /// <param name="request"></param>
     /// <returns></returns>
     private string GetRequestHandlerString(GridGenerateVeriables request) =>
-         $@"return await _cacheService.GetAsync<DataResult<IPagedList<{request.DtoName}>>>(request,async () =>
+         $@"return await _cacheService.GetAsync<Result<IPagedList<{request.DtoName}>>>(request,async () =>
                 {{
                     var query = await Get{request.DtoName}CompiledQueryCompiledQuery.Get(_coreDbContext).ToTableSettings(request.PagedListFilterModel);
-                    return new SuccessDataResult<IPagedList<{request.DtoName}>>(query);
+                    return Result.SuccessDataResult<IPagedList<{request.DtoName}>>(query);
                 }}, cancellationToken);";
     /// <summary>
     /// Generate Compile Query

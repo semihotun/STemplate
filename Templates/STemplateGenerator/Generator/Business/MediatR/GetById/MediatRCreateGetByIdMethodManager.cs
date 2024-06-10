@@ -73,10 +73,10 @@ internal class MediatRCreateGetByIdMethodManager : IMediatRCreateGetByIdMethodMa
     private string GetCreateGetByIdRequestHandlerInnerString(CreateAggregateClassRequest request)
     {
         var firstLoverClassName = request.ClassName.MakeFirstLetterLowerCaseWithRegex();
-        return $@"return await _cacheService.GetAsync<DataResult<{request.ClassName}>>(request,async () =>
+        return $@"return await _cacheService.GetAsync<Result<{request.ClassName}>>(request,async () =>
                 {{
                     var query = await _{firstLoverClassName}Repository.GetByIdAsync(request.Id);
-                    return new SuccessDataResult<{request.ClassName}>(query);
+                    return Result.SuccessDataResult<{request.ClassName}>(query);
                 }}, cancellationToken);";
     }
 }

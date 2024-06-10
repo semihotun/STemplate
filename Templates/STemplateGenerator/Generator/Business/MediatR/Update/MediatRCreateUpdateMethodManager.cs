@@ -83,9 +83,9 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
                                            var mapperData=_{firstLoverClassName}Mapper.{request.RequestName}To{request.ClassName}(request);                                       
                                            _{firstLoverClassName}Repository.Update(data);
                                            await _cacheService.RemovePatternAsync(""{request.ProjectName}:{request.ClassName.Plurualize()}"");
-                                           return new SuccessResult(Messages.Updated);
+                                           return Result.SuccessResult(Messages.Updated);
                                        }}
-                                       return new ErrorResult(Messages.UpdatedError);
+                                       return Result.ErrorResult(Messages.UpdatedError);
                                      }});";
     }
 }

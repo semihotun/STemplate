@@ -45,7 +45,7 @@ internal class MediatrTemplate : IMediatrTemplate
     #region Commands
     public string GetCommandHandlerPrimaryConstructorParameters(GetCommandHandlerPrimaryConstructorParametersRequestModel request)
     {
-        return @$"IRepository<{request.RepositoryClassName}>{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository,
+        return @$"IWriteDbRepository<{request.RepositoryClassName}>{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository,
                       IUnitOfWork unitOfWork,
                       ICacheService cacheService";
     }
@@ -57,7 +57,7 @@ internal class MediatrTemplate : IMediatrTemplate
     public string GetCommandConstructorString(GetCommandConstructorStringRequestModel request)
     {
         return $@"{(request.IsMapper ? $"private readonly {request.RepositoryClassName}Mapper _{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Mapper = new ();" : "")}
-                      private readonly IRepository<{request.RepositoryClassName}> _{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository = {request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository;
+                      private readonly IWriteDbRepository<{request.RepositoryClassName}> _{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository = {request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository;
                       private readonly IUnitOfWork  _unitOfWork = unitOfWork;
                       private readonly ICacheService _cacheService = cacheService;
                     ";
@@ -170,7 +170,7 @@ internal class MediatrTemplate : IMediatrTemplate
     #region Queries
     public string GetQueryHandlerPrimaryConstructorParameters(GetQueryHandlerPrimaryConstructorParametersRequestModel request)
     {
-        return @$"IRepository<{request.RepositoryClassName}>{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository,
+        return @$"IReadDbRepository<{request.RepositoryClassName}>{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository,
                       ICacheService cacheService";
     }
     /// <summary>
@@ -180,7 +180,7 @@ internal class MediatrTemplate : IMediatrTemplate
     /// <returns></returns>
     public string GetQueryConstructorString(GetQueryConstructorStringRequestModel request)
     {
-        return $@"private readonly IRepository<{request.RepositoryClassName}> _{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository = {request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository;
+        return $@"private readonly IReadDbRepository<{request.RepositoryClassName}> _{request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository = {request.RepositoryClassName.MakeFirstLetterLowerCaseWithRegex()}Repository;
                       private readonly ICacheService _cacheService = cacheService;
                     ";
     }

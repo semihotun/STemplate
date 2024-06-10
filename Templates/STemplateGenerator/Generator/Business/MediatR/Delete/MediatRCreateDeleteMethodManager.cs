@@ -80,10 +80,10 @@ internal class MediatRCreateDeleteMethodManager : IMediatRCreateDeleteMethodMana
                                              data.Deleted = true;
                                             _{classFirstLetterLoverCase}Repository.Update(data);
                                             await _cacheService.RemovePatternAsync(""{request.ProjectName}:{request.ClassName.Plurualize()}"");
-                                            return new SuccessResult(Messages.Deleted);
+                                            return Result.SuccessResult(Messages.Deleted);
                                         }}
                                         else{{
-                                            return new ErrorResult(Messages.DeletedError);
+                                            return Result.ErrorResult(Messages.DeletedError);
                                         }}                             
                                      }});";
     }
