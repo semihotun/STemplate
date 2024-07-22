@@ -8,6 +8,7 @@ using Generator.Consts;
 using Generator.Extensions;
 using Generator.Helpers;
 using Generator.Models;
+using System.Collections.Generic;
 using System.IO;
 namespace Generator.Commands;
 /// <summary>
@@ -63,7 +64,9 @@ internal sealed class MediatRCreateDeleteHandlerCommand : BaseCommand<MediatRCre
                     isMapper: false,
                     requestName: $"Delete{className}Command"
                     );
-                request.SetClassProperty(classProperties.CreatePropertiesSourceCode().AddIdSyntaxPropertyInfo());
+                var properties = new List<SyntaxPropertyInfo>();
+                properties.AddIdSyntaxPropertyInfo();
+                request.SetClassProperty(properties);
                 await _mediatRCreateDeleteMethodManager.CreateDeleteMethodRequestAsync(request);
             }
         }
