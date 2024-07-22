@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -79,15 +80,15 @@ namespace STemplate.Insfrastructure.Utilities.Caching.Redis
         }
         public async Task RemovePatternAsync(string key, CancellationToken cancellation = default)
         {
-            await _distributedCache.RemoveAsync(key, cancellation);
-            CacheKeys.TryRemove(key, out bool _);
+            var tasks = CacheKeys.Keys
+                   .Where(x => x.StartsWith(key))
+                   .Select(y => RemoveByPrefixAsync(y, cancellation));
+            await Task.WhenAll(tasks);
         }
         public async Task RemoveByPrefixAsync(string prefixKey, CancellationToken cancellation = default)
         {
-            var tasks = CacheKeys.Keys
-                .Where(x => x.StartsWith(prefixKey))
-                .Select(y => RemovePatternAsync(y, cancellation));
-            await Task.WhenAll(tasks);
+            await _distributedCache.RemoveAsync(prefixKey, cancellation);
+            CacheKeys.TryRemove(prefixKey, out bool _);
         }
         private static string? BuildKey(object arg)
         {
