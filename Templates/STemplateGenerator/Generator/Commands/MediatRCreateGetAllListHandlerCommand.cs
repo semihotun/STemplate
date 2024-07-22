@@ -62,7 +62,7 @@ internal class MediatRCreateGetAllListHandlerCommand : BaseCommand<MediatRCreate
                     isMapper: false,
                     requestName: $"GetAll{className}"
                     );
-                request.SetClassProperty(new List<SyntaxPropertyInfo>().AddIdSyntaxPropertyInfo());
+                request.SetClassProperty(new List<SyntaxPropertyInfo>());
                 await _mediatRCreateAddMethodManager.CreateGetAllListMethodRequestAsync(request);
             }
         }
