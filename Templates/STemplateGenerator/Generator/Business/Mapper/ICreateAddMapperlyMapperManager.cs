@@ -7,4 +7,5 @@ namespace Generator.Business.Mapper;
 internal interface ICreateAddMapperlyMapperManager
 {
     void CreateAddMethodRequest(CreateMapperlyAddMethodRequest request);
+    void CreateUpdateMethodRequest(CreateMapperlyUpdateMethodRequest request);
 }

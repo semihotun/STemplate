@@ -61,6 +61,8 @@
     <Compile Include="Business\MediatR\Create\Models\GetClassGenerateMethod.cs" />
     <Compile Include="Business\MediatR\Delete\IMediatRCreateDeleteMethodManager.cs" />
     <Compile Include="Business\MediatR\Delete\MediatRCreateDeleteMethodManager.cs" />
+    <Compile Include="Business\MediatR\GetAllList\IMediatRCreateGetAllListMethodManager.cs" />
+    <Compile Include="Business\MediatR\GetAllList\MediatRCreateGetAllListMethodManager.cs" />
     <Compile Include="Business\MediatR\GetById\IMediatRCreateGetByIdMethodManager.cs" />
     <Compile Include="Business\MediatR\GetById\MediatRCreateGetByIdMethodManager.cs" />
     <Compile Include="Business\MediatR\Grid\IMediatRCreateGridManager.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Commands\MediatRCreateAddHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateCQRSCommand.cs" />
     <Compile Include="Commands\MediatRCreateDeleteHandlerCommand.cs" />
+    <Compile Include="Commands\MediatRCreateGetAllListHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateGetByIdHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateGridHandlerCommand.cs" />
     <Compile Include="Commands\MediatRCreateUpdateHandlerCommand.cs" />

@@ -82,6 +82,15 @@
 					<LocCanonicalName>.ContextMenu.MediatRCreateGetByIdHandlerCommand</LocCanonicalName>
 				</Strings>
 			</Button>
+			<Button guid="Generator" id="MediatRCreateGetAllListdHandlerCommand" type="Button" priority="0x05">
+				<Parent guid="Generator" id="GeneratorItemNodeGroup" />
+				<Icon guid="ImageCatalogGuid" id="GenerateFile" />
+				<CommandFlag>IconIsMoniker</CommandFlag>
+				<Strings>
+					<ButtonText>Get All List Handlers</ButtonText>
+					<LocCanonicalName>.ContextMenu.MediatRCreateGetAllListdHandlerCommand</LocCanonicalName>
+				</Strings>
+			</Button>	
 			<Button guid="Generator" id="MediatRCreateCQRSCommand" type="Button" priority="0x06">
 				<Parent guid="Generator" id="GeneratorItemNodeGroup" />
 				<Icon guid="ImageCatalogGuid" id="GenerateFile" />
@@ -112,6 +121,7 @@
 			<IDSymbol name="MediatRCreateUpdateHandlerCommand" value="0x0210" />
 			<IDSymbol name="MediatRCreateGridHandlerCommand" value="0x0202" />
 			<IDSymbol name="MediatRCreateGetByIdHandlerCommand" value="0x0201" />
+			<IDSymbol name="MediatRCreateGetAllListdHandlerCommand" value="0x0211" />
 			<IDSymbol name="GeneratorSettingNodeGroup" value="0x0101" />
 			<IDSymbol name="GeneratorSettingSubMenu" value="0x0102" />
 			<IDSymbol name="GeneratorSettingsCommand" value="0x0103" />

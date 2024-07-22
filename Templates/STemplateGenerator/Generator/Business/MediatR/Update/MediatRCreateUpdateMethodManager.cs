@@ -27,7 +27,7 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
             return;
         }
         //Mapper Create
-        var mapperTask = Task.Run(() => _mapperlyManager.CreateAddMethodRequest(request.CreateMapperlyAddMethodRequest()));
+        var mapperTask = Task.Run(() => _mapperlyManager.CreateUpdateMethodRequest(request.CreateMapperlyUpdateMethodRequest()));
         //Request and handler File Write
         var requestString = CreateMediatRUpdateMethodRequestToGetRequestModel(request);
         var requestFileTask = FileHelper.WriteFileAsync(request.IRequestFilePath, GetCreateUpdateMethodRequestString(requestString));
@@ -75,12 +75,12 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
     private string GetCreateUpdateMethodRequestHandlerInnerString(CreateAggregateClassRequest request)
     {
         var firstLoverClassName = request.ClassName.MakeFirstLetterLowerCaseWithRegex();
-        return $@"return await _unitOfWork.BeginTransaction<Result>(async () =>
+        return $@"return await _unitOfWork.BeginTransaction(async () =>
                                      {{     
                                        var data = await _{firstLoverClassName}Repository.GetAsync(u => u.Id == request.Id);
                                        if(data is not null)
                                        {{
-                                           var mapperData=_{firstLoverClassName}Mapper.{request.RequestName}To{request.ClassName}(request);                                       
+                                           {request.ClassName}Mapper.{request.RequestName}To{request.ClassName}(request,data);                                   
                                            _{firstLoverClassName}Repository.Update(data);
                                            await _cacheService.RemovePatternAsync(""{request.ProjectName}:{request.ClassName.Plurualize()}"");
                                            return Result.SuccessResult(Messages.Updated);

@@ -17,5 +17,6 @@ internal sealed class MediatRCreateCQRSCommand : BaseCommand<MediatRCreateCQRSCo
         await VS.Commands.ExecuteAsync(PackageGuids.Generator, PackageIds.MediatRCreateDeleteHandlerCommand, null);
         await VS.Commands.ExecuteAsync(PackageGuids.Generator, PackageIds.MediatRCreateUpdateHandlerCommand, null);
         await VS.Commands.ExecuteAsync(PackageGuids.Generator, PackageIds.MediatRCreateGetByIdHandlerCommand, null);
+        await VS.Commands.ExecuteAsync(PackageGuids.Generator, PackageIds.MediatRCreateGetAllListdHandlerCommand, null);
     }
 }

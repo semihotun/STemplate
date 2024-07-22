@@ -25,4 +25,5 @@ internal static class CustomServiceCollection
     public static IVsWritableSettingsStoreManager VsWritableSettingsStoreManager() => new VsWritableSettingsStoreManager();
     public static IMediatrTemplate MediatrTemplate() => new MediatrTemplate();
     public static IMediatRCreateUpdateMethodManager MediatRCreateUpdateMethodManager() => new MediatRCreateUpdateMethodManager();
+    public static IMediatRCreateGetAllListMethodManager MediatRCreateGetAllListMethodManager() => new MediatRCreateGetAllListMethodManager();
 }

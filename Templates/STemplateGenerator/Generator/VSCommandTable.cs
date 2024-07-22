@@ -28,6 +28,7 @@ namespace Generator
         public const int MediatRCreateUpdateHandlerCommand = 0x0210;
         public const int MediatRCreateGridHandlerCommand = 0x0202;
         public const int MediatRCreateGetByIdHandlerCommand = 0x0201;
+        public const int MediatRCreateGetAllListdHandlerCommand = 0x0211;
         public const int GeneratorSettingNodeGroup = 0x0101;
         public const int GeneratorSettingSubMenu = 0x0102;
         public const int GeneratorSettingsCommand = 0x0103;

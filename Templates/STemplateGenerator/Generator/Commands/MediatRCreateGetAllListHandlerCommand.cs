@@ -1,5 +1,5 @@
 ﻿using EnvDTE;
-using Generator.Business.MediatR.Create;
+using Generator.Business.MediatR.GetById;
 using Generator.Business.MediatR.Template;
 using Generator.Business.ServiceCollection;
 using Generator.Business.VsStore;
@@ -8,16 +8,15 @@ using Generator.Consts;
 using Generator.Extensions;
 using Generator.Helpers;
 using Generator.Models;
+using System.Collections.Generic;
 using System.IO;
+
 namespace Generator.Commands;
 
-/// <summary>
-/// Generator menu add button click command
-/// </summary>
-[Command(PackageIds.MediatRCreateAddHandlerCommand)]
-internal sealed class MediatRCreateAddHandlerCommand : BaseCommand<MediatRCreateAddHandlerCommand>
+[Command(PackageIds.MediatRCreateGetAllListdHandlerCommand)]
+internal class MediatRCreateGetAllListHandlerCommand : BaseCommand<MediatRCreateGetAllListHandlerCommand>
 {
-    private readonly IMediatRCreateAddMethodManager _mediatRCreateAddMethodManager = CustomServiceCollection.MediatRCreateAddMethodManager();
+    private readonly IMediatRCreateGetAllListMethodManager _mediatRCreateAddMethodManager = CustomServiceCollection.MediatRCreateGetAllListMethodManager();
     private readonly IMediatrTemplate _mediatrTemplate = CustomServiceCollection.MediatrTemplate();
     private readonly IVsWritableSettingsStoreManager _vsWritableSettingsStoreManager = CustomServiceCollection.VsWritableSettingsStoreManager();
     /// <summary>
@@ -29,11 +28,11 @@ internal sealed class MediatRCreateAddHandlerCommand : BaseCommand<MediatRCreate
     {
         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
         var difFile = false;
-        if (_vsWritableSettingsStoreManager.GetMySetting(new(SettingsStoreConst.CollectionPath,
-            SettingsStoreConst.DifferentFileSettingName))?.DifferentFile != null)
+        if (_vsWritableSettingsStoreManager.GetMySetting(new(SettingsStoreConst.CollectionPath, SettingsStoreConst.DifferentFileSettingName))
+            ?.DifferentFile != null)
         {
-            difFile = (_vsWritableSettingsStoreManager.GetMySetting(new(SettingsStoreConst.CollectionPath,
-                SettingsStoreConst.DifferentFileSettingName))?.DifferentFile != 0);
+            difFile = (_vsWritableSettingsStoreManager.GetMySetting(new(SettingsStoreConst.CollectionPath, SettingsStoreConst.DifferentFileSettingName))
+                ?.DifferentFile != 0);
         }
         foreach (var projectItem in EnvDTEHelper.GetProjectItems(base.Package))
         {
@@ -49,22 +48,22 @@ internal sealed class MediatRCreateAddHandlerCommand : BaseCommand<MediatRCreate
             }
             else
             {
-                var projectName = PathConst.GetProjectName(projectItem);
                 var className = Path.GetFileNameWithoutExtension(projectItem?.FileNames[0]);
+                var projectName = PathConst.GetProjectName(projectItem);
                 var request = new CreateAggregateClassRequest(
                     className: className,
                     projectName: projectName,
                     differentFile: difFile,
                     classPath: projectItem.FileNames[0],
-                    operation: OperationEnum.Create,
-                    commandOrQuery: CqrsEnum.Command,
-                    returnType: "Result",
+                    operation: OperationEnum.Get,
+                    commandOrQuery: CqrsEnum.Query,
+                    returnType: $"Result<IList<{className}>>",
                     isAggregateUsing: _mediatrTemplate.IsAggregateUsing(new(projectName, classProperties)),
-                    isMapper: true,
-                    requestName: $"Create{className}Command"
+                    isMapper: false,
+                    requestName: $"GetAll{className}"
                     );
-                request.SetClassProperty(classProperties.CreatePropertiesSourceCode());
-                await _mediatRCreateAddMethodManager.CreateAddMethodRequestAsync(request);
+                request.SetClassProperty(new List<SyntaxPropertyInfo>().AddIdSyntaxPropertyInfo());
+                await _mediatRCreateAddMethodManager.CreateGetAllListMethodRequestAsync(request);
             }
         }
     }

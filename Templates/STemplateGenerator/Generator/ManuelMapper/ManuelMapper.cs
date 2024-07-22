@@ -27,6 +27,11 @@ internal static class ManuelMapper
         return new CreateMapperlyAddMethodRequest(request.ClassName,
         Path.Combine(request.ClassMainHandlersPath, "Mappers"), request.ProjectName, request.RequestName);
     }
+    public static CreateMapperlyUpdateMethodRequest CreateMapperlyUpdateMethodRequest(this CreateAggregateClassRequest request)
+    {
+        return new CreateMapperlyUpdateMethodRequest(request.ClassName,
+        Path.Combine(request.ClassMainHandlersPath, "Mappers"), request.ProjectName, request.RequestName);
+    }
     public static GetCommandConstructorStringRequestModel GetCommandConstructorStringRequestModel(this CreateAggregateClassRequest request)
     {
         return new GetCommandConstructorStringRequestModel(RepositoryClassName: request.ClassName, IsMapper: request.IsMapper);

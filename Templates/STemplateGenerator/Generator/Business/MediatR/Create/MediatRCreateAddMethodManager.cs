@@ -90,9 +90,9 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
     /// <returns></returns>
     private async Task<string> GetCreateAddMethodRequestHandlerInnerStringAsync(GetClassGenerateMethod request)
     {
-        return $@"return await _unitOfWork.BeginTransaction<Result>(async () =>
+        return $@"return await _unitOfWork.BeginTransaction(async () =>
                                      {{     
-                                            var data = _{request.ClassName.MakeFirstLetterLowerCaseWithRegex()}Mapper.{request.RequestName}To{request.ClassName}(request);
+                                            var data = {request.ClassName}Mapper.{request.RequestName}To{request.ClassName}(request);
                                             {String.Join("\n", await request.GetClassGenerateMethodStringAsync())}
                                             await _{request.ClassName.MakeFirstLetterLowerCaseWithRegex()}Repository.AddAsync(data); 
                                             await _cacheService.RemovePatternAsync(""{request.ProjectName}:{request.ClassName.Plurualize()}"");

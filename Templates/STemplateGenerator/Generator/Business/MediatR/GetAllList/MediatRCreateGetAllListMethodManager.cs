@@ -10,7 +10,7 @@ using System.IO;
 
 namespace Generator.Business.MediatR.GetById;
 
-internal class MediatRCreateGetByIdMethodManager : IMediatRCreateGetByIdMethodManager
+internal class MediatRCreateGetAllListMethodManager : IMediatRCreateGetAllListMethodManager
 {
     private readonly IMediatrTemplate _mediatRTemplate = CustomServiceCollection.MediatrTemplate();
     /// <summary>
@@ -18,7 +18,7 @@ internal class MediatRCreateGetByIdMethodManager : IMediatRCreateGetByIdMethodMa
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    public async Task CreateGetByIdMethodRequestAsync(CreateAggregateClassRequest request)
+    public async Task CreateGetAllListMethodRequestAsync(CreateAggregateClassRequest request)
     {
         FolderHelper.CreateIfFileNotExsist(request.CommandOrQueryPath);
         if (File.Exists(request.IRequestFilePath) || File.Exists(request.IRequestHandlerFilePath))
@@ -75,8 +75,8 @@ internal class MediatRCreateGetByIdMethodManager : IMediatRCreateGetByIdMethodMa
         var firstLoverClassName = request.ClassName.MakeFirstLetterLowerCaseWithRegex();
         return $@"return await _cacheService.GetAsync(request,async () =>
                 {{
-                    var query = await _{firstLoverClassName}Repository.GetByIdAsync(request.Id);
-                    return Result.SuccessDataResult<{request.ClassName}>(query!);
+                    var data = await _{firstLoverClassName}Repository.ToListAsync();
+                    return Result.SuccessDataResult(data!);
                 }}, cancellationToken);";
     }
 }
