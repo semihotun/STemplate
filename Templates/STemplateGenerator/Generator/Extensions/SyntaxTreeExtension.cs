@@ -166,8 +166,21 @@ internal static class SyntaxTreeExtension
     public static List<SyntaxPropertyInfo> AddPagedListFilterModel(this List<SyntaxPropertyInfo> propertiesSourceCode)
     {
         propertiesSourceCode.Add(new SyntaxPropertyInfo(
-            SyntaxFactory.ParseTypeName("PagedListFilterModel"),
-            "PagedListFilterModel"));
+          SyntaxFactory.ParseTypeName("int"),
+          "PageIndex"));
+
+        propertiesSourceCode.Add(new SyntaxPropertyInfo(
+            SyntaxFactory.ParseTypeName("int"),
+            "PageSize"));
+
+        propertiesSourceCode.Add(new SyntaxPropertyInfo(
+            SyntaxFactory.ParseTypeName("string?"),
+            "OrderByColumnName"));
+
+        propertiesSourceCode.Add(new SyntaxPropertyInfo(
+            SyntaxFactory.ParseTypeName("List<FilterModel>?"),
+            "FilterModelList"));
+
         return propertiesSourceCode;
     }
     /// <summary>

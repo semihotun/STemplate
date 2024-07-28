@@ -61,8 +61,8 @@ internal class MediatRCreateGridManager : IMediatRCreateGridManager
             request.DtoFilePath,
             request.GridGenerateVeriables.DbTableName));
         //Create compiledQuery
-        var generateCompileQueryDtoAsync = GenerateCompileQueryDtoAsync(request.GridGenerateVeriables,
-            request.DtoFilePath);
+        //var generateCompileQueryDtoAsync = GenerateCompileQueryDtoAsync(request.GridGenerateVeriables,
+        //    request.DtoFilePath);
         //Isnot DifferentFile
         FolderHelper.CreateIfFileNotExsist(request.CreateAggregateClassRequest.CommandOrQueryPath);
         var requestString = GenerateCodeRequestToGetRequestModel(request.CreateAggregateClassRequest,
@@ -79,10 +79,10 @@ internal class MediatRCreateGridManager : IMediatRCreateGridManager
             };
             var requestHandlerFileTask = FileHelper.WriteFileAsync(request.CreateAggregateClassRequest.IRequestHandlerFilePath,
                 _mediatRTemplate.GetRequestHandlerString(requestString).FormatCsharpDocumentCode());
-            await Task.WhenAll(requestFileTask, requestHandlerFileTask, generateCompileQueryDtoAsync);
+            await Task.WhenAll(requestFileTask, requestHandlerFileTask);
             return;
         }
-        await Task.WhenAll(requestFileTask, generateCompileQueryDtoAsync);
+        await Task.WhenAll(requestFileTask);
     }
     /// <summary>
     /// Map model
@@ -113,10 +113,21 @@ internal class MediatRCreateGridManager : IMediatRCreateGridManager
     /// <param name="request"></param>
     /// <returns></returns>
     private string GetRequestHandlerString(GridGenerateVeriables request) =>
-         $@"return await _cacheService.GetAsync<Result<IPagedList<{request.DtoName}>>>(request,async () =>
+         $@"return await _cacheService.GetAsync<Result<PagedList<{request.DtoName}>>>(request,async () =>
                 {{
-                    var query = await Get{request.DtoName}CompiledQueryCompiledQuery.Get(_coreDbContext).ToTableSettings(request.PagedListFilterModel);
-                    return Result.SuccessDataResult<IPagedList<{request.DtoName}>>(query);
+                    {"\t\t"}var query =await _coreDbContext.Query<{request.DbTableName}>()
+                    {"\t\t"}{String.Join("\n\t\t\t", request.IncludeCheckBoxList.Select(x => $".Include(x=>x.{x})"))}
+                    {"\t\t\t\t"}.Select(x=> new {request.DtoName}{{
+                    {"\t\t\t\t\t"}Id=x.Id,
+                    {"\t\t\t\t\t"}{String.Join(",\n\t\t\t\t\t", request.PropertiesCheckedList)}
+                    {"\t\t\t\t\t"} }}
+                    {"\t\t\t"}).ToTableSettings(new PagedListFilterModel(){{
+                        PageIndex = request.PageIndex,
+                        PageSize=request.PageSize,
+                        FilterModelList=request.FilterModelList,
+                        OrderByColumnName=request.OrderByColumnName
+                    }});
+                    return Result.SuccessDataResult<PagedList<{request.DtoName}>>(query);
                 }}, cancellationToken);";
     /// <summary>
     /// Generate Compile Query

@@ -120,12 +120,12 @@ internal class MediatrTemplate : IMediatrTemplate
     {
         var plurualizeFolderName = request.DbTableClassName.Plurualize();
         return $@"using MediatR;
+                  using {request.ProjectName}.Domain.AggregateModels;
                   using {request.ProjectName}.Domain.Result;
                   using {request.ProjectName}.Insfrastructure.Utilities.Caching.Redis;
                   using {request.ProjectName}.Persistence.Context;
                   using {request.ProjectName}.Insfrastructure.Utilities.Grid.PagedList;
                   using {request.ProjectName}.Application.Handlers.{plurualizeFolderName}.Queries.Dtos;
-                  using {request.ProjectName}.Application.Handlers.{plurualizeFolderName}.Queries.CompiledQuery;
                   using {request.ProjectName}.Insfrastructure.Utilities.Grid.Filter;
                   namespace {request.ProjectName}.Application.Handlers.{plurualizeFolderName}.Queries;";
     }
@@ -138,13 +138,13 @@ internal class MediatrTemplate : IMediatrTemplate
     {
         var plurualizeFolderName = request.DbTableClassName.Plurualize();
         return $@"using MediatR;
+                  using {request.ProjectName}.Domain.AggregateModels;
                   using {request.ProjectName}.Insfrastructure.Utilities.Grid.PagedList;
                   using {request.ProjectName}.Domain.Result;
                   using {request.ProjectName}.Application.Handlers.{plurualizeFolderName}.Queries.Dtos;
                   {(request.DifferentFile ? "" : $@"
                   using {request.ProjectName}.Insfrastructure.Utilities.Caching.Redis;
                   using {request.ProjectName}.Persistence.Context;
-                  using {request.ProjectName}.Application.Handlers.{plurualizeFolderName}.Queries.CompiledQuery;
                   using {request.ProjectName}.Insfrastructure.Utilities.Grid.Filter;")}
                  ";
     }

@@ -24,7 +24,10 @@ internal class DtoCreatorManager : IDtoCreatorManager
         }
         File.WriteAllText(request.FilePath,
          $@"namespace {PathConst.GetHandlerNameSpaceString(request.ProjectName, request.DbTableName.Plurualize(), CqrsEnum.Query)}.Dtos;
-                            public record {request.FileName}(Guid Id ,{String.Join(",", request.Properties.Select(x => x.PrimaryConstructerString))});
+                            public class {request.FileName} {{
+                             public Guid Id {{ get; set; }}
+                             {String.Join("",request.Properties.Select(x => x.PropertyString))}
+                            }}
                             ".FormatCsharpDocumentCode().Replace(", ",",\n"));
     }
 }

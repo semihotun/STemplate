@@ -105,7 +105,7 @@ internal static class ManuelMapper
                    classPath: dtoFilePath,
                    operation: OperationEnum.Get,
                    commandOrQuery: CqrsEnum.Query,
-                   returnType: $"Result<IPagedList<{gridGenerateVeriables.DtoName}>>",
+                   returnType: $"Result<PagedList<{gridGenerateVeriables.DtoName}>>",
                    isAggregateUsing: false,
                    isMapper: false,
                    requestName: $"Get{gridGenerateVeriables.DtoName}Query",
