@@ -80,7 +80,7 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
                                        var data = await _{firstLoverClassName}Repository.GetAsync(u => u.Id == request.Id);
                                        if(data is not null)
                                        {{
-                                           {request.ClassName}Mapper.{request.RequestName}To{request.ClassName}(request,data);                                   
+                                           data={request.ClassName}Mapper.{request.RequestName}To{request.ClassName}(request);                                   
                                            _{firstLoverClassName}Repository.Update(data);
                                            await _cacheService.RemovePatternAsync(""{request.ProjectName}:{request.ClassName.Plurualize()}"");
                                            return Result.SuccessResult(Messages.Updated);
