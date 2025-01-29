@@ -21,7 +21,7 @@ internal class MediatrTemplate : IMediatrTemplate
         return @$"{request.RequestUsingString}
                     namespace  {request.NameSpaceString};
                     public record {request.RequestName} (
-                           {String.Join(",\n", request.GetClassProperty.Select(x => x.PrimaryConstructerString))}
+                           {String.Join(",\n", request.GetClassProperty.Select(x => x.PrimaryConstructerString.Replace("ICollection","List")))}
                            ): IRequest<{request.MethodReturnTypeName}>;
                            {(!request.DifferentFile ? GetRequestHandlerString(request) : "")}          
                        ";

@@ -60,7 +60,7 @@ internal sealed class MediatRCreateAddHandlerCommand : BaseCommand<MediatRCreate
                     commandOrQuery: CqrsEnum.Command,
                     returnType: "Result",
                     isAggregateUsing: _mediatrTemplate.IsAggregateUsing(new(projectName, classProperties)),
-                    isMapper: true,
+                    isMapper: false,
                     requestName: $"Create{className}Command"
                     );
                 request.SetClassProperty(classProperties.CreatePropertiesSourceCode());

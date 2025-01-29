@@ -9,7 +9,11 @@ using Generator.Helpers;
 using Generator.ManuelMapper;
 using Generator.Models;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Generator.Business.MediatR.Create;
 
 /// <summary>
@@ -32,7 +36,7 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
             return;
         }
         //Mapper Create
-        var mapperTask = Task.Run(() => _mapperlyManager.CreateAddMethodRequest(request.CreateMapperlyAddMethodRequest()));
+        //var mapperTask = Task.Run(() => _mapperlyManager.CreateAddMethodRequest(request.CreateMapperlyAddMethodRequest()));
         //Request and handler File Write
         var requestString = await CreateMediatRAddMethodRequestToGetRequestModelAsync(request);
         var requestFileTask = FileHelper.WriteFileAsync(request.IRequestFilePath,
@@ -47,10 +51,10 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
             };
             var requestHandlerFileTask = FileHelper.WriteFileAsync(request.IRequestHandlerFilePath,
                 GetCreateAddMethodRequestHandler(requestString));
-            await Task.WhenAll(mapperTask, requestFileTask, requestHandlerFileTask);
+            await Task.WhenAll(requestFileTask, requestHandlerFileTask);
             return;
         }
-        await Task.WhenAll(mapperTask, requestFileTask);
+        await Task.WhenAll(requestFileTask);
     }
     #region Private
     /// <summary>
@@ -64,7 +68,7 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
             constructerString: _mediatRTemplate.GetCommandConstructorString(request.GetCommandConstructorStringRequestModel()),
             requestUsing: _mediatRTemplate.GetCommandRequestUsing(request.GetCommandRequestUsingRequestModel()),
             requestHandleMethod: await GetCreateAddMethodRequestHandlerInnerStringAsync(
-                request.GetClassGenerateMethod([])),
+                request.GetClassGenerateMethod([AcceptableMethodEnum.Add, AcceptableMethodEnum.Set]), request),
             null, null,
             primaryConstructor: _mediatRTemplate.GetCommandHandlerPrimaryConstructorParameters(new(request.ClassName))
             );
@@ -88,11 +92,44 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    private async Task<string> GetCreateAddMethodRequestHandlerInnerStringAsync(GetClassGenerateMethod request)
+    private async Task<string> GetCreateAddMethodRequestHandlerInnerStringAsync(GetClassGenerateMethod request, CreateAggregateClassRequest createAggregateClass)
     {
+        // Mevcut sınıf dosyasını oku
+        var classContent = File.ReadAllText(createAggregateClass.ClassPath);
+        var syntaxTree = CSharpSyntaxTree.ParseText(classContent);
+        var compilation = CSharpCompilation.Create($"{createAggregateClass.ClassName}Compilation")
+            .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
+            .AddSyntaxTrees(syntaxTree);
+
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var root = syntaxTree.GetCompilationUnitRoot();
+
+        // Sınıfın property'lerini al
+        var classDeclaration = root.DescendantNodes().OfType<ClassDeclarationSyntax>()
+            .First(c => c.Identifier.Text == createAggregateClass.ClassName);
+
+        var propertyDeclarations = classDeclaration.Members.OfType<PropertyDeclarationSyntax>();
+
+        // System tiplerini filtrele
+        var systemProperties = propertyDeclarations.Where(prop =>
+        {
+            var typeSymbol = semanticModel.GetTypeInfo(prop.Type).Type;
+            if (typeSymbol is INamedTypeSymbol namedTypeSymbol)
+            {
+                var isSystemType = namedTypeSymbol.ContainingNamespace?.ToString().StartsWith("System") ?? false;
+                var isNotCollection = !namedTypeSymbol.IsGenericType ||
+                                    !namedTypeSymbol.ConstructedFrom.ToString().Contains("System.Collections");
+                return isSystemType && isNotCollection;
+            }
+            return false;
+        });
+
+        var createParameters = string.Join(", ", systemProperties
+            .Select(p => $"request.{p.Identifier.Text}"));
+
         return $@"return await _unitOfWork.BeginTransaction(async () =>
                                      {{     
-                                            var data = {request.ClassName}Mapper.{request.RequestName}To{request.ClassName}(request);
+                                            var data = {request.ClassName}.Create({createParameters});
                                             {String.Join("\n", await request.GetClassGenerateMethodStringAsync())}
                                             await _{request.ClassName.MakeFirstLetterLowerCaseWithRegex()}Repository.AddAsync(data); 
                                             await _cacheService.RemovePatternAsync(""{request.ProjectName}:{request.ClassName.Plurualize()}"");

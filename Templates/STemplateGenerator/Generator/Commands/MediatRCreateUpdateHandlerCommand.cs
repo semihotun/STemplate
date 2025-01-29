@@ -61,7 +61,7 @@ internal class MediatRCreateUpdateHandlerCommand : BaseCommand<MediatRCreateUpda
                     commandOrQuery: CqrsEnum.Command,
                     returnType: "Result",
                     isAggregateUsing: _mediatrTemplate.IsAggregateUsing(new(projectName, classProperties)),
-                    isMapper: true,
+                    isMapper: false,
                     requestName: $"Update{className}Command"
                     );
                 request.SetClassProperty(classProperties.CreatePropertiesSourceCode().AddIdSyntaxPropertyInfo());

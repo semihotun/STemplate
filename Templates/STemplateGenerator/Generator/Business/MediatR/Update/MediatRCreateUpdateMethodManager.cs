@@ -7,7 +7,11 @@ using Generator.Extensions;
 using Generator.Helpers;
 using Generator.ManuelMapper;
 using Generator.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
 using System.IO;
+using System.Linq;
 namespace Generator.Business.MediatR.Update;
 internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodManager
 {
@@ -67,20 +71,49 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
     /// <returns></returns>
     private string GetCreateUpdateMethodRequestString(GetRequestModel request) =>
         _mediatRTemplate.GetRequestString(request).FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t");
-    /// <summary>
-    /// Handler Template
-    /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
+
     private string GetCreateUpdateMethodRequestHandlerInnerString(CreateAggregateClassRequest request)
     {
+        // Mevcut sınıf dosyasını oku
+        var classContent = File.ReadAllText(request.ClassPath);
+        var syntaxTree = CSharpSyntaxTree.ParseText(classContent);
+        var compilation = CSharpCompilation.Create($"{request.ClassName}Compilation")
+            .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
+            .AddSyntaxTrees(syntaxTree);
+
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var root = syntaxTree.GetCompilationUnitRoot();
+
+        // Sınıfın property'lerini al
+        var classDeclaration = root.DescendantNodes().OfType<ClassDeclarationSyntax>()
+            .First(c => c.Identifier.Text == request.ClassName);
+
+        var propertyDeclarations = classDeclaration.Members.OfType<PropertyDeclarationSyntax>();
+
+        // System tiplerini filtrele
+        var systemProperties = propertyDeclarations.Where(prop =>
+        {
+            var typeSymbol = semanticModel.GetTypeInfo(prop.Type).Type;
+            if (typeSymbol is INamedTypeSymbol namedTypeSymbol)
+            {
+                var isSystemType = namedTypeSymbol.ContainingNamespace?.ToString().StartsWith("System") ?? false;
+                var isNotCollection = !namedTypeSymbol.IsGenericType ||
+                                    !namedTypeSymbol.ConstructedFrom.ToString().Contains("System.Collections");
+                return isSystemType && isNotCollection;
+            }
+            return false;
+        });
+
+        var updateParameters = string.Join(", ", systemProperties
+            .Select(p => $"request.{p.Identifier.Text}"));
+
         var firstLoverClassName = request.ClassName.MakeFirstLetterLowerCaseWithRegex();
         return $@"return await _unitOfWork.BeginTransaction(async () =>
                                      {{     
                                        var data = await _{firstLoverClassName}Repository.GetAsync(u => u.Id == request.Id);
                                        if(data is not null)
                                        {{
-                                           data={request.ClassName}Mapper.{request.RequestName}To{request.ClassName}(request);                                   
+                                           data.Update({updateParameters});                                   
                                            _{firstLoverClassName}Repository.Update(data);
                                            await _cacheService.RemovePatternAsync(""{request.ProjectName}:{request.ClassName.Plurualize()}"");
                                            return Result.SuccessResult(Messages.Updated);
