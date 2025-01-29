@@ -31,7 +31,7 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
             return;
         }
         //Mapper Create
-        var mapperTask = Task.Run(() => _mapperlyManager.CreateUpdateMethodRequest(request.CreateMapperlyUpdateMethodRequest()));
+        //var mapperTask = Task.Run(() => _mapperlyManager.CreateUpdateMethodRequest(request.CreateMapperlyUpdateMethodRequest()));
         //Request and handler File Write
         var requestString = CreateMediatRUpdateMethodRequestToGetRequestModel(request);
         var requestFileTask = FileHelper.WriteFileAsync(request.IRequestFilePath, GetCreateUpdateMethodRequestString(requestString));
@@ -40,10 +40,10 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
         {
             requestString = requestString with { RequestHandlerUsingString = _mediatRTemplate.GetCommandRequestHandlerUsing(request.GetCommandRequestHandlerUsingRequestModel()) };
             var requestHandlerFileTask = FileHelper.WriteFileAsync(request.IRequestHandlerFilePath, GetCreateUpdateMethodRequestHandlerString(requestString));
-            await Task.WhenAll(mapperTask, requestFileTask, requestHandlerFileTask);
+            await Task.WhenAll(requestFileTask, requestHandlerFileTask);
             return;
         }
-        await Task.WhenAll(mapperTask, requestFileTask);
+        await Task.WhenAll(requestFileTask);
     }
     /// <summary>
     /// Get Create Update Method Request Handler String
