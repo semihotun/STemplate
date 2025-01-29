@@ -77,6 +77,44 @@ internal class ClassesMethodManager : IClassesMethodManager
                 }
             }
         }
+
+        var systemMethodDeclarations = GetSystemPropertyMethods(classProperties, semanticModel, methodDeclarationSyntax);
+        result.AddRange(systemMethodDeclarations);
+
+        return result;
+    }
+    private IEnumerable<MethodDeclarationSyntax> GetSystemPropertyMethods(
+        IEnumerable<PropertyDeclarationSyntax> classProperties,
+        SemanticModel semanticModel,
+        IEnumerable<MethodDeclarationSyntax> methodDeclarationSyntax)
+    {
+        var result = new List<MethodDeclarationSyntax>();
+
+        var systemProperties = classProperties.Where(prop =>
+        {
+            var typeSymbol = semanticModel.GetTypeInfo(prop.Type).Type;
+            if (typeSymbol is INamedTypeSymbol namedTypeSymbol)
+            {
+                var isSystemType = namedTypeSymbol.ContainingNamespace?.ToString().StartsWith("System") ?? false;
+                var isNotCollection = !namedTypeSymbol.IsGenericType ||
+                                    !namedTypeSymbol.ConstructedFrom.ToString().Contains("System.Collections");
+                return isSystemType && isNotCollection;
+            }
+            return false;
+        });
+
+        if (systemProperties.Any())
+        {
+            if (!methodDeclarationSyntax.Any(x => x.Identifier.ValueText == "Create"))
+            {
+                result.Add(GetCreateMethodString(systemProperties, semanticModel));
+            }
+            if (!methodDeclarationSyntax.Any(x => x.Identifier.ValueText == "Update"))
+            {
+                result.Add(GetUpdateMethodString(systemProperties, semanticModel));
+            }
+        }
+
         return result;
     }
     private MethodDeclarationSyntax GetCreateSetModelVoidString(string propertyName, string type)
@@ -133,5 +171,81 @@ internal class ClassesMethodManager : IClassesMethodManager
                  )
              )
          )).NormalizeWhitespace();
+    }
+    private MethodDeclarationSyntax GetCreateMethodString(
+        IEnumerable<PropertyDeclarationSyntax> systemProperties,
+        SemanticModel semanticModel)
+    {
+        var parameters = systemProperties.Select(prop =>
+            SyntaxFactory.Parameter(
+                SyntaxFactory.Identifier(prop.Identifier.Text.MakeFirstLetterLowerCaseWithRegex()))
+                .WithType(prop.Type));
+
+        var constructorArguments = systemProperties.Select(prop =>
+            SyntaxFactory.Argument(
+                SyntaxFactory.IdentifierName(prop.Identifier.Text.MakeFirstLetterLowerCaseWithRegex())));
+
+        var className = systemProperties.First().Parent.Parent.DescendantNodes()
+            .OfType<ClassDeclarationSyntax>().First().Identifier.Text;
+
+        return SyntaxFactory.MethodDeclaration(
+            SyntaxFactory.IdentifierName(className),
+            "Create")
+            .WithModifiers(SyntaxFactory.TokenList(
+                SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                SyntaxFactory.Token(SyntaxKind.StaticKeyword)))
+            .WithParameterList(SyntaxFactory.ParameterList(
+                SyntaxFactory.SeparatedList(parameters)))
+            .WithBody(SyntaxFactory.Block(
+                SyntaxFactory.LocalDeclarationStatement(
+                    SyntaxFactory.VariableDeclaration(
+                        SyntaxFactory.IdentifierName("var"))
+                    .WithVariables(
+                        SyntaxFactory.SingletonSeparatedList(
+                            SyntaxFactory.VariableDeclarator(
+                                SyntaxFactory.Identifier(className.MakeFirstLetterLowerCaseWithRegex()))
+                            .WithInitializer(
+                                SyntaxFactory.EqualsValueClause(
+                                    SyntaxFactory.ObjectCreationExpression(
+                                        SyntaxFactory.IdentifierName(className))
+                                    .WithArgumentList(
+                                        SyntaxFactory.ArgumentList(
+                                            SyntaxFactory.SeparatedList(constructorArguments)))))))),
+                SyntaxFactory.ReturnStatement(
+                    SyntaxFactory.IdentifierName(className.MakeFirstLetterLowerCaseWithRegex()))))
+            .NormalizeWhitespace();
+    }
+    private MethodDeclarationSyntax GetUpdateMethodString(
+        IEnumerable<PropertyDeclarationSyntax> systemProperties,
+        SemanticModel semanticModel)
+    {
+        var parameters = systemProperties.Select(prop =>
+            SyntaxFactory.Parameter(
+                SyntaxFactory.Identifier(prop.Identifier.Text.MakeFirstLetterLowerCaseWithRegex()))
+                .WithType(prop.Type));
+
+        var assignments = systemProperties.Select(prop =>
+            SyntaxFactory.ExpressionStatement(
+                SyntaxFactory.AssignmentExpression(
+                    SyntaxKind.SimpleAssignmentExpression,
+                    SyntaxFactory.IdentifierName(prop.Identifier.Text),
+                    SyntaxFactory.IdentifierName(prop.Identifier.Text.MakeFirstLetterLowerCaseWithRegex()))));
+
+        var className = systemProperties.First().Parent.Parent.DescendantNodes()
+            .OfType<ClassDeclarationSyntax>().First().Identifier.Text;
+
+        var statements = new List<StatementSyntax>();
+        statements.AddRange(assignments);
+        statements.Add(SyntaxFactory.ReturnStatement(SyntaxFactory.ThisExpression()));
+
+        return SyntaxFactory.MethodDeclaration(
+            SyntaxFactory.IdentifierName(className),
+            "Update")
+            .WithModifiers(SyntaxFactory.TokenList(
+                SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
+            .WithParameterList(SyntaxFactory.ParameterList(
+                SyntaxFactory.SeparatedList(parameters)))
+            .WithBody(SyntaxFactory.Block(statements))
+            .NormalizeWhitespace();
     }
 }
