@@ -93,12 +93,12 @@ internal class MediatRCreateGridManager : IMediatRCreateGridManager
     private GetRequestModel GenerateCodeRequestToGetRequestModel(CreateAggregateClassRequest request, GridGenerateVeriables gridGenerateVeriables)
     {
         return request.GetRequestModel(
-            constructerString: _mediatRTemplate.GetDtoConstructer(),
+            constructerString: _mediatRTemplate.GetDtoConstructer(gridGenerateVeriables.DbTableName),
             requestUsing: _mediatRTemplate.GetDtoRequestUsing(new(gridGenerateVeriables.ProjectName,
             gridGenerateVeriables.DbTableName, request.NameSpaceString, request.DifferentFile)),
             requestHandleMethod: GetRequestHandlerString(gridGenerateVeriables),
             repositoryClassName: gridGenerateVeriables.DbTableName,
-            primaryConstructor: _mediatRTemplate.GetDtoPrimaryConstructerParameters());
+            primaryConstructor: _mediatRTemplate.GetDtoPrimaryConstructerParameters(gridGenerateVeriables.DbTableName));
     }
     /// <summary>
     /// Request file string
@@ -109,14 +109,14 @@ internal class MediatRCreateGridManager : IMediatRCreateGridManager
          await FileHelper.WriteFileAsync(createAggregateClassRequest.IRequestFilePath, _mediatRTemplate.GetRequestString(request).FormatCsharpDocumentCode());
     /// <summary>
     /// Request handler file string
+    ///  {"\t\t"}{String.Join("\n\t\t\t", request.IncludeCheckBoxList.Select(x => $".Include(x=>x.{x})"))} ile include eklenebilir
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
     private string GetRequestHandlerString(GridGenerateVeriables request) =>
-         $@"return await _cacheService.GetAsync<Result<PagedList<{request.DtoName}>>>(request,async () =>
+         $@"return await _cacheService.GetAsync(request,async () =>
                 {{
-                    {"\t\t"}var query =await _coreDbContext.Query<{request.DbTableName}>()
-                    {"\t\t"}{String.Join("\n\t\t\t", request.IncludeCheckBoxList.Select(x => $".Include(x=>x.{x})"))}
+                    {"\t\t"}var query =await _{request.DbTableName.MakeFirstLetterLowerCaseWithRegex()}Repository.Query()                 
                     {"\t\t\t\t"}.Select(x=> new {request.DtoName}{{
                     {"\t\t\t\t\t"}Id=x.Id,
                     {"\t\t\t\t\t"}{String.Join(",\n\t\t\t\t\t", request.PropertiesCheckedList)}
@@ -127,7 +127,7 @@ internal class MediatRCreateGridManager : IMediatRCreateGridManager
                         FilterModelList=request.FilterModelList,
                         OrderByColumnName=request.OrderByColumnName
                     }});
-                    return Result.SuccessDataResult<PagedList<{request.DtoName}>>(query);
+                    return Result.SuccessDataResult(query);
                 }}, cancellationToken);";
     /// <summary>
     /// Generate Compile Query

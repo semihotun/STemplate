@@ -4,6 +4,7 @@ using Generator.Business.MediatR.Template.Models.Dto;
 using Generator.Business.MediatR.Template.Models.Query;
 using Generator.Extensions;
 using Microsoft.CodeAnalysis;
+using StreamJsonRpc;
 using System.Linq;
 namespace Generator.Business.MediatR.Template;
 
@@ -124,6 +125,7 @@ internal class MediatrTemplate : IMediatrTemplate
                   using {request.ProjectName}.Domain.Result;
                   using {request.ProjectName}.Insfrastructure.Utilities.Caching.Redis;
                   using {request.ProjectName}.Persistence.Context;
+                  using {request.ProjectName}.Persistence.GenericRepository;
                   using {request.ProjectName}.Insfrastructure.Utilities.Grid.PagedList;
                   using {request.ProjectName}.Application.Handlers.{plurualizeFolderName}.Queries.Dtos;
                   using {request.ProjectName}.Insfrastructure.Utilities.Grid.Filter;
@@ -143,6 +145,7 @@ internal class MediatrTemplate : IMediatrTemplate
                   using {request.ProjectName}.Domain.Result;
                   using {request.ProjectName}.Application.Handlers.{plurualizeFolderName}.Queries.Dtos;
                   {(request.DifferentFile ? "" : $@"
+                  using {request.ProjectName}.Persistence.GenericRepository;
                   using {request.ProjectName}.Insfrastructure.Utilities.Caching.Redis;
                   using {request.ProjectName}.Persistence.Context;
                   using {request.ProjectName}.Insfrastructure.Utilities.Grid.Filter;")}
@@ -152,18 +155,18 @@ internal class MediatrTemplate : IMediatrTemplate
     /// Get Dto Constructor
     /// </summary>
     /// <returns></returns>
-    public string GetDtoConstructer()
+    public string GetDtoConstructer(string className)
     {
-        return @"private readonly CoreDbContext _coreDbContext = coreDbContext;
-                 private readonly ICacheService _cacheService = cacheService;";
+        return @$"private readonly IReadDbRepository<{className}>_{className.MakeFirstLetterLowerCaseWithRegex()}Repository= {className.MakeFirstLetterLowerCaseWithRegex()}Repository;
+                  private readonly ICacheService _cacheService = cacheService;";
     }
     /// <summary>
     /// Get Dto Primary Constructor Parameters
     /// </summary>
     /// <returns></returns>
-    public string GetDtoPrimaryConstructerParameters()
+    public string GetDtoPrimaryConstructerParameters(string className)
     {
-        return "CoreDbContext coreDbContext, ICacheService cacheService";
+        return @$"IReadDbRepository<{className}>{className.MakeFirstLetterLowerCaseWithRegex()}Repository, ICacheService cacheService";
     }
     #endregion
     #region Queries

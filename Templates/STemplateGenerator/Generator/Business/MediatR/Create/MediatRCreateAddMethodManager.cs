@@ -64,7 +64,7 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
             constructerString: _mediatRTemplate.GetCommandConstructorString(request.GetCommandConstructorStringRequestModel()),
             requestUsing: _mediatRTemplate.GetCommandRequestUsing(request.GetCommandRequestUsingRequestModel()),
             requestHandleMethod: await GetCreateAddMethodRequestHandlerInnerStringAsync(
-                request.GetClassGenerateMethod([AcceptableMethodEnum.Add, AcceptableMethodEnum.Set])),
+                request.GetClassGenerateMethod([])),
             null, null,
             primaryConstructor: _mediatRTemplate.GetCommandHandlerPrimaryConstructorParameters(new(request.ClassName))
             );

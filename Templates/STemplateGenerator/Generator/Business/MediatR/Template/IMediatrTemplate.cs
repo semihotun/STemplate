@@ -17,8 +17,8 @@ internal interface IMediatrTemplate
     #region Dto
     string GetDtoRequestHandlerUsing(GetDtoRequestHandlerUsing request);
     string GetDtoRequestUsing(GetDtoRequestUsingRequestModel request);
-    string GetDtoConstructer();
-    string GetDtoPrimaryConstructerParameters();
+    string GetDtoConstructer(string className);
+    string GetDtoPrimaryConstructerParameters(string className);
     #endregion
     #region Query
     string GetQueryHandlerPrimaryConstructorParameters(GetQueryHandlerPrimaryConstructorParametersRequestModel request);
