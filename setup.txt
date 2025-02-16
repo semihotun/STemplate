@@ -1,8 +1,0 @@
-/// 4 Step installation
-/// Step 1 -> Create Network
-
-docker network create net_frontend
-docker network create net_backendservices
-
-/// Step 2 ->run docker-compose-service.bat
-/// Step 3 ->docker-compose -f docker-compose.yml up -d
