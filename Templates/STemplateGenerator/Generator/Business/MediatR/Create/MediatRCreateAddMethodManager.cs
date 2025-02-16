@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text.RegularExpressions;
+using System.Text;
+using StreamJsonRpc;
 namespace Generator.Business.MediatR.Create;
 
 /// <summary>
@@ -39,8 +42,12 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
         //var mapperTask = Task.Run(() => _mapperlyManager.CreateAddMethodRequest(request.CreateMapperlyAddMethodRequest()));
         //Request and handler File Write
         var requestString = await CreateMediatRAddMethodRequestToGetRequestModelAsync(request);
+        var getCreateAddMethodRequestString = GetCreateAddMethodRequestString(requestString);
         var requestFileTask = FileHelper.WriteFileAsync(request.IRequestFilePath,
-            GetCreateAddMethodRequestString(requestString));
+            getCreateAddMethodRequestString);
+
+        var validatorString=GenerateValidator(getCreateAddMethodRequestString, request);
+        var validatorTask =FileHelper.WriteFileAsync(request.ValidatorPath,validatorString.FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t"));
         if (request.DifferentFile)
         {
             //requestHandlerUsing
@@ -51,10 +58,10 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
             };
             var requestHandlerFileTask = FileHelper.WriteFileAsync(request.IRequestHandlerFilePath,
                 GetCreateAddMethodRequestHandler(requestString));
-            await Task.WhenAll(requestFileTask, requestHandlerFileTask);
+            await Task.WhenAll(requestFileTask, requestHandlerFileTask, validatorTask);
             return;
         }
-        await Task.WhenAll(requestFileTask);
+        await Task.WhenAll(requestFileTask, validatorTask);
     }
     #region Private
     /// <summary>
@@ -135,6 +142,50 @@ internal class MediatRCreateAddMethodManager : IMediatRCreateAddMethodManager
                                             await _cacheService.RemovePatternAsync(""{request.ProjectName}:{request.ClassName.Plurualize()}"");
                                             return Result.SuccessResult(Messages.Added);
                                      }});";
+    }
+    public static string GenerateValidator(string commandCode,CreateAggregateClassRequest request)
+    {
+        FolderHelper.CreateIfFileNotExsist(request.ValidatorFilePath);
+        var syntaxTree = CSharpSyntaxTree.ParseText(commandCode);
+        var compilation = CSharpCompilation.Create("CommandCompilation")
+            .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
+            .AddSyntaxTrees(syntaxTree);
+
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+
+        var recordDeclaration = syntaxTree.GetRoot()
+            .DescendantNodes()
+            .OfType<RecordDeclarationSyntax>()
+            .FirstOrDefault();
+
+        if (recordDeclaration == null)
+            throw new ArgumentException("No record declaration found in the provided code");
+
+        var className = recordDeclaration.Identifier.Text;
+
+        var properties = recordDeclaration.ParameterList.Parameters
+            .Select(p => p.Identifier.Text)
+            .ToList();
+
+        var validationRules = string.Join("\n",
+            properties.Select(prop =>
+                $@"           RuleFor(x => x.{prop})
+               .NotEmpty().WithMessage(""{prop}IsNotEmpty"");"
+            ));
+
+        var plurualizeClassFolderName = request.ClassName.Plurualize();
+        var namespaceSting= $"{request.ProjectName}.Application.Handlers.{plurualizeClassFolderName}.Validators";
+        return $@"
+                using {request.NameSpaceString};
+                using FluentValidation;
+                namespace {namespaceSting};
+                public class {className}Validator : AbstractValidator<{className}>
+                {{
+                    public {className}Validator()
+                    {{
+                         {validationRules}
+                    }}
+                }}";
     }
     #endregion
 }

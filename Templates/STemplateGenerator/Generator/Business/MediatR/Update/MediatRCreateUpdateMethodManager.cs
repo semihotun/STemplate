@@ -34,7 +34,11 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
         //var mapperTask = Task.Run(() => _mapperlyManager.CreateUpdateMethodRequest(request.CreateMapperlyUpdateMethodRequest()));
         //Request and handler File Write
         var requestString = CreateMediatRUpdateMethodRequestToGetRequestModel(request);
-        var requestFileTask = FileHelper.WriteFileAsync(request.IRequestFilePath, GetCreateUpdateMethodRequestString(requestString));
+        var getCreateUpdateMethodRequestString = GetCreateUpdateMethodRequestString(requestString);
+        var requestFileTask = FileHelper.WriteFileAsync(request.IRequestFilePath, getCreateUpdateMethodRequestString);
+
+        var validatorString = GenerateValidator(getCreateUpdateMethodRequestString, request);
+        var validatorTask = FileHelper.WriteFileAsync(request.ValidatorPath, validatorString.FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t"));
         //Differen File
         if (request.DifferentFile)
         {
@@ -120,5 +124,49 @@ internal class MediatRCreateUpdateMethodManager : IMediatRCreateUpdateMethodMana
                                        }}
                                        return Result.ErrorResult(Messages.UpdatedError);
                                      }});";
+    }
+    public static string GenerateValidator(string commandCode, CreateAggregateClassRequest request)
+    {
+        FolderHelper.CreateIfFileNotExsist(request.ValidatorFilePath);
+        var syntaxTree = CSharpSyntaxTree.ParseText(commandCode);
+        var compilation = CSharpCompilation.Create("CommandCompilation")
+            .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
+            .AddSyntaxTrees(syntaxTree);
+
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+
+        var recordDeclaration = syntaxTree.GetRoot()
+            .DescendantNodes()
+            .OfType<RecordDeclarationSyntax>()
+            .FirstOrDefault();
+
+        if (recordDeclaration == null)
+            throw new ArgumentException("No record declaration found in the provided code");
+
+        var className = recordDeclaration.Identifier.Text;
+
+        var properties = recordDeclaration.ParameterList.Parameters
+            .Select(p => p.Identifier.Text)
+            .ToList();
+
+        var validationRules = string.Join("\n",
+            properties.Select(prop =>
+                $@"           RuleFor(x => x.{prop})
+               .NotEmpty().WithMessage(""{prop}IsNotEmpty"");"
+            ));
+
+        var plurualizeClassFolderName = request.ClassName.Plurualize();
+        var namespaceSting = $"{request.ProjectName}.Application.Handlers.{plurualizeClassFolderName}.Validators";
+        return $@"
+                using {request.NameSpaceString};
+                using FluentValidation;
+                namespace {namespaceSting};
+                public class {className}Validator : AbstractValidator<{className}>
+                {{
+                    public {className}Validator()
+                    {{
+                         {validationRules}
+                    }}
+                }}";
     }
 }

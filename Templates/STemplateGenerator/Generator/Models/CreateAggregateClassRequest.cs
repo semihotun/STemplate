@@ -28,6 +28,8 @@ internal class CreateAggregateClassRequest
         ClassMainHandlersPath = classMainHandlersPath ?? PathConst.HandlerPath(classPath, className);
         CommandOrQueryPath = Path.Combine(ClassMainHandlersPath, commandOrQuery.ToString().Plurualize());
         RequestName = requestName;
+        ValidatorFilePath = Path.Combine(ClassMainHandlersPath, "Validators");
+        ValidatorPath = Path.Combine(ValidatorFilePath,$"{RequestName}Validator.cs");
         IRequestFilePath = Path.Combine(CommandOrQueryPath, $"{RequestName}.cs");
         IRequestHandlerFilePath = Path.Combine(CommandOrQueryPath, $"{RequestName}Handler.cs");
         NameSpaceString = nameSpaceString ?? PathConst.GetHandlerNameSpaceString(projectName, className, commandOrQuery);
@@ -40,6 +42,8 @@ internal class CreateAggregateClassRequest
     {
         GetClassProperty = property;
     }
+    public string ValidatorFilePath { get;  }
+    public string ValidatorPath { get;  }
     public string ClassName { get; }
     public string ProjectName { get; }
     public bool DifferentFile { get; } = false;

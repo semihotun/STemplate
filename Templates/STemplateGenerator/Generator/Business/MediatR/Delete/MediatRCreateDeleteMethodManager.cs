@@ -6,7 +6,11 @@ using Generator.Extensions;
 using Generator.Helpers;
 using Generator.ManuelMapper;
 using Generator.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
 using System.IO;
+using System.Linq;
 namespace Generator.Business.MediatR.Delete;
 internal class MediatRCreateDeleteMethodManager : IMediatRCreateDeleteMethodManager
 {
@@ -32,7 +36,12 @@ internal class MediatRCreateDeleteMethodManager : IMediatRCreateDeleteMethodMana
             requestHandleMethod: GetCreateDeleteMethodRequestHandlerInnerString(request),
             primaryConstructor: _mediatRTemplate.GetCommandHandlerPrimaryConstructorParameters(new(request.ClassName)));
         //Request File Write
-        var requestFileTask = FileHelper.WriteFileAsync(request.IRequestFilePath, GetCreateDeleteMethodRequestString(requestString));
+        var getCreateDeleteMethodRequestString = GetCreateDeleteMethodRequestString(requestString);
+        var requestFileTask = FileHelper.WriteFileAsync(request.IRequestFilePath, getCreateDeleteMethodRequestString);
+
+        var validatorString = GenerateValidator(getCreateDeleteMethodRequestString, request);
+        var validatorTask = FileHelper.WriteFileAsync(request.ValidatorPath, validatorString.FormatCsharpDocumentCode().Replace(", ", ",\r\n\t\t"));
+
         //if different file write
         if (request.DifferentFile)
         {
@@ -42,10 +51,10 @@ internal class MediatRCreateDeleteMethodManager : IMediatRCreateDeleteMethodMana
             };
             var requestHandlerFileTask = FileHelper.WriteFileAsync(request.IRequestHandlerFilePath,
                 GetCreateDeleteMethodRequestHandlerString(requestString));
-            await Task.WhenAll(requestFileTask, requestHandlerFileTask);
+            await Task.WhenAll(requestFileTask, requestHandlerFileTask, validatorTask);
             return;
         }
-        await Task.WhenAll(requestFileTask);
+        await Task.WhenAll(requestFileTask, validatorTask);
     }
     #region private
     /// <summary>
@@ -86,6 +95,50 @@ internal class MediatRCreateDeleteMethodManager : IMediatRCreateDeleteMethodMana
                                             return Result.ErrorResult(Messages.DeletedError);
                                         }}                             
                                      }});";
+    }
+    public static string GenerateValidator(string commandCode, CreateAggregateClassRequest request)
+    {
+        FolderHelper.CreateIfFileNotExsist(request.ValidatorFilePath);
+        var syntaxTree = CSharpSyntaxTree.ParseText(commandCode);
+        var compilation = CSharpCompilation.Create("CommandCompilation")
+            .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
+            .AddSyntaxTrees(syntaxTree);
+
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+
+        var recordDeclaration = syntaxTree.GetRoot()
+            .DescendantNodes()
+            .OfType<RecordDeclarationSyntax>()
+            .FirstOrDefault();
+
+        if (recordDeclaration == null)
+            throw new ArgumentException("No record declaration found in the provided code");
+
+        var className = recordDeclaration.Identifier.Text;
+
+        var properties = recordDeclaration.ParameterList.Parameters
+            .Select(p => p.Identifier.Text)
+            .ToList();
+
+        var validationRules = string.Join("\n",
+            properties.Select(prop =>
+                $@"           RuleFor(x => x.{prop})
+               .NotEmpty().WithMessage(""{prop}IsNotEmpty"");"
+            ));
+
+        var plurualizeClassFolderName = request.ClassName.Plurualize();
+        var namespaceSting = $"{request.ProjectName}.Application.Handlers.{plurualizeClassFolderName}.Validators";
+        return $@"
+                using {request.NameSpaceString};
+                using FluentValidation;
+                namespace {namespaceSting};
+                public class {className}Validator : AbstractValidator<{className}>
+                {{
+                    public {className}Validator()
+                    {{
+                         {validationRules}
+                    }}
+                }}";
     }
     #endregion
 }
